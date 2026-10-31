@@ -182,469 +182,510 @@
 </div>
 
 <script>
-const COLORS = [
-  "#ff6b6b", "#ffd93d", "#6bcB77", "#4d96ff", "#c77dff",
-  "#ff9f1c", "#2ec4b6", "#e71d36", "#9d4edd", "#06d6a0",
-  "#f72585", "#7209b7", "#f4a261", "#e76f51", "#264653",
-  "#e9c46a", "#a8dadc", "#457b9d", "#1d3557", "#ffb703",
-  "#fb8500", "#8ecae6", "#219ebc", "#023047", "#bde0fe",
-  "#a2d2ff", "#cdb4db", "#ffc8dd", "#ffafcc", "#bde0fe",
-  "#ff006e", "#8338ec", "#3a86ff", "#ffbe0b", "#fb5607",
-  "#06d6a0", "#118ab2", "#073b4c", "#ef476f", "#ffd166",
-  "#06d6a0", "#118ab2", "#073b4c", "#ef476f", "#ffd166",
-  "#8ac926", "#1982c4", "#6a4c93", "#ff595e", "#ffca3a"
-];
+(function () {
+  'use strict';
 
-// ====== СОСТОЯНИЕ ======
-let ALL_GAMES = [];   // полный список из games.txt
-let games = [];       // текущие игры для крутки (до 50)
-let history = [];
-let spinning = false;
-let rotation = 0;
-let loaded = false;
+  // ====== КОНСТАНТЫ ======
+  const COLORS = [
+    "#ff6b6b", "#ffd93d", "#6bcB77", "#4d96ff", "#c77dff",
+    "#ff9f1c", "#2ec4b6", "#e71d36", "#9d4edd", "#06d6a0",
+    "#f72585", "#7209b7", "#f4a261", "#e76f51", "#264653",
+    "#e9c46a", "#a8dadc", "#457b9d", "#1d3557", "#ffb703",
+    "#fb8500", "#8ecae6", "#219ebc", "#023047", "#bde0fe",
+    "#a2d2ff", "#cdb4db", "#ffc8dd", "#ffafcc", "#bde0fe",
+    "#ff006e", "#8338ec", "#3a86ff", "#ffbe0b", "#fb5607",
+    "#06d6a0", "#118ab2", "#073b4c", "#ef476f", "#ffd166",
+    "#06d6a0", "#118ab2", "#073b4c", "#ef476f", "#ffd166",
+    "#8ac926", "#1982c4", "#6a4c93", "#ff595e", "#ffca3a"
+  ];
 
-const SPIN_COUNT = 50; // сколько случайных игр выбираем для крутки
+  const TAU = Math.PI * 2;
+  const SPIN_COUNT = 50;
+  const SIZE = 1000;
+  const CX = SIZE / 2;
+  const CY = SIZE / 2;
+  const R = SIZE / 2 - 10;
+  const POINTER_ANGLE = -Math.PI / 2; // указатель сверху колеса
+  const SPIN_DURATION = 5000;
+  const SPIN_TURNS = 6;
 
-const canvas = document.getElementById('wheel');
-const ctx = canvas.getContext('2d', { alpha: true, desynchronized: true });
+  // ====== СОСТОЯНИЕ ======
+  let ALL_GAMES = [];
+  let games = [];
+  let history = [];
+  let spinning = false;
+  let rotation = 0;
+  let loaded = false;
+  let cachedSegs = null;
 
-const off = document.createElement('canvas');
-const offCtx = off.getContext('2d');
+  // ====== DOM ======
+  const canvas = document.getElementById('wheel');
+  const ctx = canvas.getContext('2d', { alpha: true, desynchronized: true });
+  const off = document.createElement('canvas');
+  const offCtx = off.getContext('2d');
 
-const spinBtn = document.getElementById('spinBtn');
-const shuffleBtn = document.getElementById('shuffleBtn');
-const resetBtn = document.getElementById('resetBtn');
-const resultEl = document.getElementById('result');
-const voteListEl = document.getElementById('voteList');
-const historyListEl = document.getElementById('historyList');
+  const spinBtn = document.getElementById('spinBtn');
+  const shuffleBtn = document.getElementById('shuffleBtn');
+  const resetBtn = document.getElementById('resetBtn');
+  const resultEl = document.getElementById('result');
+  const voteListEl = document.getElementById('voteList');
+  const historyListEl = document.getElementById('historyList');
 
-// ====== РАЗМЕР CANVAS ======
-const SIZE = 1000;
-function setupCanvas() {
-  const dpr = Math.min(window.devicePixelRatio || 1, 2);
-  canvas.width = SIZE * dpr;
-  canvas.height = SIZE * dpr;
-  canvas.style.width = '100%';
-  canvas.style.height = '100%';
-  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-
-  off.width = SIZE * dpr;
-  off.height = SIZE * dpr;
-  offCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
-}
-setupCanvas();
-
-const CX = SIZE / 2;
-const CY = SIZE / 2;
-const R = SIZE / 2 - 10;
-
-// ====== ИНВЕРТИРОВАННЫЙ ВЕС ======
-function inverseWeight(g) {
-  return 1 / (g.weight + 1);
-}
-
-// ====== КЭШ СЕГМЕНТОВ ======
-let cachedSegs = null;
-
-function computeSegments() {
-  if (cachedSegs) return cachedSegs;
-  const totalInv = games.reduce((s, g) => s + inverseWeight(g), 0) || 1;
-  let angle = 0;
-  const segs = [];
-  for (let i = 0; i < games.length; i++) {
-    const sweep = (inverseWeight(games[i]) / totalInv) * Math.PI * 2;
-    segs.push({ game: games[i], start: angle, sweep, idx: i, inv: inverseWeight(games[i]) });
-    angle += sweep;
+  // ====== УТИЛИТЫ ======
+  function norm(a) {
+    return ((a % TAU) + TAU) % TAU;
   }
-  cachedSegs = segs;
-  return segs;
-}
 
-function invalidateCache() {
-  cachedSegs = null;
-}
-
-// ====== ВЫБОР СЛУЧАЙНЫХ ИГР ДЛЯ КРУТКИ ======
-function pickRandomGames() {
-  // Копируем полный список и перемешиваем (Fisher-Yates)
-  const pool = ALL_GAMES.slice();
-  for (let i = pool.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [pool[i], pool[j]] = [pool[j], pool[i]];
+  function escapeHtml(s) {
+    return String(s).replace(/[&<>"']/g, c => ({
+      '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+    }[c]));
   }
-  // Берём не больше SPIN_COUNT, но и не больше, чем есть
-  const count = Math.min(SPIN_COUNT, pool.length);
-  return pool.slice(0, count).map(g => ({ ...g, weight: 0 }));
-}
 
-// ====== ЗАГРУЗКА ИГР ИЗ games.txt ======
-async function loadGames() {
-  try {
-    const resp = await fetch('games.txt', { cache: 'no-store' });
-    if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
-    const text = await resp.text();
+  function setupCanvas() {
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    canvas.width = SIZE * dpr;
+    canvas.height = SIZE * dpr;
+    canvas.style.width = '100%';
+    canvas.style.height = '100%';
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
-    // Игры перечислены через запятую; переносы строк игнорируем
-    const names = text
-      .split(',')
-      .map(s => s.trim())
-      .filter(s => s.length > 0);
+    off.width = SIZE * dpr;
+    off.height = SIZE * dpr;
+    offCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  }
 
-    if (names.length === 0) {
-      throw new Error('Файл games.txt пуст или не содержит игр');
+  // ====== ИНВЕРТИРОВАННЫЙ ВЕС ======
+  // Чем больше голосов (weight), тем МЕНЬШЕ inverseWeight,
+  // а значит — уже сектор и ниже шанс вылета.
+  function inverseWeight(g) {
+    return 1 / (g.weight + 1);
+  }
+
+  // ====== СЕГМЕНТЫ ======
+  function computeSegments() {
+    if (cachedSegs) return cachedSegs;
+    if (games.length === 0) {
+      cachedSegs = [];
+      return cachedSegs;
     }
-
-    ALL_GAMES = names.map(name => ({ name, size: '' }));
-    loaded = true;
-    initGame();
-
-    if (ALL_GAMES.length <= SPIN_COUNT) {
-      resultEl.textContent = `✅ Загружено игр: ${ALL_GAMES.length}. Крутите!`;
-    } else {
-      resultEl.textContent = `✅ Загружено игр: ${ALL_GAMES.length}. В крутку выбрано ${SPIN_COUNT}. Крутите!`;
+    const totalInv = games.reduce((s, g) => s + inverseWeight(g), 0) || 1;
+    let angle = 0;
+    const segs = [];
+    for (let i = 0; i < games.length; i++) {
+      const g = games[i];
+      const inv = inverseWeight(g);
+      const sweep = (inv / totalInv) * TAU;
+      segs.push({ game: g, start: angle, sweep, inv });
+      angle += sweep;
     }
-    resultEl.className = 'result';
-  } catch (err) {
-    console.error('Ошибка загрузки games.txt:', err);
-    resultEl.textContent = `❌ Не удалось загрузить games.txt (${err.message}). Проверьте, что файл лежит рядом с HTML и сервер запущен.`;
-    resultEl.className = 'result error';
-    spinBtn.disabled = true;
-    shuffleBtn.disabled = true;
-  }
-}
-
-// ====== ИНИЦИАЛИЗАЦИЯ ======
-function initGame() {
-  if (!loaded) return;
-  // Выбираем случайные SPIN_COUNT игр из полного списка
-  games = pickRandomGames();
-  history = [];
-  rotation = 0;
-  spinning = false;
-  spinBtn.disabled = false;
-  shuffleBtn.disabled = false;
-  resultEl.textContent = '';
-  resultEl.className = 'result';
-  historyListEl.innerHTML = '';
-  distributeVotes();
-}
-
-// ====== РАСПРЕДЕЛЕНИЕ ГОЛОСОВ ======
-function distributeVotes() {
-  games.forEach(g => {
-    let w = Math.floor(Math.random() * 100) + 1;
-    if (Math.random() < 0.12) w += Math.floor(Math.random() * 200);
-    g.weight = w;
-  });
-  invalidateCache();
-  renderVotes();
-  renderStaticWheel();
-  drawWheel();
-}
-
-// ====== ВЗВЕШЕННЫЙ ВЫБОР ======
-function weightedPick(items) {
-  const total = items.reduce((s, i) => s + inverseWeight(i), 0);
-  let r = Math.random() * total;
-  for (const item of items) {
-    r -= inverseWeight(item);
-    if (r <= 0) return item;
-  }
-  return items[items.length - 1];
-}
-
-// ====== СТАТИЧНАЯ ОТРИСОВКА ======
-function renderStaticWheel() {
-  offCtx.clearRect(0, 0, SIZE, SIZE);
-  const segs = computeSegments();
-  const n = segs.length;
-
-  if (n === 0) {
-    offCtx.fillStyle = '#ffd700';
-    offCtx.font = 'bold 44px sans-serif';
-    offCtx.textAlign = 'center';
-    offCtx.textBaseline = 'middle';
-    offCtx.fillText('🏆 Победитель определён!', CX, CY);
-    return;
+    cachedSegs = segs;
+    return segs;
   }
 
-  const maxInv = Math.max(...segs.map(s => s.inv), 0.001);
+  function invalidateCache() {
+    cachedSegs = null;
+  }
 
-  segs.forEach(seg => {
-    const { game, start, sweep, idx, inv } = seg;
-    const color = COLORS[idx % COLORS.length];
-    const intensity = 0.35 + 0.65 * (inv / maxInv);
-
-    offCtx.globalAlpha = 0.55 + 0.45 * intensity;
-    offCtx.beginPath();
-    offCtx.moveTo(CX, CY);
-    offCtx.arc(CX, CY, R, start, start + sweep);
-    offCtx.closePath();
-    offCtx.fillStyle = color;
-    offCtx.fill();
-    offCtx.globalAlpha = 1;
-    offCtx.strokeStyle = 'rgba(0,0,0,.35)';
-    offCtx.lineWidth = 1.5;
-    offCtx.stroke();
-  });
-
-  segs.forEach(seg => {
-    const { game, start, sweep } = seg;
-    if (sweep < 0.04) return;
-
-    const mid = start + sweep / 2;
-    offCtx.save();
-    offCtx.translate(CX, CY);
-    offCtx.rotate(mid);
-
-    const fontSize = Math.max(16, Math.min(34, 14 + sweep * 90));
-    offCtx.font = `bold ${fontSize}px 'Segoe UI', sans-serif`;
-    offCtx.textAlign = 'right';
-    offCtx.textBaseline = 'middle';
-    offCtx.shadowColor = 'rgba(0,0,0,.9)';
-    offCtx.shadowBlur = 6;
-
-    offCtx.fillStyle = '#fff';
-    offCtx.fillText(game.name, R - 18, 0);
-
-    offCtx.font = `bold ${Math.max(12, fontSize - 8)}px 'Segoe UI', sans-serif`;
-    offCtx.fillStyle = 'rgba(255,255,255,.75)';
-    offCtx.fillText(`[${game.weight}]`, R - 18, fontSize + 4);
-
-    offCtx.restore();
-  });
-
-  offCtx.beginPath();
-  offCtx.arc(CX, CY, 70, 0, Math.PI * 2);
-  offCtx.fillStyle = '#0d0d1a';
-  offCtx.fill();
-  offCtx.strokeStyle = '#ffd700';
-  offCtx.lineWidth = 6;
-  offCtx.stroke();
-  offCtx.fillStyle = '#ffd700';
-  offCtx.font = 'bold 34px sans-serif';
-  offCtx.textAlign = 'center';
-  offCtx.textBaseline = 'middle';
-  offCtx.fillText('🎡', CX, CY + 2);
-}
-
-// ====== ВЫВОД НА ЭКРАН ======
-function drawWheel() {
-  ctx.clearRect(0, 0, SIZE, SIZE);
-  ctx.save();
-  ctx.translate(CX, CY);
-  ctx.rotate(rotation);
-  ctx.drawImage(off, -CX, -CY, SIZE, SIZE);
-  ctx.restore();
-}
-
-// ====== ОТОБРАЖЕНИЕ ГОЛОСОВ ======
-function renderVotes() {
-  const totalInv = games.reduce((s, g) => s + inverseWeight(g), 0) || 1;
-  const indexed = games.map((g, i) => ({
-    ...g,
-    colorIdx: i,
-    chance: (inverseWeight(g) / totalInv) * 100
-  }));
-  indexed.sort((a, b) => b.weight - a.weight);
-
-  const maxWeight = Math.max(...games.map(x => x.weight), 1);
-
-  voteListEl.innerHTML = indexed.map(g => {
-    const barPct = (g.weight / maxWeight) * 100;
-    const color = COLORS[g.colorIdx % COLORS.length];
-    return `
-      <div class="vote-row">
-        <div class="vote-name" title="${g.name}">${g.name}</div>
-        <div class="vote-bar-bg">
-          <div class="vote-bar" style="width:${barPct}%;background:${color}"></div>
-        </div>
-        <div class="vote-count">${g.weight}</div>
-        <div class="chance" title="Шанс вылета">${g.chance.toFixed(1)}%</div>
-      </div>`;
-  }).join('');
-}
-
-// ====== КАКОЙ СЕКТОР ПОД УКАЗАТЕЛЕМ ======
-function gameUnderPointer(rot) {
-  const segs = computeSegments();
-  const norm = a => ((a % (Math.PI * 2)) + Math.PI * 2) % (Math.PI * 2);
-  const pa = norm(-Math.PI / 2);
-  for (const seg of segs) {
-    const s = norm(seg.start + rot);
-    const e = norm(seg.start + seg.sweep + rot);
-    if (s < e) {
-      if (pa >= s && pa < e) return seg.game;
-    } else {
-      if (pa >= s || pa < e) return seg.game;
+  // ====== ВЫБОР СЛУЧАЙНЫХ ИГР ======
+  function pickRandomGames() {
+    const pool = ALL_GAMES.slice();
+    for (let i = pool.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [pool[i], pool[j]] = [pool[j], pool[i]];
     }
-  }
-  return null;
-}
-
-// ====== ПРОКРУТКА ======
-function spin() {
-  if (spinning || games.length === 0) return;
-
-  if (games.length === 1) {
-    resultEl.textContent = `🏆 Победитель: ${games[0].name}`;
-    resultEl.className = 'result winner';
-    return;
+    const count = Math.min(SPIN_COUNT, pool.length);
+    return pool.slice(0, count).map((g, i) => ({
+      name: g.name,
+      weight: 0,
+      colorIdx: i
+    }));
   }
 
-  spinning = true;
-  spinBtn.disabled = true;
-  shuffleBtn.disabled = true;
-  resultEl.textContent = '🎲 Крутим...';
-  resultEl.className = 'result';
-
-  const winner = weightedPick(games);
-  const winnerIdx = games.indexOf(winner);
-
-  const segs = computeSegments();
-  const wSeg = segs[winnerIdx];
-  const winnerCenter = wSeg.start + wSeg.sweep / 2;
-
-  const norm = a => ((a % (Math.PI * 2)) + Math.PI * 2) % (Math.PI * 2);
-  const targetNorm = norm(-Math.PI / 2 - winnerCenter);
-  const currentNorm = norm(rotation);
-  let delta = targetNorm - currentNorm;
-  if (delta < 0) delta += Math.PI * 2;
-
-  const maxJitter = wSeg.sweep * 0.3;
-  const jitter = (Math.random() * 2 - 1) * maxJitter;
-  const totalRotation = Math.PI * 2 * 6 + delta + jitter;
-
-  const startRot = rotation;
-  const startTime = performance.now();
-  const duration = 5000;
-
-  let lastFrame = 0;
-  const frameInterval = 1000 / 60;
-
-  function animate(now) {
-    const elapsed = now - startTime;
-    const t = Math.min(elapsed / duration, 1);
-    const eased = 1 - Math.pow(1 - t, 3);
-    rotation = startRot + totalRotation * eased;
-
-    if (now - lastFrame >= frameInterval || t >= 1) {
-      drawWheel();
-      lastFrame = now;
-    }
-
-    if (t < 1) {
-      requestAnimationFrame(animate);
-    } else {
-      rotation = startRot + totalRotation;
-      const under = gameUnderPointer(rotation);
-      if (under !== winner) {
-        const cur = computeSegments();
-        const curSeg = cur[winnerIdx];
-        const curCenter = curSeg.start + curSeg.sweep / 2 + rotation;
-        const fix = norm(-Math.PI / 2 - curCenter);
-        const curNorm = norm(rotation);
-        let d = fix - curNorm;
-        if (d < 0) d += Math.PI * 2;
-        rotation += d;
-      }
-      drawWheel();
-      finishSpin(winner);
-    }
-  }
-  requestAnimationFrame(animate);
-}
-
-function finishSpin(winner) {
-  games = games.filter(g => g !== winner);
-  history.push(winner);
-  invalidateCache();
-
-  historyListEl.innerHTML = history.map((g, i) =>
-    `<li>${g.name}${i === history.length - 1 ? ' ← выбыла' : ''}</li>`
-  ).join('');
-
-  if (games.length === 1) {
-    const champ = games[0];
-    history.push(champ);
-    historyListEl.innerHTML = history.map((g, i) =>
-      `<li>${g.name}${i === history.length - 1 ? ' 🏆' : ' ← выбыла'}</li>`
-    ).join('');
-    resultEl.textContent = `🏆 Победитель: ${champ.name}`;
-    resultEl.className = 'result winner';
-    games = [];
+  // ====== РАСПРЕДЕЛЕНИЕ ГОЛОСОВ ======
+  function distributeVotes() {
+    games.forEach(g => {
+      let w = Math.floor(Math.random() * 100) + 1;
+      if (Math.random() < 0.12) w += Math.floor(Math.random() * 200);
+      g.weight = w;
+    });
     invalidateCache();
+    renderVotes();
     renderStaticWheel();
     drawWheel();
-    spinBtn.disabled = true;
-    shuffleBtn.disabled = true;
-    spinning = false;
-    return;
   }
 
-  if (games.length === 0) {
-    resultEl.textContent = `🏆 Победитель: ${winner.name}`;
-    resultEl.className = 'result winner';
+  // ====== ЧЕСТНЫЙ ВЗВЕШЕННЫЙ ВЫБОР ======
+  // Вероятность выбора ровно пропорциональна inverseWeight,
+  // т.е. в точности размеру сектора на колесе.
+  function weightedPick(items) {
+    const total = items.reduce((s, i) => s + inverseWeight(i), 0);
+    let r = Math.random() * total;
+    for (const item of items) {
+      r -= inverseWeight(item);
+      if (r <= 0) return item;
+    }
+    return items[items.length - 1];
+  }
+
+  // ====== ОТРИСОВКА КОЛЕСА ======
+  function renderStaticWheel() {
+    offCtx.clearRect(0, 0, SIZE, SIZE);
+    const segs = computeSegments();
+
+    if (segs.length === 0) {
+      offCtx.fillStyle = '#ffd700';
+      offCtx.font = 'bold 44px sans-serif';
+      offCtx.textAlign = 'center';
+      offCtx.textBaseline = 'middle';
+      offCtx.fillText('🏆 Победитель определён!', CX, CY);
+      return;
+    }
+
+    const maxInv = Math.max(...segs.map(s => s.inv), 0.001);
+
+    segs.forEach(seg => {
+      const { game, start, sweep, inv } = seg;
+      const color = COLORS[game.colorIdx % COLORS.length];
+      const intensity = 0.35 + 0.65 * (inv / maxInv);
+
+      offCtx.globalAlpha = 0.55 + 0.45 * intensity;
+      offCtx.beginPath();
+      offCtx.moveTo(CX, CY);
+      offCtx.arc(CX, CY, R, start, start + sweep);
+      offCtx.closePath();
+      offCtx.fillStyle = color;
+      offCtx.fill();
+      offCtx.globalAlpha = 1;
+      offCtx.strokeStyle = 'rgba(0,0,0,.35)';
+      offCtx.lineWidth = 1.5;
+      offCtx.stroke();
+    });
+
+    segs.forEach(seg => {
+      const { game, start, sweep } = seg;
+      if (sweep < 0.04) return;
+
+      const mid = start + sweep / 2;
+      offCtx.save();
+      offCtx.translate(CX, CY);
+      offCtx.rotate(mid);
+
+      const fontSize = Math.max(16, Math.min(34, 14 + sweep * 90));
+      offCtx.font = `bold ${fontSize}px 'Segoe UI', sans-serif`;
+      offCtx.textAlign = 'right';
+      offCtx.textBaseline = 'middle';
+      offCtx.shadowColor = 'rgba(0,0,0,.9)';
+      offCtx.shadowBlur = 6;
+
+      offCtx.fillStyle = '#fff';
+      offCtx.fillText(game.name, R - 18, 0);
+
+      offCtx.font = `bold ${Math.max(12, fontSize - 8)}px 'Segoe UI', sans-serif`;
+      offCtx.fillStyle = 'rgba(255,255,255,.75)';
+      offCtx.fillText(`[${game.weight}]`, R - 18, fontSize + 4);
+
+      offCtx.restore();
+    });
+
+    offCtx.beginPath();
+    offCtx.arc(CX, CY, 70, 0, TAU);
+    offCtx.fillStyle = '#0d0d1a';
+    offCtx.fill();
+    offCtx.strokeStyle = '#ffd700';
+    offCtx.lineWidth = 6;
+    offCtx.stroke();
+    offCtx.fillStyle = '#ffd700';
+    offCtx.font = 'bold 34px sans-serif';
+    offCtx.textAlign = 'center';
+    offCtx.textBaseline = 'middle';
+    offCtx.fillText('🎡', CX, CY + 2);
+  }
+
+  function drawWheel() {
+    ctx.clearRect(0, 0, SIZE, SIZE);
+    ctx.save();
+    ctx.translate(CX, CY);
+    ctx.rotate(rotation);
+    ctx.drawImage(off, -CX, -CY, SIZE, SIZE);
+    ctx.restore();
+  }
+
+  // ====== ПАНЕЛЬ ГОЛОСОВ ======
+  function renderVotes() {
+    if (games.length === 0) {
+      voteListEl.innerHTML =
+        '<div style="text-align:center;color:#aaa;padding:20px;">🎉 Игра завершена</div>';
+      return;
+    }
+    const totalInv = games.reduce((s, g) => s + inverseWeight(g), 0) || 1;
+    const indexed = games.map(g => ({
+      ...g,
+      chance: (inverseWeight(g) / totalInv) * 100
+    }));
+    indexed.sort((a, b) => b.weight - a.weight);
+
+    const maxWeight = Math.max(...games.map(x => x.weight), 1);
+
+    voteListEl.innerHTML = indexed.map(g => {
+      const barPct = (g.weight / maxWeight) * 100;
+      const color = COLORS[g.colorIdx % COLORS.length];
+      return `
+        <div class="vote-row">
+          <div class="vote-name" title="${escapeHtml(g.name)}">${escapeHtml(g.name)}</div>
+          <div class="vote-bar-bg">
+            <div class="vote-bar" style="width:${barPct}%;background:${color}"></div>
+          </div>
+          <div class="vote-count">${g.weight}</div>
+          <div class="chance" title="Шанс вылета">${g.chance.toFixed(1)}%</div>
+        </div>`;
+    }).join('');
+  }
+
+  // ====== СЕКТОР ПОД УКАЗАТЕЛЕМ ======
+  function gameUnderPointer(rot) {
+    const segs = computeSegments();
+    if (segs.length === 0) return null;
+    const pa = norm(POINTER_ANGLE);
+    for (const seg of segs) {
+      const s = norm(seg.start + rot);
+      const e = norm(seg.start + seg.sweep + rot);
+      if (s <= e) {
+        if (pa >= s && pa < e) return seg.game;
+      } else {
+        if (pa >= s || pa < e) return seg.game;
+      }
+    }
+    return null;
+  }
+
+  // ====== ИНИЦИАЛИЗАЦИЯ ======
+  function initGame() {
+    if (!loaded) return;
+    games = pickRandomGames();
+    history = [];
+    rotation = 0;
+    spinning = false;
+    spinBtn.disabled = false;
+    shuffleBtn.disabled = false;
+    resultEl.textContent = '';
+    resultEl.className = 'result';
+    historyListEl.innerHTML = '';
+    distributeVotes();
+  }
+
+  // ====== ЗАГРУЗКА ======
+  async function loadGames() {
+    try {
+      const resp = await fetch('games.txt', { cache: 'no-store' });
+      if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+      const text = await resp.text();
+
+      const names = text
+        .split(',')
+        .map(s => s.trim())
+        .filter(s => s.length > 0);
+
+      if (names.length === 0) {
+        throw new Error('Файл games.txt пуст или не содержит игр');
+      }
+
+      ALL_GAMES = names.map(name => ({ name }));
+      loaded = true;
+      initGame();
+
+      resultEl.textContent = ALL_GAMES.length <= SPIN_COUNT
+        ? `✅ Загружено игр: ${ALL_GAMES.length}. Крутите!`
+        : `✅ Загружено игр: ${ALL_GAMES.length}. В крутку выбрано ${SPIN_COUNT}. Крутите!`;
+      resultEl.className = 'result';
+    } catch (err) {
+      console.error('Ошибка загрузки games.txt:', err);
+      resultEl.textContent =
+        `❌ Не удалось загрузить games.txt (${err.message}). ` +
+        'Проверьте, что файл лежит рядом с HTML и сервер запущен.';
+      resultEl.className = 'result error';
+      spinBtn.disabled = true;
+      shuffleBtn.disabled = true;
+    }
+  }
+
+  // ====== ПРОКРУТКА ======
+  function spin() {
+    if (spinning || games.length === 0) return;
+
+    if (games.length === 1) {
+      resultEl.textContent = `🏆 Победитель: ${games[0].name}`;
+      resultEl.className = 'result winner';
+      return;
+    }
+
+    spinning = true;
     spinBtn.disabled = true;
     shuffleBtn.disabled = true;
-  } else {
+    resultEl.textContent = '🎲 Крутим...';
+    resultEl.className = 'result';
+
+    // Честный выбор: вероятность ∝ размеру сектора.
+    const winner = weightedPick(games);
+    const segs = computeSegments();
+    const winnerIdx = games.indexOf(winner);
+    const wSeg = segs[winnerIdx];
+    const winnerCenter = wSeg.start + wSeg.sweep / 2;
+
+    // Нужное вращение, чтобы центр сектора победителя попал под указатель.
+    const targetNorm = norm(POINTER_ANGLE - winnerCenter);
+    const currentNorm = norm(rotation);
+    let delta = targetNorm - currentNorm;
+    if (delta < 0) delta += TAU;
+
+    // Джиттер — чтобы колесо не останавливалось всегда в центре сектора,
+    // но так, чтобы указатель гарантированно остался внутри сектора победителя.
+    const maxJitter = wSeg.sweep * 0.3;
+    const jitter = (Math.random() * 2 - 1) * maxJitter;
+
+    const totalRotation = TAU * SPIN_TURNS + delta + jitter;
+
+    const startRot = rotation;
+    const startTime = performance.now();
+    let lastFrame = 0;
+    const frameInterval = 1000 / 60;
+
+    function animate(now) {
+      const elapsed = now - startTime;
+      const t = Math.min(elapsed / SPIN_DURATION, 1);
+      const eased = 1 - Math.pow(1 - t, 3);
+      rotation = startRot + totalRotation * eased;
+
+      if (now - lastFrame >= frameInterval || t >= 1) {
+        drawWheel();
+        lastFrame = now;
+      }
+
+      if (t < 1) {
+        requestAnimationFrame(animate);
+        return;
+      }
+
+      rotation = startRot + totalRotation;
+
+      // Страховка от накопленных ошибок округления.
+      if (gameUnderPointer(rotation) !== winner) {
+        const curSeg = computeSegments()[winnerIdx];
+        const curCenterAbs = curSeg.start + curSeg.sweep / 2 + rotation;
+        let adjust = norm(POINTER_ANGLE - curCenterAbs);
+        if (adjust > Math.PI) adjust -= TAU;
+        rotation += adjust;
+        drawWheel();
+      }
+
+      finishSpin(winner);
+    }
+
+    requestAnimationFrame(animate);
+  }
+
+  function finishSpin(winner) {
+    games = games.filter(g => g !== winner);
+    history.push(winner);
+    invalidateCache();
+    spinning = false;
+
+    // Финальная победа: осталась ровно одна игра.
+    if (games.length === 1) {
+      const champ = games[0];
+      history.push(champ);
+      renderHistory(true);
+
+      resultEl.textContent = `🏆 Победитель: ${champ.name}`;
+      resultEl.className = 'result winner';
+
+      games = [];
+      invalidateCache();
+      spinBtn.disabled = true;
+      shuffleBtn.disabled = true;
+
+      renderVotes();
+      renderStaticWheel();
+      drawWheel();
+      return;
+    }
+
+    renderHistory(false);
+
+    // Теоретически невозможно (в spin() есть guard для length === 1),
+    // но на всякий случай.
+    if (games.length === 0) {
+      resultEl.textContent = `🏆 Победитель: ${winner.name}`;
+      resultEl.className = 'result winner';
+      spinBtn.disabled = true;
+      shuffleBtn.disabled = true;
+      renderVotes();
+      renderStaticWheel();
+      drawWheel();
+      return;
+    }
+
     resultEl.textContent = `❌ Выбывает: ${winner.name}`;
     resultEl.className = 'result out';
     spinBtn.disabled = false;
     shuffleBtn.disabled = false;
-    rotation = rotation % (Math.PI * 2);
+    rotation = norm(rotation);
+
+    renderVotes();
     renderStaticWheel();
     drawWheel();
   }
-  spinning = false;
-}
 
-// ====== ОБРАБОТЧИКИ ======
-spinBtn.addEventListener('click', spin);
+  function renderHistory(finalWinner) {
+    historyListEl.innerHTML = history.map((g, i) => {
+      const isLast = i === history.length - 1;
+      let suffix;
+      if (finalWinner) {
+        suffix = isLast ? ' 🏆' : ' ← выбыла';
+      } else {
+        suffix = isLast ? ' ← выбыла' : '';
+      }
+      return `<li>${escapeHtml(g.name)}${suffix}</li>`;
+    }).join('');
+  }
 
-shuffleBtn.addEventListener('click', () => {
-  if (spinning) return;
-  if (!loaded) return;
+  // ====== ОБРАБОТЧИКИ ======
+  spinBtn.addEventListener('click', spin);
 
-  // Заново выбираем случайные SPIN_COUNT игр из полного списка
-  games = pickRandomGames();
-  history = [];
-  rotation = 0;
-  historyListEl.innerHTML = '';
+  shuffleBtn.addEventListener('click', () => {
+    if (spinning || !loaded) return;
 
-  games.forEach(g => {
-    let w = Math.floor(Math.random() * 100) + 1;
-    if (Math.random() < 0.12) w += Math.floor(Math.random() * 200);
-    g.weight = w;
+    games = pickRandomGames();
+    history = [];
+    rotation = 0;
+    historyListEl.innerHTML = '';
+
+    distributeVotes();
+
+    resultEl.textContent = ALL_GAMES.length > SPIN_COUNT
+      ? `🔀 Выбрано ${SPIN_COUNT} случайных игр из ${ALL_GAMES.length}, голоса перераспределены!`
+      : `🔀 Голоса перераспределены!`;
+    resultEl.className = 'result';
+
+    spinBtn.disabled = false;
+    shuffleBtn.disabled = false;
   });
 
-  invalidateCache();
-  renderVotes();
-  renderStaticWheel();
-  drawWheel();
+  resetBtn.addEventListener('click', () => {
+    if (spinning || !loaded) return;
+    initGame();
+  });
 
-  resultEl.textContent = ALL_GAMES.length > SPIN_COUNT
-    ? `🔀 Выбрано ${SPIN_COUNT} случайных игр из ${ALL_GAMES.length}, голоса перераспределены!`
-    : `🔀 Голоса перераспределены!`;
-  resultEl.className = 'result';
+  window.addEventListener('resize', () => {
+    setupCanvas();
+    renderStaticWheel();
+    drawWheel();
+  });
 
-  spinBtn.disabled = false;
-  shuffleBtn.disabled = false;
-});
-
-resetBtn.addEventListener('click', () => {
-  if (spinning || !loaded) return;
-  initGame();
-});
-
-window.addEventListener('resize', () => {
+  // ====== СТАРТ ======
   setupCanvas();
-  renderStaticWheel();
-  drawWheel();
-});
-
-// ====== СТАРТ ======
-loadGames();
+  loadGames();
+})();
 </script>
 </body>
 </html>
