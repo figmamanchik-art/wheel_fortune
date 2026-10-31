@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>🎡 Колесо Фортуны Папича — 50 игр</title>
+<title>🎡 Колесо Фортуны Папича — 50 игр (smooth)</title>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body {
@@ -35,20 +35,22 @@
     max-width: 94vw;
     max-height: 94vw;
     margin-bottom: 22px;
+    will-change: transform;
   }
   canvas { width: 100%; height: 100%; display: block; filter: drop-shadow(0 0 40px rgba(255,215,0,.25)); }
 
   .pointer {
     position: absolute;
-    top: -22px;
+    top: -4px;
     left: 50%;
     transform: translateX(-50%);
     width: 0; height: 0;
-    border-left: 22px solid transparent;
-    border-right: 22px solid transparent;
-    border-top: 40px solid #ffd700;
+    border-left: 24px solid transparent;
+    border-right: 24px solid transparent;
+    border-top: 46px solid #ffd700;
     filter: drop-shadow(0 0 10px #ffd700);
     z-index: 10;
+    pointer-events: none;
   }
 
   .controls {
@@ -149,11 +151,11 @@
 <body>
 
 <h1>🎡 Колесо Фортуны Папича</h1>
-<p class="subtitle">50 игр. Голоса распределяются один раз. Сектора сразу показывают голоса. Крути — выбывает — крути снова.</p>
+<p class="subtitle">50 игр. Голоса фиксированы. Сектора пропорциональны голосам. Плавная отрисовка.</p>
 
 <div class="wheel-wrap">
   <div class="pointer"></div>
-  <canvas id="wheel" width="1440" height="1440"></canvas>
+  <canvas id="wheel"></canvas>
 </div>
 
 <div class="controls">
@@ -252,7 +254,12 @@ let spinning = false;
 let rotation = 0;
 
 const canvas = document.getElementById('wheel');
-const ctx = canvas.getContext('2d');
+const ctx = canvas.getContext('2d', { alpha: true, desynchronized: true });
+
+// Off-screen canvas для статичной картинки колеса
+const off = document.createElement('canvas');
+const offCtx = off.getContext('2d');
+
 const spinBtn = document.getElementById('spinBtn');
 const shuffleBtn = document.getElementById('shuffleBtn');
 const resetBtn = document.getElementById('resetBtn');
@@ -260,9 +267,49 @@ const resultEl = document.getElementById('result');
 const voteListEl = document.getElementById('voteList');
 const historyListEl = document.getElementById('historyList');
 
-const CX = canvas.width / 2;
-const CY = canvas.height / 2;
-const R = canvas.width / 2 - 10;
+// ====== РАЗМЕР CANVAS (с учётом DPR) ======
+const SIZE = 1000; // логический размер
+function setupCanvas() {
+  const dpr = Math.min(window.devicePixelRatio || 1, 2); // ограничиваем 2x
+  canvas.width = SIZE * dpr;
+  canvas.height = SIZE * dpr;
+  canvas.style.width = '100%';
+  canvas.style.height = '100%';
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+  off.width = SIZE * dpr;
+  off.height = SIZE * dpr;
+  offCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
+}
+setupCanvas();
+
+const CX = SIZE / 2;
+const CY = SIZE / 2;
+const R = SIZE / 2 - 10;
+
+// ====== КЭШ СЕГМЕНТОВ ======
+let cachedSegs = null;
+let cachedTotalW = 0;
+
+function computeSegments() {
+  // базовые (при rotation = 0), без учёта поворота
+  if (cachedSegs) return cachedSegs;
+  const totalW = games.reduce((s, g) => s + g.weight, 0) || 1;
+  let angle = 0;
+  const segs = [];
+  for (let i = 0; i < games.length; i++) {
+    const sweep = (games[i].weight / totalW) * Math.PI * 2;
+    segs.push({ game: games[i], start: angle, sweep, idx: i });
+    angle += sweep;
+  }
+  cachedSegs = segs;
+  cachedTotalW = totalW;
+  return segs;
+}
+
+function invalidateCache() {
+  cachedSegs = null;
+}
 
 // ====== ИНИЦИАЛИЗАЦИЯ ======
 function initGame() {
@@ -275,18 +322,20 @@ function initGame() {
   resultEl.textContent = '';
   resultEl.className = 'result';
   historyListEl.innerHTML = '';
-  distributeVotes(); // один раз в начале — и сразу рисуем диаграмму
+  distributeVotes();
 }
 
-// ====== РАСПРЕДЕЛЕНИЕ ГОЛОСОВ (ОДИН РАЗ) ======
+// ====== РАСПРЕДЕЛЕНИЕ ГОЛОСОВ ======
 function distributeVotes() {
   games.forEach(g => {
     let w = Math.floor(Math.random() * 100) + 1;
-    if (Math.random() < 0.12) w += Math.floor(Math.random() * 200); // бонус фаворитам
+    if (Math.random() < 0.12) w += Math.floor(Math.random() * 200);
     g.weight = w;
   });
+  invalidateCache();
   renderVotes();
-  drawWheel(); // сразу перерисовываем колесо как диаграмму
+  renderStaticWheel(); // отрисовать статичную картинку в off-screen
+  drawWheel();          // вывести её на экран
 }
 
 // ====== ВЗВЕШЕННЫЙ ВЫБОР ======
@@ -300,103 +349,97 @@ function weightedPick(items) {
   return items[items.length - 1];
 }
 
-// ====== РИСОВАНИЕ КОЛЕСА-ДИАГРАММЫ ======
-function drawWheel() {
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-  const n = games.length;
+// ====== СТАТИЧНАЯ ОТРИСОВКА КОЛЕСА В OFF-SCREEN ======
+// Рисуем сектора и подписи БЕЗ поворота (rotation = 0).
+// Это делается только при смене голосов / выбывании — не каждый кадр.
+function renderStaticWheel() {
+  offCtx.clearRect(0, 0, SIZE, SIZE);
+  const segs = computeSegments();
+  const n = segs.length;
+
   if (n === 0) {
-    ctx.fillStyle = '#ffd700';
-    ctx.font = 'bold 44px sans-serif';
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
-    ctx.fillText('🏆 Победитель определён!', CX, CY);
+    offCtx.fillStyle = '#ffd700';
+    offCtx.font = 'bold 44px sans-serif';
+    offCtx.textAlign = 'center';
+    offCtx.textBaseline = 'middle';
+    offCtx.fillText('🏆 Победитель определён!', CX, CY);
     return;
   }
 
-  // Сектора пропорциональны голосам (диаграмма)
-  const totalW = games.reduce((s, g) => s + g.weight, 0) || 1;
-  const maxW = Math.max(...games.map(g => g.weight), 1);
+  const maxW = Math.max(...segs.map(s => s.game.weight), 1);
 
-  let angle = rotation;
-  const segments = [];
-
-  for (let i = 0; i < n; i++) {
-    const g = games[i];
-    const share = g.weight / totalW;          // доля голосов
-    const sweep = share * Math.PI * 2;        // угол сектора
-    segments.push({ game: g, start: angle, sweep, idx: i, maxW });
-    angle += sweep;
-  }
-
-  // Рисуем сектора
-  segments.forEach(seg => {
+  // Сектора
+  segs.forEach(seg => {
     const { game, start, sweep, idx } = seg;
     const color = COLORS[idx % COLORS.length];
+    const intensity = 0.35 + 0.65 * (game.weight / maxW);
 
-    // Яркость зависит от веса: чем больше — тем насыщеннее
-    const intensity = 0.35 + 0.65 * (game.weight / seg.maxW);
-    ctx.globalAlpha = 0.55 + 0.45 * intensity;
-
-    ctx.beginPath();
-    ctx.moveTo(CX, CY);
-    ctx.arc(CX, CY, R, start, start + sweep);
-    ctx.closePath();
-    ctx.fillStyle = color;
-    ctx.fill();
-    ctx.globalAlpha = 1;
-    ctx.strokeStyle = 'rgba(0,0,0,.35)';
-    ctx.lineWidth = 1.5;
-    ctx.stroke();
+    offCtx.globalAlpha = 0.55 + 0.45 * intensity;
+    offCtx.beginPath();
+    offCtx.moveTo(CX, CY);
+    offCtx.arc(CX, CY, R, start, start + sweep);
+    offCtx.closePath();
+    offCtx.fillStyle = color;
+    offCtx.fill();
+    offCtx.globalAlpha = 1;
+    offCtx.strokeStyle = 'rgba(0,0,0,.35)';
+    offCtx.lineWidth = 1.5;
+    offCtx.stroke();
   });
 
-  // Подписи — крупные, вдоль радиуса, только если сектор достаточно широкий
-  segments.forEach(seg => {
-    const { game, start, sweep, idx } = seg;
-    if (sweep < 0.04) return; // слишком тонкий — пропускаем подпись
+  // Подписи (с тенью — но один раз, не каждый кадр!)
+  segs.forEach(seg => {
+    const { game, start, sweep } = seg;
+    if (sweep < 0.04) return;
 
     const mid = start + sweep / 2;
-    ctx.save();
-    ctx.translate(CX, CY);
-    ctx.rotate(mid);
+    offCtx.save();
+    offCtx.translate(CX, CY);
+    offCtx.rotate(mid);
 
-    // Крупный шрифт: минимум 16, растёт с шириной сектора
     const fontSize = Math.max(16, Math.min(34, 14 + sweep * 90));
-    ctx.font = `bold ${fontSize}px 'Segoe UI', sans-serif`;
-    ctx.textAlign = 'right';
-    ctx.textBaseline = 'middle';
+    offCtx.font = `bold ${fontSize}px 'Segoe UI', sans-serif`;
+    offCtx.textAlign = 'right';
+    offCtx.textBaseline = 'middle';
+    offCtx.shadowColor = 'rgba(0,0,0,.9)';
+    offCtx.shadowBlur = 6;
 
-    // Тень для читаемости
-    ctx.shadowColor = 'rgba(0,0,0,.9)';
-    ctx.shadowBlur = 6;
+    offCtx.fillStyle = '#fff';
+    offCtx.fillText(game.name, R - 18, 0);
 
-    const label = game.name;
-    ctx.fillStyle = '#fff';
-    ctx.fillText(label, R - 18, 0);
+    offCtx.font = `bold ${Math.max(12, fontSize - 8)}px 'Segoe UI', sans-serif`;
+    offCtx.fillStyle = 'rgba(255,255,255,.75)';
+    offCtx.fillText(`[${game.weight}]`, R - 18, fontSize + 4);
 
-    // Голоса под названием
-    ctx.font = `bold ${Math.max(12, fontSize - 8)}px 'Segoe UI', sans-serif`;
-    ctx.fillStyle = 'rgba(255,255,255,.75)';
-    ctx.fillText(`[${game.weight}]`, R - 18, fontSize + 4);
-
-    ctx.restore();
+    offCtx.restore();
   });
 
   // Центр
-  ctx.beginPath();
-  ctx.arc(CX, CY, 70, 0, Math.PI * 2);
-  ctx.fillStyle = '#0d0d1a';
-  ctx.fill();
-  ctx.strokeStyle = '#ffd700';
-  ctx.lineWidth = 6;
-  ctx.stroke();
-  ctx.fillStyle = '#ffd700';
-  ctx.font = 'bold 34px sans-serif';
-  ctx.textAlign = 'center';
-  ctx.textBaseline = 'middle';
-  ctx.fillText('🎡', CX, CY + 2);
+  offCtx.beginPath();
+  offCtx.arc(CX, CY, 70, 0, Math.PI * 2);
+  offCtx.fillStyle = '#0d0d1a';
+  offCtx.fill();
+  offCtx.strokeStyle = '#ffd700';
+  offCtx.lineWidth = 6;
+  offCtx.stroke();
+  offCtx.fillStyle = '#ffd700';
+  offCtx.font = 'bold 34px sans-serif';
+  offCtx.textAlign = 'center';
+  offCtx.textBaseline = 'middle';
+  offCtx.fillText('🎡', CX, CY + 2);
 }
 
-// ====== ОТОБРАЖЕНИЕ ГОЛОСОВ В ПАНЕЛИ ======
+// ====== ВЫВОД НА ЭКРАН (только rotate готовой картинки) ======
+function drawWheel() {
+  ctx.clearRect(0, 0, SIZE, SIZE);
+  ctx.save();
+  ctx.translate(CX, CY);
+  ctx.rotate(rotation);
+  ctx.drawImage(off, -CX, -CY, SIZE, SIZE);
+  ctx.restore();
+}
+
+// ====== ОТОБРАЖЕНИЕ ГОЛОСОВ ======
 function renderVotes() {
   const maxW = Math.max(...games.map(g => g.weight), 1);
   const indexed = games.map((g, i) => ({ ...g, colorIdx: i }));
@@ -413,6 +456,23 @@ function renderVotes() {
         <div class="vote-count">${g.weight}</div>
       </div>`;
   }).join('');
+}
+
+// ====== КАКОЙ СЕКТОР ПОД УКАЗАТЕЛЕМ ======
+function gameUnderPointer(rot) {
+  const segs = computeSegments();
+  const norm = a => ((a % (Math.PI * 2)) + Math.PI * 2) % (Math.PI * 2);
+  const pa = norm(-Math.PI / 2);
+  for (const seg of segs) {
+    const s = norm(seg.start + rot);
+    const e = norm(seg.start + seg.sweep + rot);
+    if (s < e) {
+      if (pa >= s && pa < e) return seg.game;
+    } else {
+      if (pa >= s || pa < e) return seg.game;
+    }
+  }
+  return null;
 }
 
 // ====== ПРОКРУТКА ======
@@ -434,37 +494,57 @@ function spin() {
   const winner = weightedPick(games);
   const winnerIdx = games.indexOf(winner);
 
-  // Пересчитываем сегменты (как в drawWheel), чтобы найти угол победителя
-  const totalW = games.reduce((s, g) => s + g.weight, 0) || 1;
-  let angle = rotation;
-  let winnerStart = 0, winnerSweep = 0;
-  for (let i = 0; i < games.length; i++) {
-    const sweep = (games[i].weight / totalW) * Math.PI * 2;
-    if (i === winnerIdx) { winnerStart = angle; winnerSweep = sweep; break; }
-    angle += sweep;
-  }
+  const segs = computeSegments();
+  const wSeg = segs[winnerIdx];
+  const winnerCenter = wSeg.start + wSeg.sweep / 2;
 
-  // Целевой угол: центр сектора победителя должен оказаться под указателем (сверху = -PI/2)
-  const targetBase = -Math.PI / 2 - (winnerStart + winnerSweep / 2);
-  const jitter = (Math.random() - 0.5) * winnerSweep * 0.7;
-  const currentNorm = ((rotation % (Math.PI * 2)) + Math.PI * 2) % (Math.PI * 2);
-  const targetNorm = ((targetBase + jitter) % (Math.PI * 2) + Math.PI * 2) % (Math.PI * 2);
+  const norm = a => ((a % (Math.PI * 2)) + Math.PI * 2) % (Math.PI * 2);
+  const targetNorm = norm(-Math.PI / 2 - winnerCenter);
+  const currentNorm = norm(rotation);
   let delta = targetNorm - currentNorm;
   if (delta < 0) delta += Math.PI * 2;
-  const totalRotation = Math.PI * 2 * 6 + delta;
+
+  const maxJitter = wSeg.sweep * 0.3;
+  const jitter = (Math.random() * 2 - 1) * maxJitter;
+  const totalRotation = Math.PI * 2 * 6 + delta + jitter;
 
   const startRot = rotation;
   const startTime = performance.now();
   const duration = 5000;
 
+  // throttle до ~60 FPS (на 144 Гц мониторе не рисуем лишнего)
+  let lastFrame = 0;
+  const targetFps = 60;
+  const frameInterval = 1000 / targetFps;
+
   function animate(now) {
-    const t = Math.min((now - startTime) / duration, 1);
+    const elapsed = now - startTime;
+    const t = Math.min(elapsed / duration, 1);
     const eased = 1 - Math.pow(1 - t, 3);
     rotation = startRot + totalRotation * eased;
-    drawWheel();
-    if (t < 1) requestAnimationFrame(animate);
-    else {
+
+    // рисуем только если прошло достаточно времени с прошлого кадра
+    if (now - lastFrame >= frameInterval || t >= 1) {
+      drawWheel();
+      lastFrame = now;
+    }
+
+    if (t < 1) {
+      requestAnimationFrame(animate);
+    } else {
+      // финальная точная доводка
       rotation = startRot + totalRotation;
+      const under = gameUnderPointer(rotation);
+      if (under !== winner) {
+        const cur = computeSegments();
+        const curSeg = cur[winnerIdx];
+        const curCenter = curSeg.start + curSeg.sweep / 2 + rotation;
+        const fix = norm(-Math.PI / 2 - curCenter);
+        const curNorm = norm(rotation);
+        let d = fix - curNorm;
+        if (d < 0) d += Math.PI * 2;
+        rotation += d;
+      }
       drawWheel();
       finishSpin(winner);
     }
@@ -475,6 +555,7 @@ function spin() {
 function finishSpin(winner) {
   games = games.filter(g => g !== winner);
   history.push(winner);
+  invalidateCache();
 
   historyListEl.innerHTML = history.map((g, i) =>
     `<li>${g.name} <span style="color:#888;font-size:.8em">(${g.size})</span>${i === history.length - 1 ? ' ← выбыла' : ''}</li>`
@@ -489,6 +570,8 @@ function finishSpin(winner) {
     resultEl.textContent = `🏆 Победитель: ${champ.name} (${champ.size})`;
     resultEl.className = 'result winner';
     games = [];
+    invalidateCache();
+    renderStaticWheel();
     drawWheel();
     spinBtn.disabled = true;
     shuffleBtn.disabled = true;
@@ -507,6 +590,7 @@ function finishSpin(winner) {
     spinBtn.disabled = false;
     shuffleBtn.disabled = false;
     rotation = rotation % (Math.PI * 2);
+    renderStaticWheel(); // перерисовать статичную картинку без выбывшей
     drawWheel();
   }
   spinning = false;
@@ -523,8 +607,10 @@ shuffleBtn.addEventListener('click', () => {
     if (Math.random() < 0.12) w += Math.floor(Math.random() * 200);
     g.weight = w;
   });
+  invalidateCache();
   renderVotes();
-  drawWheel(); // сразу обновляем диаграмму
+  renderStaticWheel();
+  drawWheel();
   resultEl.textContent = '🔀 Голоса перераспределены!';
   resultEl.className = 'result';
 });
@@ -532,6 +618,13 @@ shuffleBtn.addEventListener('click', () => {
 resetBtn.addEventListener('click', () => {
   if (spinning) return;
   initGame();
+});
+
+// ====== РЕСАЙЗ (пересоздать canvas при смене DPR/размера) ======
+window.addEventListener('resize', () => {
+  setupCanvas();
+  renderStaticWheel();
+  drawWheel();
 });
 
 // ====== СТАРТ ======
