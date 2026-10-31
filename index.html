@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>🎡 Колесо Фортуны Папича — 50 игр (smooth)</title>
+<title>🎡 Колесо Фортуны Папича — 50 игр (инверсия)</title>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body {
@@ -142,6 +142,7 @@
   .vote-bar-bg { flex: 1; height: 14px; background: rgba(255,255,255,.08); border-radius: 7px; overflow: hidden; }
   .vote-bar { height: 100%; border-radius: 7px; transition: width .5s ease; }
   .vote-count { width: 36px; text-align: right; font-weight: bold; color: #ffd700; font-size: .75rem; }
+  .chance { width: 52px; text-align: right; font-size: .7rem; color: #6bcB77; }
 
   .history-list ol { padding-left: 24px; font-size: .85rem; }
   .history-list li { margin-bottom: 4px; }
@@ -151,7 +152,7 @@
 <body>
 
 <h1>🎡 Колесо Фортуны Папича</h1>
-<p class="subtitle">50 игр. Голоса фиксированы. Сектора пропорциональны голосам. Плавная отрисовка.</p>
+<p class="subtitle">Больше голосов → уже сектор → меньше шанс вылета. Защищённые игры — тонкие полоски.</p>
 
 <div class="wheel-wrap">
   <div class="pointer"></div>
@@ -167,7 +168,7 @@
 
 <div class="panels">
   <div class="panel">
-    <h2>📊 Голоса (зафиксированы)</h2>
+    <h2>📊 Голоса и шанс вылета</h2>
     <div class="vote-list" id="voteList"></div>
   </div>
   <div class="panel">
@@ -256,7 +257,6 @@ let rotation = 0;
 const canvas = document.getElementById('wheel');
 const ctx = canvas.getContext('2d', { alpha: true, desynchronized: true });
 
-// Off-screen canvas для статичной картинки колеса
 const off = document.createElement('canvas');
 const offCtx = off.getContext('2d');
 
@@ -267,10 +267,10 @@ const resultEl = document.getElementById('result');
 const voteListEl = document.getElementById('voteList');
 const historyListEl = document.getElementById('historyList');
 
-// ====== РАЗМЕР CANVAS (с учётом DPR) ======
-const SIZE = 1000; // логический размер
+// ====== РАЗМЕР CANVAS ======
+const SIZE = 1000;
 function setupCanvas() {
-  const dpr = Math.min(window.devicePixelRatio || 1, 2); // ограничиваем 2x
+  const dpr = Math.min(window.devicePixelRatio || 1, 2);
   canvas.width = SIZE * dpr;
   canvas.height = SIZE * dpr;
   canvas.style.width = '100%';
@@ -287,23 +287,27 @@ const CX = SIZE / 2;
 const CY = SIZE / 2;
 const R = SIZE / 2 - 10;
 
+// ====== ИНВЕРТИРОВАННЫЙ ВЕС ======
+// Чем больше голосов — тем меньше шанс вылета.
+// inverse = 1 / (votes + 1) — чтобы не делить на 0 и сгладить крайности.
+function inverseWeight(g) {
+  return 1 / (g.weight + 1);
+}
+
 // ====== КЭШ СЕГМЕНТОВ ======
 let cachedSegs = null;
-let cachedTotalW = 0;
 
 function computeSegments() {
-  // базовые (при rotation = 0), без учёта поворота
   if (cachedSegs) return cachedSegs;
-  const totalW = games.reduce((s, g) => s + g.weight, 0) || 1;
+  const totalInv = games.reduce((s, g) => s + inverseWeight(g), 0) || 1;
   let angle = 0;
   const segs = [];
   for (let i = 0; i < games.length; i++) {
-    const sweep = (games[i].weight / totalW) * Math.PI * 2;
-    segs.push({ game: games[i], start: angle, sweep, idx: i });
+    const sweep = (inverseWeight(games[i]) / totalInv) * Math.PI * 2;
+    segs.push({ game: games[i], start: angle, sweep, idx: i, inv: inverseWeight(games[i]) });
     angle += sweep;
   }
   cachedSegs = segs;
-  cachedTotalW = totalW;
   return segs;
 }
 
@@ -334,24 +338,22 @@ function distributeVotes() {
   });
   invalidateCache();
   renderVotes();
-  renderStaticWheel(); // отрисовать статичную картинку в off-screen
-  drawWheel();          // вывести её на экран
+  renderStaticWheel();
+  drawWheel();
 }
 
-// ====== ВЗВЕШЕННЫЙ ВЫБОР ======
+// ====== ВЗВЕШЕННЫЙ ВЫБОР (по инвертированному весу) ======
 function weightedPick(items) {
-  const total = items.reduce((s, i) => s + i.weight, 0);
+  const total = items.reduce((s, i) => s + inverseWeight(i), 0);
   let r = Math.random() * total;
   for (const item of items) {
-    r -= item.weight;
+    r -= inverseWeight(item);
     if (r <= 0) return item;
   }
   return items[items.length - 1];
 }
 
-// ====== СТАТИЧНАЯ ОТРИСОВКА КОЛЕСА В OFF-SCREEN ======
-// Рисуем сектора и подписи БЕЗ поворота (rotation = 0).
-// Это делается только при смене голосов / выбывании — не каждый кадр.
+// ====== СТАТИЧНАЯ ОТРИСОВКА ======
 function renderStaticWheel() {
   offCtx.clearRect(0, 0, SIZE, SIZE);
   const segs = computeSegments();
@@ -366,13 +368,14 @@ function renderStaticWheel() {
     return;
   }
 
-  const maxW = Math.max(...segs.map(s => s.game.weight), 1);
+  const maxInv = Math.max(...segs.map(s => s.inv), 0.001);
 
-  // Сектора
   segs.forEach(seg => {
-    const { game, start, sweep, idx } = seg;
+    const { game, start, sweep, idx, inv } = seg;
     const color = COLORS[idx % COLORS.length];
-    const intensity = 0.35 + 0.65 * (game.weight / maxW);
+
+    // Яркость: чем больше inverse (чем меньше голосов) — тем ярче
+    const intensity = 0.35 + 0.65 * (inv / maxInv);
 
     offCtx.globalAlpha = 0.55 + 0.45 * intensity;
     offCtx.beginPath();
@@ -387,7 +390,7 @@ function renderStaticWheel() {
     offCtx.stroke();
   });
 
-  // Подписи (с тенью — но один раз, не каждый кадр!)
+  // Подписи
   segs.forEach(seg => {
     const { game, start, sweep } = seg;
     if (sweep < 0.04) return;
@@ -429,7 +432,7 @@ function renderStaticWheel() {
   offCtx.fillText('🎡', CX, CY + 2);
 }
 
-// ====== ВЫВОД НА ЭКРАН (только rotate готовой картинки) ======
+// ====== ВЫВОД НА ЭКРАН ======
 function drawWheel() {
   ctx.clearRect(0, 0, SIZE, SIZE);
   ctx.save();
@@ -439,21 +442,28 @@ function drawWheel() {
   ctx.restore();
 }
 
-// ====== ОТОБРАЖЕНИЕ ГОЛОСОВ ======
+// ====== ОТОБРАЖЕНИЕ ГОЛОСОВ И ШАНСОВ ======
 function renderVotes() {
-  const maxW = Math.max(...games.map(g => g.weight), 1);
-  const indexed = games.map((g, i) => ({ ...g, colorIdx: i }));
+  const totalInv = games.reduce((s, g) => s + inverseWeight(g), 0) || 1;
+  const indexed = games.map((g, i) => ({
+    ...g,
+    colorIdx: i,
+    chance: (inverseWeight(g) / totalInv) * 100
+  }));
+  // сортируем по голосам (убывание) — сверху самые защищённые
   indexed.sort((a, b) => b.weight - a.weight);
+
   voteListEl.innerHTML = indexed.map(g => {
-    const pct = (g.weight / maxW) * 100;
+    const barPct = (g.weight / Math.max(...games.map(x => x.weight), 1)) * 100;
     const color = COLORS[g.colorIdx % COLORS.length];
     return `
       <div class="vote-row">
         <div class="vote-name" title="${g.name}">${g.name}</div>
         <div class="vote-bar-bg">
-          <div class="vote-bar" style="width:${pct}%;background:${color}"></div>
+          <div class="vote-bar" style="width:${barPct}%;background:${color}"></div>
         </div>
         <div class="vote-count">${g.weight}</div>
+        <div class="chance" title="Шанс вылета">${g.chance.toFixed(1)}%</div>
       </div>`;
   }).join('');
 }
@@ -512,10 +522,8 @@ function spin() {
   const startTime = performance.now();
   const duration = 5000;
 
-  // throttle до ~60 FPS (на 144 Гц мониторе не рисуем лишнего)
   let lastFrame = 0;
-  const targetFps = 60;
-  const frameInterval = 1000 / targetFps;
+  const frameInterval = 1000 / 60;
 
   function animate(now) {
     const elapsed = now - startTime;
@@ -523,7 +531,6 @@ function spin() {
     const eased = 1 - Math.pow(1 - t, 3);
     rotation = startRot + totalRotation * eased;
 
-    // рисуем только если прошло достаточно времени с прошлого кадра
     if (now - lastFrame >= frameInterval || t >= 1) {
       drawWheel();
       lastFrame = now;
@@ -532,7 +539,6 @@ function spin() {
     if (t < 1) {
       requestAnimationFrame(animate);
     } else {
-      // финальная точная доводка
       rotation = startRot + totalRotation;
       const under = gameUnderPointer(rotation);
       if (under !== winner) {
@@ -590,7 +596,7 @@ function finishSpin(winner) {
     spinBtn.disabled = false;
     shuffleBtn.disabled = false;
     rotation = rotation % (Math.PI * 2);
-    renderStaticWheel(); // перерисовать статичную картинку без выбывшей
+    renderStaticWheel();
     drawWheel();
   }
   spinning = false;
@@ -620,7 +626,6 @@ resetBtn.addEventListener('click', () => {
   initGame();
 });
 
-// ====== РЕСАЙЗ (пересоздать canvas при смене DPR/размера) ======
 window.addEventListener('resize', () => {
   setupCanvas();
   renderStaticWheel();
