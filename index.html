@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🎡 Колесо Фортуны Папича — 50 игр</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Segoe UI', Tahoma, sans-serif;
+    background: radial-gradient(circle at 50% 20%, #2a1a4a, #0d0d1a 70%);
+    color: #fff;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+  }
+  h1 {
+    font-size: 2rem;
+    margin-bottom: 6px;
+    text-align: center;
+    background: linear-gradient(90deg, #ffd700, #ff6b6b, #ffd700);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    text-shadow: 0 0 20px rgba(255,215,0,.3);
+  }
+  .subtitle { color: #aaa; margin-bottom: 18px; text-align: center; font-size: .9rem; }
+
+  .wheel-wrap {
+    position: relative;
+    width: 720px;
+    height: 720px;
+    max-width: 94vw;
+    max-height: 94vw;
+    margin-bottom: 22px;
+  }
+  canvas { width: 100%; height: 100%; display: block; filter: drop-shadow(0 0 40px rgba(255,215,0,.25)); }
+
+  .pointer {
+    position: absolute;
+    top: -22px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0; height: 0;
+    border-left: 22px solid transparent;
+    border-right: 22px solid transparent;
+    border-top: 40px solid #ffd700;
+    filter: drop-shadow(0 0 10px #ffd700);
+    z-index: 10;
+  }
+
+  .controls {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-bottom: 18px;
+  }
+  .btn {
+    padding: 16px 42px;
+    font-size: 1.15rem;
+    font-weight: bold;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: transform .15s, box-shadow .15s;
+  }
+  .btn:hover:not(:disabled) { transform: scale(1.05); }
+  .btn:disabled { opacity: .5; cursor: not-allowed; }
+  .btn-spin {
+    background: linear-gradient(135deg, #ffd700, #ff8c00);
+    color: #1a1a2e;
+    box-shadow: 0 6px 25px rgba(255,215,0,.4);
+  }
+  .btn-spin:hover:not(:disabled) { box-shadow: 0 8px 35px rgba(255,215,0,.6); }
+  .btn-shuffle {
+    background: linear-gradient(135deg, #4d96ff, #6bcB77);
+    color: #fff;
+    box-shadow: 0 6px 25px rgba(77,150,255,.4);
+  }
+  .btn-shuffle:hover:not(:disabled) { box-shadow: 0 8px 35px rgba(77,150,255,.6); }
+  .btn-reset {
+    padding: 10px 24px;
+    font-size: .9rem;
+    border: 1px solid rgba(255,255,255,.2);
+    border-radius: 30px;
+    background: transparent;
+    color: #aaa;
+    cursor: pointer;
+    transition: all .15s;
+  }
+  .btn-reset:hover { background: rgba(255,255,255,.1); color: #fff; }
+
+  .result {
+    text-align: center;
+    font-size: 1.3rem;
+    min-height: 2em;
+    margin-bottom: 14px;
+    font-weight: bold;
+  }
+  .result.winner { color: #ffd700; text-shadow: 0 0 20px rgba(255,215,0,.6); animation: pulse 1s infinite; }
+  .result.out { color: #ff6b6b; }
+  @keyframes pulse { 0%,100% { transform: scale(1); } 50% { transform: scale(1.06); } }
+
+  .panels {
+    display: flex;
+    gap: 16px;
+    width: 100%;
+    max-width: 960px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .panel {
+    flex: 1;
+    min-width: 280px;
+    background: rgba(255,255,255,.05);
+    border-radius: 16px;
+    padding: 16px;
+    border: 1px solid rgba(255,255,255,.1);
+  }
+  .panel h2 { font-size: 1rem; margin-bottom: 12px; color: #ffd700; text-align: center; }
+  .vote-list, .history-list {
+    max-height: 340px;
+    overflow-y: auto;
+    padding-right: 6px;
+  }
+  .vote-list::-webkit-scrollbar, .history-list::-webkit-scrollbar { width: 6px; }
+  .vote-list::-webkit-scrollbar-thumb, .history-list::-webkit-scrollbar-thumb { background: rgba(255,255,255,.2); border-radius: 3px; }
+
+  .vote-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 6px;
+    font-size: .8rem;
+  }
+  .vote-name { width: 140px; flex-shrink: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .vote-bar-bg { flex: 1; height: 14px; background: rgba(255,255,255,.08); border-radius: 7px; overflow: hidden; }
+  .vote-bar { height: 100%; border-radius: 7px; transition: width .5s ease; }
+  .vote-count { width: 36px; text-align: right; font-weight: bold; color: #ffd700; font-size: .75rem; }
+
+  .history-list ol { padding-left: 24px; font-size: .85rem; }
+  .history-list li { margin-bottom: 4px; }
+  .history-list li:last-child { color: #ffd700; font-weight: bold; }
+</style>
+</head>
+<body>
+
+<h1>🎡 Колесо Фортуны Папича</h1>
+<p class="subtitle">50 игр. Голоса распределяются один раз. Сектора сразу показывают голоса. Крути — выбывает — крути снова.</p>
+
+<div class="wheel-wrap">
+  <div class="pointer"></div>
+  <canvas id="wheel" width="1440" height="1440"></canvas>
+</div>
+
+<div class="controls">
+  <button class="btn btn-spin" id="spinBtn">Крутить! 🎲</button>
+  <button class="btn btn-shuffle" id="shuffleBtn">Перераспределить голоса 🔀</button>
+</div>
+
+<div class="result" id="result"></div>
+
+<div class="panels">
+  <div class="panel">
+    <h2>📊 Голоса (зафиксированы)</h2>
+    <div class="vote-list" id="voteList"></div>
+  </div>
+  <div class="panel">
+    <h2>🏆 История выбывания</h2>
+    <div class="history-list"><ol id="historyList"></ol></div>
+    <div style="text-align:center;margin-top:14px;">
+      <button class="btn-reset" id="resetBtn">🔄 Начать заново</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ====== 50 ИГР (до 5 ГБ, популярные) ======
+const ALL_GAMES = [
+  { name: "Balatro",              size: "~600 МБ" },
+  { name: "Undertale",            size: "~250 МБ" },
+  { name: "Hades",                size: "~4.5 ГБ" },
+  { name: "Slay the Spire",       size: "~1.8 ГБ" },
+  { name: "Stardew Valley",       size: "~1.3 ГБ" },
+  { name: "Terraria",             size: "~2.8 ГБ" },
+  { name: "Limbo",                size: "~150 МБ" },
+  { name: "Inside",               size: "~1.2 ГБ" },
+  { name: "Baba Is You",          size: "~400 МБ" },
+  { name: "Animal Well",          size: "~33 МБ" },
+  { name: "Mini Metro",           size: "~300 МБ" },
+  { name: "Inscryption",          size: "~2.8 ГБ" },
+  { name: "Disco Elysium",        size: "~4.2 ГБ" },
+  { name: "Hollow Knight",        size: "~3.5 ГБ" },
+  { name: "Celeste",              size: "~1.2 ГБ" },
+  { name: "Cuphead",              size: "~4.5 ГБ" },
+  { name: "Ori and the Blind Forest", size: "~3.2 ГБ" },
+  { name: "Ori and the Will of the Wisps", size: "~4.8 ГБ" },
+  { name: "Katana ZERO",          size: "~500 МБ" },
+  { name: "Hotline Miami",        size: "~300 МБ" },
+  { name: "Hotline Miami 2",      size: "~1.5 ГБ" },
+  { name: "Dead Cells",           size: "~1.5 ГБ" },
+  { name: "Enter the Gungeon",    size: "~2.2 ГБ" },
+  { name: "The Binding of Isaac: Rebirth", size: "~1.2 ГБ" },
+  { name: "Vampire Survivors",    size: "~300 МБ" },
+  { name: "Peggle Deluxe",        size: "~50 МБ" },
+  { name: "Papers, Please",       size: "~300 МБ" },
+  { name: "Return of the Obra Dinn", size: "~1.5 ГБ" },
+  { name: "The Stanley Parable: Ultra Deluxe", size: "~4 ГБ" },
+  { name: "Superhot",             size: "~1.5 ГБ" },
+  { name: "Portal",               size: "~4 ГБ" },
+  { name: "Portal 2",             size: "~4.5 ГБ" },
+  { name: "Half-Life 2",          size: "~4 ГБ" },
+  { name: "Bioshock",             size: "~4 ГБ" },
+  { name: "Bioshock Infinite",    size: "~4.5 ГБ" },
+  { name: "Dishonored",           size: "~4.5 ГБ" },
+  { name: "Firewatch",            size: "~3.5 ГБ" },
+  { name: "What Remains of Edith Finch", size: "~3 ГБ" },
+  { name: "Outer Wilds",          size: "~4 ГБ" },
+  { name: "Subnautica",           size: "~4.5 ГБ" },
+  { name: "The Forest",           size: "~4.5 ГБ" },
+  { name: "Raft",                 size: "~3.5 ГБ" },
+  { name: "Phasmophobia",         size: "~4 ГБ" },
+  { name: "Lethal Company",       size: "~1.5 ГБ" },
+  { name: "Among Us",             size: "~250 МБ" },
+  { name: "Fall Guys",            size: "~2 ГБ" },
+  { name: "Rocket League",        size: "~4.5 ГБ" },
+  { name: "Brawlhalla",           size: "~1.5 ГБ" },
+  { name: "Terraria (Modded)",    size: "~3 ГБ" },
+  { name: "Cult of the Lamb",     size: "~2.5 ГБ" }
+];
+
+const COLORS = [
+  "#ff6b6b", "#ffd93d", "#6bcB77", "#4d96ff", "#c77dff",
+  "#ff9f1c", "#2ec4b6", "#e71d36", "#9d4edd", "#06d6a0",
+  "#f72585", "#7209b7", "#f4a261", "#e76f51", "#264653",
+  "#e9c46a", "#a8dadc", "#457b9d", "#1d3557", "#ffb703",
+  "#fb8500", "#8ecae6", "#219ebc", "#023047", "#bde0fe",
+  "#a2d2ff", "#cdb4db", "#ffc8dd", "#ffafcc", "#bde0fe",
+  "#ff006e", "#8338ec", "#3a86ff", "#ffbe0b", "#fb5607",
+  "#06d6a0", "#118ab2", "#073b4c", "#ef476f", "#ffd166",
+  "#06d6a0", "#118ab2", "#073b4c", "#ef476f", "#ffd166",
+  "#8ac926", "#1982c4", "#6a4c93", "#ff595e", "#ffca3a"
+];
+
+// ====== СОСТОЯНИЕ ======
+let games = [];
+let history = [];
+let spinning = false;
+let rotation = 0;
+
+const canvas = document.getElementById('wheel');
+const ctx = canvas.getContext('2d');
+const spinBtn = document.getElementById('spinBtn');
+const shuffleBtn = document.getElementById('shuffleBtn');
+const resetBtn = document.getElementById('resetBtn');
+const resultEl = document.getElementById('result');
+const voteListEl = document.getElementById('voteList');
+const historyListEl = document.getElementById('historyList');
+
+const CX = canvas.width / 2;
+const CY = canvas.height / 2;
+const R = canvas.width / 2 - 10;
+
+// ====== ИНИЦИАЛИЗАЦИЯ ======
+function initGame() {
+  games = ALL_GAMES.map(g => ({ ...g, weight: 0 }));
+  history = [];
+  rotation = 0;
+  spinning = false;
+  spinBtn.disabled = false;
+  shuffleBtn.disabled = false;
+  resultEl.textContent = '';
+  resultEl.className = 'result';
+  historyListEl.innerHTML = '';
+  distributeVotes(); // один раз в начале — и сразу рисуем диаграмму
+}
+
+// ====== РАСПРЕДЕЛЕНИЕ ГОЛОСОВ (ОДИН РАЗ) ======
+function distributeVotes() {
+  games.forEach(g => {
+    let w = Math.floor(Math.random() * 100) + 1;
+    if (Math.random() < 0.12) w += Math.floor(Math.random() * 200); // бонус фаворитам
+    g.weight = w;
+  });
+  renderVotes();
+  drawWheel(); // сразу перерисовываем колесо как диаграмму
+}
+
+// ====== ВЗВЕШЕННЫЙ ВЫБОР ======
+function weightedPick(items) {
+  const total = items.reduce((s, i) => s + i.weight, 0);
+  let r = Math.random() * total;
+  for (const item of items) {
+    r -= item.weight;
+    if (r <= 0) return item;
+  }
+  return items[items.length - 1];
+}
+
+// ====== РИСОВАНИЕ КОЛЕСА-ДИАГРАММЫ ======
+function drawWheel() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  const n = games.length;
+  if (n === 0) {
+    ctx.fillStyle = '#ffd700';
+    ctx.font = 'bold 44px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText('🏆 Победитель определён!', CX, CY);
+    return;
+  }
+
+  // Сектора пропорциональны голосам (диаграмма)
+  const totalW = games.reduce((s, g) => s + g.weight, 0) || 1;
+  const maxW = Math.max(...games.map(g => g.weight), 1);
+
+  let angle = rotation;
+  const segments = [];
+
+  for (let i = 0; i < n; i++) {
+    const g = games[i];
+    const share = g.weight / totalW;          // доля голосов
+    const sweep = share * Math.PI * 2;        // угол сектора
+    segments.push({ game: g, start: angle, sweep, idx: i, maxW });
+    angle += sweep;
+  }
+
+  // Рисуем сектора
+  segments.forEach(seg => {
+    const { game, start, sweep, idx } = seg;
+    const color = COLORS[idx % COLORS.length];
+
+    // Яркость зависит от веса: чем больше — тем насыщеннее
+    const intensity = 0.35 + 0.65 * (game.weight / seg.maxW);
+    ctx.globalAlpha = 0.55 + 0.45 * intensity;
+
+    ctx.beginPath();
+    ctx.moveTo(CX, CY);
+    ctx.arc(CX, CY, R, start, start + sweep);
+    ctx.closePath();
+    ctx.fillStyle = color;
+    ctx.fill();
+    ctx.globalAlpha = 1;
+    ctx.strokeStyle = 'rgba(0,0,0,.35)';
+    ctx.lineWidth = 1.5;
+    ctx.stroke();
+  });
+
+  // Подписи — крупные, вдоль радиуса, только если сектор достаточно широкий
+  segments.forEach(seg => {
+    const { game, start, sweep, idx } = seg;
+    if (sweep < 0.04) return; // слишком тонкий — пропускаем подпись
+
+    const mid = start + sweep / 2;
+    ctx.save();
+    ctx.translate(CX, CY);
+    ctx.rotate(mid);
+
+    // Крупный шрифт: минимум 16, растёт с шириной сектора
+    const fontSize = Math.max(16, Math.min(34, 14 + sweep * 90));
+    ctx.font = `bold ${fontSize}px 'Segoe UI', sans-serif`;
+    ctx.textAlign = 'right';
+    ctx.textBaseline = 'middle';
+
+    // Тень для читаемости
+    ctx.shadowColor = 'rgba(0,0,0,.9)';
+    ctx.shadowBlur = 6;
+
+    const label = game.name;
+    ctx.fillStyle = '#fff';
+    ctx.fillText(label, R - 18, 0);
+
+    // Голоса под названием
+    ctx.font = `bold ${Math.max(12, fontSize - 8)}px 'Segoe UI', sans-serif`;
+    ctx.fillStyle = 'rgba(255,255,255,.75)';
+    ctx.fillText(`[${game.weight}]`, R - 18, fontSize + 4);
+
+    ctx.restore();
+  });
+
+  // Центр
+  ctx.beginPath();
+  ctx.arc(CX, CY, 70, 0, Math.PI * 2);
+  ctx.fillStyle = '#0d0d1a';
+  ctx.fill();
+  ctx.strokeStyle = '#ffd700';
+  ctx.lineWidth = 6;
+  ctx.stroke();
+  ctx.fillStyle = '#ffd700';
+  ctx.font = 'bold 34px sans-serif';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText('🎡', CX, CY + 2);
+}
+
+// ====== ОТОБРАЖЕНИЕ ГОЛОСОВ В ПАНЕЛИ ======
+function renderVotes() {
+  const maxW = Math.max(...games.map(g => g.weight), 1);
+  const indexed = games.map((g, i) => ({ ...g, colorIdx: i }));
+  indexed.sort((a, b) => b.weight - a.weight);
+  voteListEl.innerHTML = indexed.map(g => {
+    const pct = (g.weight / maxW) * 100;
+    const color = COLORS[g.colorIdx % COLORS.length];
+    return `
+      <div class="vote-row">
+        <div class="vote-name" title="${g.name}">${g.name}</div>
+        <div class="vote-bar-bg">
+          <div class="vote-bar" style="width:${pct}%;background:${color}"></div>
+        </div>
+        <div class="vote-count">${g.weight}</div>
+      </div>`;
+  }).join('');
+}
+
+// ====== ПРОКРУТКА ======
+function spin() {
+  if (spinning || games.length === 0) return;
+
+  if (games.length === 1) {
+    resultEl.textContent = `🏆 Победитель: ${games[0].name} (${games[0].size})`;
+    resultEl.className = 'result winner';
+    return;
+  }
+
+  spinning = true;
+  spinBtn.disabled = true;
+  shuffleBtn.disabled = true;
+  resultEl.textContent = '🎲 Крутим...';
+  resultEl.className = 'result';
+
+  const winner = weightedPick(games);
+  const winnerIdx = games.indexOf(winner);
+
+  // Пересчитываем сегменты (как в drawWheel), чтобы найти угол победителя
+  const totalW = games.reduce((s, g) => s + g.weight, 0) || 1;
+  let angle = rotation;
+  let winnerStart = 0, winnerSweep = 0;
+  for (let i = 0; i < games.length; i++) {
+    const sweep = (games[i].weight / totalW) * Math.PI * 2;
+    if (i === winnerIdx) { winnerStart = angle; winnerSweep = sweep; break; }
+    angle += sweep;
+  }
+
+  // Целевой угол: центр сектора победителя должен оказаться под указателем (сверху = -PI/2)
+  const targetBase = -Math.PI / 2 - (winnerStart + winnerSweep / 2);
+  const jitter = (Math.random() - 0.5) * winnerSweep * 0.7;
+  const currentNorm = ((rotation % (Math.PI * 2)) + Math.PI * 2) % (Math.PI * 2);
+  const targetNorm = ((targetBase + jitter) % (Math.PI * 2) + Math.PI * 2) % (Math.PI * 2);
+  let delta = targetNorm - currentNorm;
+  if (delta < 0) delta += Math.PI * 2;
+  const totalRotation = Math.PI * 2 * 6 + delta;
+
+  const startRot = rotation;
+  const startTime = performance.now();
+  const duration = 5000;
+
+  function animate(now) {
+    const t = Math.min((now - startTime) / duration, 1);
+    const eased = 1 - Math.pow(1 - t, 3);
+    rotation = startRot + totalRotation * eased;
+    drawWheel();
+    if (t < 1) requestAnimationFrame(animate);
+    else {
+      rotation = startRot + totalRotation;
+      drawWheel();
+      finishSpin(winner);
+    }
+  }
+  requestAnimationFrame(animate);
+}
+
+function finishSpin(winner) {
+  games = games.filter(g => g !== winner);
+  history.push(winner);
+
+  historyListEl.innerHTML = history.map((g, i) =>
+    `<li>${g.name} <span style="color:#888;font-size:.8em">(${g.size})</span>${i === history.length - 1 ? ' ← выбыла' : ''}</li>`
+  ).join('');
+
+  if (games.length === 1) {
+    const champ = games[0];
+    history.push(champ);
+    historyListEl.innerHTML = history.map((g, i) =>
+      `<li>${g.name} <span style="color:#888;font-size:.8em">(${g.size})</span>${i === history.length - 1 ? ' 🏆' : ' ← выбыла'}</li>`
+    ).join('');
+    resultEl.textContent = `🏆 Победитель: ${champ.name} (${champ.size})`;
+    resultEl.className = 'result winner';
+    games = [];
+    drawWheel();
+    spinBtn.disabled = true;
+    shuffleBtn.disabled = true;
+    spinning = false;
+    return;
+  }
+
+  if (games.length === 0) {
+    resultEl.textContent = `🏆 Победитель: ${winner.name} (${winner.size})`;
+    resultEl.className = 'result winner';
+    spinBtn.disabled = true;
+    shuffleBtn.disabled = true;
+  } else {
+    resultEl.textContent = `❌ Выбывает: ${winner.name} (${winner.size})`;
+    resultEl.className = 'result out';
+    spinBtn.disabled = false;
+    shuffleBtn.disabled = false;
+    rotation = rotation % (Math.PI * 2);
+    drawWheel();
+  }
+  spinning = false;
+}
+
+// ====== ОБРАБОТЧИКИ ======
+spinBtn.addEventListener('click', spin);
+
+shuffleBtn.addEventListener('click', () => {
+  if (spinning) return;
+  if (games.length <= 1) return;
+  games.forEach(g => {
+    let w = Math.floor(Math.random() * 100) + 1;
+    if (Math.random() < 0.12) w += Math.floor(Math.random() * 200);
+    g.weight = w;
+  });
+  renderVotes();
+  drawWheel(); // сразу обновляем диаграмму
+  resultEl.textContent = '🔀 Голоса перераспределены!';
+  resultEl.className = 'result';
+});
+
+resetBtn.addEventListener('click', () => {
+  if (spinning) return;
+  initGame();
+});
+
+// ====== СТАРТ ======
+initGame();
+</script>
+</body>
+</html>
