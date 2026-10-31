@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>🎡 Колесо Фортуны Папича — 50 игр (инверсия)</title>
+<title>🎡 Колесо Фортуны Папича — инверсия</title>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body {
@@ -104,6 +104,7 @@
   }
   .result.winner { color: #ffd700; text-shadow: 0 0 20px rgba(255,215,0,.6); animation: pulse 1s infinite; }
   .result.out { color: #ff6b6b; }
+  .result.error { color: #ff6b6b; }
   @keyframes pulse { 0%,100% { transform: scale(1); } 50% { transform: scale(1.06); } }
 
   .panels {
@@ -160,11 +161,11 @@
 </div>
 
 <div class="controls">
-  <button class="btn btn-spin" id="spinBtn">Крутить! 🎲</button>
-  <button class="btn btn-shuffle" id="shuffleBtn">Перераспределить голоса 🔀</button>
+  <button class="btn btn-spin" id="spinBtn" disabled>Крутить! 🎲</button>
+  <button class="btn btn-shuffle" id="shuffleBtn" disabled>Перераспределить голоса 🔀</button>
 </div>
 
-<div class="result" id="result"></div>
+<div class="result" id="result">⏳ Загрузка списка игр из games.txt...</div>
 
 <div class="panels">
   <div class="panel">
@@ -181,659 +182,6 @@
 </div>
 
 <script>
-// ====== 50 ИГР (до 5 ГБ, популярные) ======
-const ALL_GAMES = [
-  // ===== Метроидвании / экшн-платформеры (сингл, прохождение) =====
-  { name: "Hollow Knight", size: "" },
-  { name: "Hollow Knight: Silksong", size: "" },
-  { name: "Ori and the Blind Forest", size: "" },
-  { name: "Ori and the Will of the Wisps", size: "" },
-  { name: "Blasphemous", size: "" },
-  { name: "Blasphemous 2", size: "" },
-  { name: "Nine Sols", size: "" },
-  { name: "Ender Lilies", size: "" },
-  { name: "Ender Magnolia", size: "" },
-  { name: "Grime", size: "" },
-  { name: "The Last Faith", size: "" },
-  { name: "Salt and Sanctuary", size: "" },
-  { name: "Axiom Verge", size: "" },
-  { name: "Axiom Verge 2", size: "" },
-  { name: "The Messenger", size: "" },
-  { name: "Iconoclasts", size: "" },
-  { name: "Momodora: Moonlit Farewell", size: "" },
-  { name: "Afterimage", size: "" },
-  { name: "Islets", size: "" },
-  { name: "Crypt Custodian", size: "" },
-  { name: "Prince of Persia: The Lost Crown", size: "" },
-  { name: "Metroid Dread", size: "" },
-  { name: "Castlevania: Symphony of the Night", size: "" },
-  { name: "Bloodstained: Ritual of the Night", size: "" },
-  { name: "Dead Cells", size: "" },
-  { name: "Celeste", size: "" },
-  { name: "Katana ZERO", size: "" },
-  { name: "Pizza Tower", size: "" },
-  { name: "Super Meat Boy", size: "" },
-  { name: "N++", size: "" },
-  { name: "Dustforce", size: "" },
-  { name: "VVVVVV", size: "" },
-  { name: "Jump King", size: "" },
-  { name: "Getting Over It", size: "" },
-
-  // ===== Сюжетные RPG / JRPG (сингл, прохождение) =====
-  { name: "Undertale", size: "" },
-  { name: "Deltarune", size: "" },
-  { name: "Omori", size: "" },
-  { name: "Sea of Stars", size: "" },
-  { name: "Chained Echoes", size: "" },
-  { name: "CrossCode", size: "" },
-  { name: "Eastward", size: "" },
-  { name: "Undertale Yellow", size: "" },
-  { name: "Lisa: The Painful", size: "" },
-  { name: "Hylics", size: "" },
-  { name: "Hylics 2", size: "" },
-  { name: "OFF", size: "" },
-  { name: "Ib", size: "" },
-  { name: "The Coffin of Andy and Leyley", size: "" },
-  { name: "Fear & Hunger", size: "" },
-  { name: "Fear & Hunger 2: Termina", size: "" },
-  { name: "Darkest Dungeon", size: "" },
-  { name: "Darkest Dungeon II", size: "" },
-  { name: "Battle Brothers", size: "" },
-  { name: "Wartales", size: "" },
-  { name: "Divinity: Original Sin", size: "" },
-  { name: "Divinity: Original Sin 2", size: "" },
-  { name: "Baldur's Gate 3", size: "" },
-  { name: "Pillars of Eternity", size: "" },
-  { name: "Pillars of Eternity II", size: "" },
-  { name: "Tyranny", size: "" },
-  { name: "Disco Elysium", size: "" },
-  { name: "Planescape: Torment", size: "" },
-  { name: "Torment: Tides of Numenera", size: "" },
-  { name: "Shadowrun Returns", size: "" },
-  { name: "Shadowrun: Dragonfall", size: "" },
-  { name: "Shadowrun: Hong Kong", size: "" },
-  { name: "Wasteland 2", size: "" },
-  { name: "Wasteland 3", size: "" },
-  { name: "Underrail", size: "" },
-  { name: "Atom RPG", size: "" },
-  { name: "Encased", size: "" },
-  { name: "Gamedec", size: "" },
-  { name: "The Thaumaturge", size: "" },
-  { name: "Pentiment", size: "" },
-  { name: "Fallout", size: "" },
-  { name: "Fallout 2", size: "" },
-  { name: "Fallout: New Vegas", size: "" },
-  { name: "The Elder Scrolls III: Morrowind", size: "" },
-  { name: "The Elder Scrolls IV: Oblivion", size: "" },
-  { name: "The Elder Scrolls V: Skyrim", size: "" },
-  { name: "The Witcher", size: "" },
-  { name: "The Witcher 2", size: "" },
-  { name: "The Witcher 3", size: "" },
-  { name: "Cyberpunk 2077", size: "" },
-  { name: "Mass Effect", size: "" },
-  { name: "Mass Effect 2", size: "" },
-  { name: "Mass Effect 3", size: "" },
-  { name: "Dragon Age: Origins", size: "" },
-  { name: "Dragon Age II", size: "" },
-  { name: "Dragon Age: Inquisition", size: "" },
-  { name: "Knights of the Old Republic", size: "" },
-  { name: "Knights of the Old Republic II", size: "" },
-  { name: "Jade Empire", size: "" },
-  { name: "Alpha Protocol", size: "" },
-  { name: "Vampire: The Masquerade – Bloodlines", size: "" },
-  { name: "Deus Ex", size: "" },
-  { name: "Deus Ex: Human Revolution", size: "" },
-  { name: "Deus Ex: Mankind Divided", size: "" },
-  { name: "System Shock", size: "" },
-  { name: "System Shock 2", size: "" },
-  { name: "Prey (2017)", size: "" },
-  { name: "BioShock", size: "" },
-  { name: "BioShock 2", size: "" },
-  { name: "BioShock Infinite", size: "" },
-  { name: "Dishonored", size: "" },
-  { name: "Dishonored 2", size: "" },
-  { name: "Deathloop", size: "" },
-  { name: "Half-Life", size: "" },
-  { name: "Half-Life 2", size: "" },
-  { name: "Half-Life: Alyx", size: "" },
-  { name: "Portal", size: "" },
-  { name: "Portal 2", size: "" },
-  { name: "Black Mesa", size: "" },
-
-  // ===== Хорроры / выживание (сингл, прохождение) =====
-  { name: "Limbo", size: "" },
-  { name: "Inside", size: "" },
-  { name: "Little Nightmares", size: "" },
-  { name: "Little Nightmares II", size: "" },
-  { name: "Signalis", size: "" },
-  { name: "Mouthwashing", size: "" },
-  { name: "Amnesia: The Dark Descent", size: "" },
-  { name: "Amnesia: Rebirth", size: "" },
-  { name: "SOMA", size: "" },
-  { name: "Outlast", size: "" },
-  { name: "Outlast 2", size: "" },
-  { name: "Alien: Isolation", size: "" },
-  { name: "Resident Evil 2 Remake", size: "" },
-  { name: "Resident Evil 3 Remake", size: "" },
-  { name: "Resident Evil 7", size: "" },
-  { name: "Resident Evil Village", size: "" },
-  { name: "Devotion", size: "" },
-  { name: "Detention", size: "" },
-  { name: "Layers of Fear", size: "" },
-  { name: "Visage", size: "" },
-  { name: "The Mortuary Assistant", size: "" },
-  { name: "Fears to Fathom", size: "" },
-  { name: "Cry of Fear", size: "" },
-  { name: "SCP: Containment Breach", size: "" },
-  { name: "The Forest", size: "" },
-  { name: "Sons of the Forest", size: "" },
-  { name: "Green Hell", size: "" },
-  { name: "The Long Dark", size: "" },
-  { name: "Subnautica", size: "" },
-  { name: "Subnautica: Below Zero", size: "" },
-
-  // ===== Нарративные / квесты (сингл, прохождение) =====
-  { name: "Firewatch", size: "" },
-  { name: "What Remains of Edith Finch", size: "" },
-  { name: "The Stanley Parable: Ultra Deluxe", size: "" },
-  { name: "The Beginner's Guide", size: "" },
-  { name: "The Vanishing of Ethan Carter", size: "" },
-  { name: "Everybody's Gone to the Rapture", size: "" },
-  { name: "Dear Esther", size: "" },
-  { name: "Gone Home", size: "" },
-  { name: "Tacoma", size: "" },
-  { name: "Oxenfree", size: "" },
-  { name: "Oxenfree II", size: "" },
-  { name: "Life is Strange", size: "" },
-  { name: "Life is Strange: Before the Storm", size: "" },
-  { name: "Life is Strange: True Colors", size: "" },
-  { name: "Tell Me Why", size: "" },
-  { name: "As Dusk Falls", size: "" },
-  { name: "The Wolf Among Us", size: "" },
-  { name: "The Walking Dead", size: "" },
-  { name: "Batman: The Telltale Series", size: "" },
-  { name: "Tales from the Borderlands", size: "" },
-  { name: "Coffee Talk", size: "" },
-  { name: "Coffee Talk 2", size: "" },
-  { name: "VA-11 Hall-A", size: "" },
-  { name: "The Red Strings Club", size: "" },
-  { name: "Kathy Rain", size: "" },
-  { name: "Unavowed", size: "" },
-  { name: "Thimbleweed Park", size: "" },
-  { name: "Return to Monkey Island", size: "" },
-  { name: "Day of the Tentacle Remastered", size: "" },
-  { name: "Grim Fandango Remastered", size: "" },
-  { name: "Broken Sword", size: "" },
-  { name: "Syberia", size: "" },
-  { name: "The Room", size: "" },
-  { name: "The Room 2", size: "" },
-  { name: "The Room 3", size: "" },
-  { name: "The Room 4: Old Sins", size: "" },
-  { name: "House of Da Vinci", size: "" },
-  { name: "House of Da Vinci 2", size: "" },
-  { name: "Myst", size: "" },
-  { name: "Riven Remake", size: "" },
-  { name: "Return of the Obra Dinn", size: "" },
-  { name: "Papers, Please", size: "" },
-  { name: "The Case of the Golden Idol", size: "" },
-  { name: "Chants of Sennaar", size: "" },
-  { name: "Outer Wilds", size: "" },
-  { name: "Tunic", size: "" },
-  { name: "Animal Well", size: "" },
-
-  // ===== Головоломки / атмосферные (сингл, прохождение) =====
-  { name: "Baba Is You", size: "" },
-  { name: "Stephen's Sausage Roll", size: "" },
-  { name: "A Monster's Expedition", size: "" },
-  { name: "Patrick's Parabox", size: "" },
-  { name: "Recursed", size: "" },
-  { name: "Snakebird", size: "" },
-  { name: "Hexcells", size: "" },
-  { name: "Tametsi", size: "" },
-  { name: "The Witness", size: "" },
-  { name: "The Talos Principle", size: "" },
-  { name: "The Talos Principle 2", size: "" },
-  { name: "Superliminal", size: "" },
-  { name: "Manifold Garden", size: "" },
-  { name: "Antichamber", size: "" },
-  { name: "Q.U.B.E. 2", size: "" },
-  { name: "The Turing Test", size: "" },
-  { name: "Mini Metro", size: "" },
-  { name: "Mini Motorways", size: "" },
-  { name: "Dorfromantik", size: "" },
-  { name: "Unpacking", size: "" },
-  { name: "A Short Hike", size: "" },
-  { name: "Cocoon", size: "" },
-
-  // ===== Экшены / шутеры с синглом =====
-  { name: "Cuphead", size: "" },
-  { name: "Hotline Miami", size: "" },
-  { name: "Hotline Miami 2", size: "" },
-  { name: "Superhot", size: "" },
-  { name: "Superhot: Mind Control Delete", size: "" },
-  { name: "Ghostrunner", size: "" },
-  { name: "Ghostrunner 2", size: "" },
-  { name: "Neon White", size: "" },
-  { name: "Ultrakill", size: "" },
-  { name: "Dusk", size: "" },
-  { name: "Amid Evil", size: "" },
-  { name: "Ion Fury", size: "" },
-  { name: "Prodeus", size: "" },
-  { name: "Turbo Overkill", size: "" },
-  { name: "Severed Steel", size: "" },
-  { name: "Titanfall 2", size: "" },
-  { name: "Doom (2016)", size: "" },
-  { name: "Doom Eternal", size: "" },
-  { name: "Wolfenstein: The New Order", size: "" },
-  { name: "Wolfenstein II: The New Colossus", size: "" },
-  { name: "Metro 2033", size: "" },
-  { name: "Metro: Last Light", size: "" },
-  { name: "Metro Exodus", size: "" },
-  { name: "S.T.A.L.K.E.R.: Shadow of Chernobyl", size: "" },
-  { name: "S.T.A.L.K.E.R.: Call of Pripyat", size: "" },
-  { name: "Crysis", size: "" },
-  { name: "Crysis 2", size: "" },
-  { name: "Far Cry 3", size: "" },
-  { name: "Far Cry 4", size: "" },
-  { name: "Far Cry 5", size: "" },
-  { name: "Assassin's Creed II", size: "" },
-  { name: "Assassin's Creed: Brotherhood", size: "" },
-  { name: "Assassin's Creed IV: Black Flag", size: "" },
-  { name: "Assassin's Creed Origins", size: "" },
-  { name: "Assassin's Creed Odyssey", size: "" },
-  { name: "Batman: Arkham Asylum", size: "" },
-  { name: "Batman: Arkham City", size: "" },
-  { name: "Batman: Arkham Knight", size: "" },
-  { name: "Middle-earth: Shadow of Mordor", size: "" },
-  { name: "Middle-earth: Shadow of War", size: "" },
-  { name: "Mad Max", size: "" },
-  { name: "Sleeping Dogs", size: "" },
-  { name: "GTA III", size: "" },
-  { name: "GTA: Vice City", size: "" },
-  { name: "GTA: San Andreas", size: "" },
-  { name: "GTA IV", size: "" },
-  { name: "GTA V", size: "" },
-  { name: "Red Dead Redemption", size: "" },
-  { name: "Red Dead Redemption 2", size: "" },
-  { name: "Mafia", size: "" },
-  { name: "Mafia II", size: "" },
-  { name: "Mafia III", size: "" },
-  { name: "Saints Row: The Third", size: "" },
-  { name: "Saints Row IV", size: "" },
-  { name: "Just Cause 2", size: "" },
-  { name: "Just Cause 3", size: "" },
-
-  // ===== Стелс / тактика (сингл, прохождение) =====
-  { name: "Hitman: Blood Money", size: "" },
-  { name: "Hitman (2016)", size: "" },
-  { name: "Hitman 2", size: "" },
-  { name: "Hitman 3", size: "" },
-  { name: "Splinter Cell", size: "" },
-  { name: "Splinter Cell: Chaos Theory", size: "" },
-  { name: "Splinter Cell: Blacklist", size: "" },
-  { name: "Thief", size: "" },
-  { name: "Thief II: The Metal Age", size: "" },
-  { name: "Styx: Master of Shadows", size: "" },
-  { name: "Styx: Shards of Darkness", size: "" },
-  { name: "Mark of the Ninja", size: "" },
-  { name: "Aragami", size: "" },
-  { name: "Desperados III", size: "" },
-  { name: "Shadow Tactics: Blades of the Shogun", size: "" },
-  { name: "Commandos 2", size: "" },
-  { name: "XCOM: Enemy Unknown", size: "" },
-  { name: "XCOM 2", size: "" },
-  { name: "Phoenix Point", size: "" },
-  { name: "Gears Tactics", size: "" },
-  { name: "Mutant Year Zero", size: "" },
-  { name: "Into the Breach", size: "" },
-  { name: "FTL: Faster Than Light", size: "" },
-  { name: "Advance Wars", size: "" },
-  { name: "Wargroove", size: "" },
-  { name: "Wargroove 2", size: "" },
-  { name: "Songs of Conquest", size: "" },
-  { name: "Heroes of Might and Magic III", size: "" },
-  { name: "Heroes of Might and Magic V", size: "" },
-  { name: "Age of Wonders 4", size: "" },
-  { name: "Age of Wonders: Planetfall", size: "" },
-
-  // ===== Стратегии с кампанией (сингл, прохождение) =====
-  { name: "Civilization V", size: "" },
-  { name: "Civilization VI", size: "" },
-  { name: "Endless Legend", size: "" },
-  { name: "Endless Space 2", size: "" },
-  { name: "Stellaris", size: "" },
-  { name: "Hearts of Iron IV", size: "" },
-  { name: "Crusader Kings III", size: "" },
-  { name: "Europa Universalis IV", size: "" },
-  { name: "Victoria 3", size: "" },
-  { name: "Total War: Shogun 2", size: "" },
-  { name: "Total War: Rome II", size: "" },
-  { name: "Total War: Warhammer", size: "" },
-  { name: "Total War: Warhammer II", size: "" },
-  { name: "Total War: Warhammer III", size: "" },
-  { name: "Homeworld Remastered", size: "" },
-  { name: "Homeworld 3", size: "" },
-  { name: "Sins of a Solar Empire: Rebellion", size: "" },
-  { name: "Supreme Commander: Forged Alliance", size: "" },
-  { name: "Command & Conquer: Remastered", size: "" },
-  { name: "Red Alert 2", size: "" },
-  { name: "StarCraft II", size: "" },
-  { name: "Warcraft III: Reforged", size: "" },
-  { name: "Age of Empires II: Definitive Edition", size: "" },
-  { name: "Age of Empires IV", size: "" },
-  { name: "Age of Mythology: Extended Edition", size: "" },
-  { name: "Rise of Nations", size: "" },
-
-  // ===== Симуляторы с прогрессией (сингл, прохождение) =====
-  { name: "Stardew Valley", size: "" },
-  { name: "Terraria", size: "" },
-  { name: "Graveyard Keeper", size: "" },
-  { name: "My Time at Portia", size: "" },
-  { name: "My Time at Sandrock", size: "" },
-  { name: "Dinkum", size: "" },
-  { name: "Coral Island", size: "" },
-  { name: "Sun Haven", size: "" },
-  { name: "Roots of Pacha", size: "" },
-  { name: "Littlewood", size: "" },
-  { name: "Forager", size: "" },
-  { name: "Astroneer", size: "" },
-  { name: "Raft", size: "" },
-  { name: "Planet Crafter", size: "" },
-  { name: "Satisfactory", size: "" },
-  { name: "Factorio", size: "" },
-  { name: "Dyson Sphere Program", size: "" },
-  { name: "Shapez", size: "" },
-  { name: "Mindustry", size: "" },
-  { name: "Oxygen Not Included", size: "" },
-  { name: "RimWorld", size: "" },
-  { name: "Prison Architect", size: "" },
-  { name: "Two Point Hospital", size: "" },
-  { name: "Two Point Campus", size: "" },
-  { name: "Project Hospital", size: "" },
-  { name: "Game Dev Tycoon", size: "" },
-  { name: "Mad Games Tycoon 2", size: "" },
-  { name: "City Game Studio", size: "" },
-  { name: "Software Inc.", size: "" },
-  { name: "Production Line", size: "" },
-  { name: "Big Pharma", size: "" },
-  { name: "Academia: School Simulator", size: "" },
-  { name: "RollerCoaster Tycoon 2", size: "" },
-  { name: "Parkitect", size: "" },
-  { name: "Planet Coaster", size: "" },
-  { name: "Planet Zoo", size: "" },
-  { name: "Anno 1800", size: "" },
-  { name: "Anno 1404", size: "" },
-  { name: "Tropico 6", size: "" },
-  { name: "Cities: Skylines", size: "" },
-  { name: "Cities: Skylines II", size: "" },
-
-  // ===== Карточные / настольные с синглом =====
-  { name: "Inscryption", size: "" },
-  { name: "Slay the Spire", size: "" },
-  { name: "Monster Train", size: "" },
-  { name: "Griftlands", size: "" },
-  { name: "Across the Obelisk", size: "" },
-  { name: "Roguebook", size: "" },
-  { name: "Faeria", size: "" },
-  { name: "Magic: The Gathering Arena", size: "" },
-  { name: "Legends of Runeterra", size: "" },
-  { name: "Hearthstone", size: "" },
-  { name: "Gwent: The Witcher Card Game", size: "" },
-  { name: "Balatro", size: "" },
-  { name: "Luck be a Landlord", size: "" },
-  { name: "Peglin", size: "" },
-  { name: "Backpack Hero", size: "" },
-  { name: "Loop Hero", size: "" },
-  { name: "Dome Keeper", size: "" },
-  { name: "Wall World", size: "" },
-  { name: "Core Keeper", size: "" },
-  { name: "Streets of Rogue", size: "" },
-  { name: "Neon Abyss", size: "" },
-  { name: "Undermine", size: "" },
-  { name: "Atomicrops", size: "" },
-  { name: "Gunfire Reborn", size: "" },
-  { name: "Roboquest", size: "" },
-  { name: "Ravenswatch", size: "" },
-  { name: "Enter the Gungeon", size: "" },
-  { name: "The Binding of Isaac: Rebirth", size: "" },
-  { name: "Risk of Rain 2", size: "" },
-  { name: "Risk of Rain Returns", size: "" },
-  { name: "Noita", size: "" },
-  { name: "Spelunky 2", size: "" },
-  { name: "Rogue Legacy 2", size: "" },
-  { name: "Skul: The Hero Slayer", size: "" },
-  { name: "Astral Ascent", size: "" },
-  { name: "Oblivion Override", size: "" },
-  { name: "Vampire Survivors", size: "" },
-
-  // ===== Ритм-игры с синглом/кампанией =====
-  { name: "Crypt of the NecroDancer", size: "" },
-  { name: "Cadence of Hyrule", size: "" },
-  { name: "Soundodger 2", size: "" },
-  { name: "A Dance of Fire and Ice", size: "" },
-  { name: "Rhythm Doctor", size: "" },
-  { name: "Friday Night Funkin'", size: "" },
-  { name: "Muse Dash", size: "" },
-  { name: "Cytus II", size: "" },
-  { name: "Deemo", size: "" },
-  { name: "VOEZ", size: "" },
-  { name: "Arcaea", size: "" },
-  { name: "Project Diva Mega Mix", size: "" },
-  { name: "Taiko no Tatsujin", size: "" },
-  { name: "Groove Coaster", size: "" },
-  { name: "DJMAX Respect V", size: "" },
-  { name: "Tetris Effect", size: "" },
-  { name: "Lumines Remastered", size: "" },
-  { name: "Rez Infinite", size: "" },
-  { name: "Thumper", size: "" },
-  { name: "Beat Saber", size: "" },
-
-  // ===== Сингл + мульт (но есть прохождение/кампания) =====
-  { name: "It Takes Two", size: "" },
-  { name: "A Way Out", size: "" },
-  { name: "Overcooked", size: "" },
-  { name: "Overcooked 2", size: "" },
-  { name: "Moving Out", size: "" },
-  { name: "Moving Out 2", size: "" },
-  { name: "Human: Fall Flat", size: "" },
-  { name: "Gang Beasts", size: "" },
-  { name: "Castle Crashers", size: "" },
-  { name: "BattleBlock Theater", size: "" },
-  { name: "Pit People", size: "" },
-  { name: "Alien Swarm: Reactive Drop", size: "" },
-  { name: "Warhammer: Vermintide 2", size: "" },
-  { name: "Warhammer 40,000: Darktide", size: "" },
-  { name: "Left 4 Dead 2", size: "" },
-  { name: "Back 4 Blood", size: "" },
-  { name: "World War Z", size: "" },
-  { name: "Payday 2", size: "" },
-  { name: "Payday 3", size: "" },
-  { name: "Killing Floor 2", size: "" },
-  { name: "Deep Rock Galactic", size: "" },
-  { name: "Sea of Thieves", size: "" },
-  { name: "Valheim", size: "" },
-  { name: "V Rising", size: "" },
-  { name: "Enshrouded", size: "" },
-  { name: "Palworld", size: "" },
-  { name: "Rust", size: "" },
-  { name: "Ark: Survival Evolved", size: "" },
-  { name: "Conan Exiles", size: "" },
-  { name: "The Front", size: "" },
-  { name: "Smalland", size: "" },
-  { name: "Grounded", size: "" },
-  { name: "Terraria", size: "" },
-  { name: "Rocket League", size: "" },
-  { name: "Brawlhalla", size: "" },
-  { name: "Multiversus", size: "" },
-  { name: "Fall Guys", size: "" },
-  { name: "Among Us", size: "" },
-  { name: "Lethal Company", size: "" },
-  { name: "Content Warning", size: "" },
-  { name: "Phasmophobia", size: "" },
-  { name: "Demonologist", size: "" },
-  { name: "REPO", size: "" },
-  { name: "Schedule I", size: "" },
-   // ===== ДОПОЛНИТЕЛЬНЫЕ 100 ИГР (без повторов) =====
-
-  // ----- Метроидвании / экшн-платформеры -----
-  { name: "Bo: Path of the Teal Lotus", size: "" },
-  { name: "Momodora: Reverie Under the Moonlight", size: "" },
-  { name: "Timespinner", size: "" },
-  { name: "Chasm", size: "" },
-  { name: "Record of Lodoss War: Deedlit in Wonder Labyrinth", size: "" },
-  { name: "Touhou Luna Nights", size: "" },
-  { name: "Rusted Moss", size: "" },
-  { name: "La-Mulana", size: "" },
-  { name: "La-Mulana 2", size: "" },
-  { name: "Environmental Station Alpha", size: "" },
-
-  // ----- Сюжетные RPG / JRPG -----
-  { name: "Clair Obscur: Expedition 33", size: "" },
-  { name: "Metaphor: ReFantazio", size: "" },
-  { name: "Like a Dragon: Infinite Wealth", size: "" },
-  { name: "Persona 3 Reload", size: "" },
-  { name: "Persona 4 Golden", size: "" },
-  { name: "Persona 5 Royal", size: "" },
-  { name: "Octopath Traveler II", size: "" },
-  { name: "Live A Live", size: "" },
-  { name: "Triangle Strategy", size: "" },
-  { name: "Tactics Ogre: Reborn", size: "" },
-  { name: "Unicorn Overlord", size: "" },
-  { name: "Dragon's Dogma 2", size: "" },
-  { name: "Yakuza 0", size: "" },
-  { name: "Yakuza: Like a Dragon", size: "" },
-  { name: "Nier: Automata", size: "" },
-  { name: "Nier Replicant ver.1.22", size: "" },
-  { name: "Final Fantasy VII Remake", size: "" },
-  { name: "Final Fantasy XVI", size: "" },
-  { name: "Chrono Trigger", size: "" },
-  { name: "Suikoden I&II HD Remaster", size: "" },
-
-  // ----- Хорроры / выживание -----
-  { name: "Crow Country", size: "" },
-  { name: "Still Wakes the Deep", size: "" },
-  { name: "The Casting of Frank Stone", size: "" },
-  { name: "Until Dawn", size: "" },
-  { name: "Silent Hill 2 Remake", size: "" },
-  { name: "Alone in the Dark (2024)", size: "" },
-  { name: "Killer Frequency", size: "" },
-  { name: "Bendy and the Ink Machine", size: "" },
-  { name: "Poppy Playtime", size: "" },
-  { name: "Iron Lung", size: "" },
-  { name: "Darkwood", size: "" },
-  { name: "World of Horror", size: "" },
-  { name: "Faith: The Unholy Trinity", size: "" },
-  { name: "Anatomy", size: "" },
-  { name: "Puppet Combo's Nun Massacre", size: "" },
-
-  // ----- Нарративные / квесты / головоломки -----
-  { name: "Blue Prince", size: "" },
-  { name: "The Rise of the Golden Idol", size: "" },
-  { name: "Lorelei and the Laser Eyes", size: "" },
-  { name: "Indika", size: "" },
-  { name: "1000xRESIST", size: "" },
-  { name: "Thank Goodness You're Here!", size: "" },
-  { name: "Tactical Breach Wizards", size: "" },
-  { name: "Caves of Qud", size: "" },
-  { name: "Dwarf Fortress", size: "" },
-  { name: "UFO 50", size: "" },
-  { name: "Kentucky Route Zero", size: "" },
-  { name: "Paradise Killer", size: "" },
-  { name: "Umineko When They Cry", size: "" },
-  { name: "Higurashi When They Cry", size: "" },
-  { name: "Danganronpa: Trigger Happy Havoc", size: "" },
-  { name: "Zero Escape: Virtue's Last Reward", size: "" },
-  { name: "AI: The Somnium Files", size: "" },
-  { name: "428: Shibuya Scramble", size: "" },
-
-  // ----- Экшены / шутеры / соулслайки -----
-  { name: "Black Myth: Wukong", size: "" },
-  { name: "Stellar Blade", size: "" },
-  { name: "Wuchang: Fallen Feathers", size: "" },
-  { name: "Lies of P", size: "" },
-  { name: "Lords of the Fallen (2023)", size: "" },
-  { name: "Armored Core VI: Fires of Rubicon", size: "" },
-  { name: "Sekiro: Shadows Die Twice", size: "" },
-  { name: "Elden Ring", size: "" },
-  { name: "Remnant II", size: "" },
-  { name: "Nioh 2", size: "" },
-  { name: "Wo Long: Fallen Dynasty", size: "" },
-  { name: "The Surge 2", size: "" },
-  { name: "Mortal Shell", size: "" },
-  { name: "Hellpoint", size: "" },
-  { name: "Returnal", size: "" },
-
-  // ----- Стелс / тактика / стратегии -----
-  { name: "Shadow Gambit: The Cursed Crew", size: "" },
-  { name: "Airborne Kingdom", size: "" },
-  { name: "The Wandering Village", size: "" },
-  { name: "Against the Storm", size: "" },
-  { name: "Manor Lords", size: "" },
-  { name: "Frostpunk 2", size: "" },
-  { name: "Sins of a Solar Empire II", size: "" },
-  { name: "Men of War II", size: "" },
-  { name: "Jagged Alliance 3", size: "" },
-  { name: "BattleTech", size: "" },
-  { name: "Battletech", size: "" },
-  { name: "Fire Emblem: Three Houses", size: "" },
-  { name: "Fire Emblem Engage", size: "" },
-  { name: "Valkyria Chronicles", size: "" },
-  { name: "Valkyria Chronicles 4", size: "" },
-
-  // ----- Симуляторы / выживание / строительство -----
-  { name: "Farming Simulator 25", size: "" },
-  { name: "Lightyear Frontier", size: "" },
-  { name: "Bellwright", size: "" },
-  { name: "ASKA", size: "" },
-  { name: "Nightingale", size: "" },
-  { name: "Pacific Drive", size: "" },
-  { name: "Abiotic Factor", size: "" },
-  { name: "Icarus", size: "" },
-  { name: "7 Days to Die", size: "" },
-  { name: "Stationeers", size: "" },
-
-  // ----- Рогалики / карточные / аркады -----
-  { name: "Hades II", size: "" },
-  { name: "Windblown", size: "" },
-  { name: "Sworn", size: "" },
-  { name: "33 Immortals", size: "" },
-  { name: "The Rogue Prince of Persia", size: "" },
-  { name: "Cult of the Lamb", size: "" },
-  { name: "Have a Nice Death", size: "" },
-  { name: "Dead Estate", size: "" },
-  { name: "Tiny Rogues", size: "" },
-  { name: "Halls of Torment", size: "" },
-  { name: "Brotato", size: "" },
-  { name: "20 Minutes Till Dawn", size: "" },
-  { name: "Deep Rock Galactic: Survivor", size: "" },
-  { name: "Slay the Spire 2", size: "" },
-  { name: "Balatro", size: "" },
-
-  // ----- Инди / разное -----
-  { name: "Neva", size: "" },
-  { name: "The Plucky Squire", size: "" },
-  { name: "Hauntii", size: "" },
-  { name: "Children of the Sun", size: "" },
-  { name: "Ultros", size: "" },
-  { name: "Arctic Eggs", size: "" },
-  { name: "Judero", size: "" },
-  { name: "Despelote", size: "" },
-  { name: "Consume Me", size: "" },
-  { name: "The Exit 8", size: "" },
-
-  // ----- Крупные релизы -----
-  { name: "Kingdom Come: Deliverance II", size: "" },
-  { name: "Monster Hunter Wilds", size: "" },
-  { name: "Elden Ring: Nightreign", size: "" },
-  { name: "Borderlands 4", size: "" },
-  { name: "Civilization VII", size: "" },
-  { name: "Assassin's Creed Shadows", size: "" },
-  { name: "Split Fiction", size: "" },
-  { name: "Dune: Awakening", size: "" },
-  { name: "Doom: The Dark Ages", size: "" },
-  { name: "Grand Theft Auto VI", size: "" },
-];
-
 const COLORS = [
   "#ff6b6b", "#ffd93d", "#6bcB77", "#4d96ff", "#c77dff",
   "#ff9f1c", "#2ec4b6", "#e71d36", "#9d4edd", "#06d6a0",
@@ -848,10 +196,12 @@ const COLORS = [
 ];
 
 // ====== СОСТОЯНИЕ ======
+let ALL_GAMES = [];   // загружается из games.txt
 let games = [];
 let history = [];
 let spinning = false;
 let rotation = 0;
+let loaded = false;
 
 const canvas = document.getElementById('wheel');
 const ctx = canvas.getContext('2d', { alpha: true, desynchronized: true });
@@ -887,8 +237,6 @@ const CY = SIZE / 2;
 const R = SIZE / 2 - 10;
 
 // ====== ИНВЕРТИРОВАННЫЙ ВЕС ======
-// Чем больше голосов — тем меньше шанс вылета.
-// inverse = 1 / (votes + 1) — чтобы не делить на 0 и сгладить крайности.
 function inverseWeight(g) {
   return 1 / (g.weight + 1);
 }
@@ -914,8 +262,40 @@ function invalidateCache() {
   cachedSegs = null;
 }
 
+// ====== ЗАГРУЗКА ИГР ИЗ games.txt ======
+async function loadGames() {
+  try {
+    const resp = await fetch('games.txt', { cache: 'no-store' });
+    if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+    const text = await resp.text();
+
+    // Игры перечислены через запятую; переносы строк игнорируем
+    const names = text
+      .split(',')
+      .map(s => s.trim())
+      .filter(s => s.length > 0);
+
+    if (names.length === 0) {
+      throw new Error('Файл games.txt пуст или не содержит игр');
+    }
+
+    ALL_GAMES = names.map(name => ({ name, size: '' }));
+    loaded = true;
+    initGame();
+    resultEl.textContent = `✅ Загружено игр: ${ALL_GAMES.length}. Крутите!`;
+    resultEl.className = 'result';
+  } catch (err) {
+    console.error('Ошибка загрузки games.txt:', err);
+    resultEl.textContent = `❌ Не удалось загрузить games.txt (${err.message}). Проверьте, что файл лежит рядом с HTML и сервер запущен.`;
+    resultEl.className = 'result error';
+    spinBtn.disabled = true;
+    shuffleBtn.disabled = true;
+  }
+}
+
 // ====== ИНИЦИАЛИЗАЦИЯ ======
 function initGame() {
+  if (!loaded) return;
   games = ALL_GAMES.map(g => ({ ...g, weight: 0 }));
   history = [];
   rotation = 0;
@@ -941,7 +321,7 @@ function distributeVotes() {
   drawWheel();
 }
 
-// ====== ВЗВЕШЕННЫЙ ВЫБОР (по инвертированному весу) ======
+// ====== ВЗВЕШЕННЫЙ ВЫБОР ======
 function weightedPick(items) {
   const total = items.reduce((s, i) => s + inverseWeight(i), 0);
   let r = Math.random() * total;
@@ -972,8 +352,6 @@ function renderStaticWheel() {
   segs.forEach(seg => {
     const { game, start, sweep, idx, inv } = seg;
     const color = COLORS[idx % COLORS.length];
-
-    // Яркость: чем больше inverse (чем меньше голосов) — тем ярче
     const intensity = 0.35 + 0.65 * (inv / maxInv);
 
     offCtx.globalAlpha = 0.55 + 0.45 * intensity;
@@ -989,7 +367,6 @@ function renderStaticWheel() {
     offCtx.stroke();
   });
 
-  // Подписи
   segs.forEach(seg => {
     const { game, start, sweep } = seg;
     if (sweep < 0.04) return;
@@ -1016,7 +393,6 @@ function renderStaticWheel() {
     offCtx.restore();
   });
 
-  // Центр
   offCtx.beginPath();
   offCtx.arc(CX, CY, 70, 0, Math.PI * 2);
   offCtx.fillStyle = '#0d0d1a';
@@ -1041,7 +417,7 @@ function drawWheel() {
   ctx.restore();
 }
 
-// ====== ОТОБРАЖЕНИЕ ГОЛОСОВ И ШАНСОВ ======
+// ====== ОТОБРАЖЕНИЕ ГОЛОСОВ ======
 function renderVotes() {
   const totalInv = games.reduce((s, g) => s + inverseWeight(g), 0) || 1;
   const indexed = games.map((g, i) => ({
@@ -1049,7 +425,6 @@ function renderVotes() {
     colorIdx: i,
     chance: (inverseWeight(g) / totalInv) * 100
   }));
-  // сортируем по голосам (убывание) — сверху самые защищённые
   indexed.sort((a, b) => b.weight - a.weight);
 
   voteListEl.innerHTML = indexed.map(g => {
@@ -1089,7 +464,7 @@ function spin() {
   if (spinning || games.length === 0) return;
 
   if (games.length === 1) {
-    resultEl.textContent = `🏆 Победитель: ${games[0].name} (${games[0].size})`;
+    resultEl.textContent = `🏆 Победитель: ${games[0].name}`;
     resultEl.className = 'result winner';
     return;
   }
@@ -1163,16 +538,16 @@ function finishSpin(winner) {
   invalidateCache();
 
   historyListEl.innerHTML = history.map((g, i) =>
-    `<li>${g.name} <span style="color:#888;font-size:.8em">(${g.size})</span>${i === history.length - 1 ? ' ← выбыла' : ''}</li>`
+    `<li>${g.name}${i === history.length - 1 ? ' ← выбыла' : ''}</li>`
   ).join('');
 
   if (games.length === 1) {
     const champ = games[0];
     history.push(champ);
     historyListEl.innerHTML = history.map((g, i) =>
-      `<li>${g.name} <span style="color:#888;font-size:.8em">(${g.size})</span>${i === history.length - 1 ? ' 🏆' : ' ← выбыла'}</li>`
+      `<li>${g.name}${i === history.length - 1 ? ' 🏆' : ' ← выбыла'}</li>`
     ).join('');
-    resultEl.textContent = `🏆 Победитель: ${champ.name} (${champ.size})`;
+    resultEl.textContent = `🏆 Победитель: ${champ.name}`;
     resultEl.className = 'result winner';
     games = [];
     invalidateCache();
@@ -1185,12 +560,12 @@ function finishSpin(winner) {
   }
 
   if (games.length === 0) {
-    resultEl.textContent = `🏆 Победитель: ${winner.name} (${winner.size})`;
+    resultEl.textContent = `🏆 Победитель: ${winner.name}`;
     resultEl.className = 'result winner';
     spinBtn.disabled = true;
     shuffleBtn.disabled = true;
   } else {
-    resultEl.textContent = `❌ Выбывает: ${winner.name} (${winner.size})`;
+    resultEl.textContent = `❌ Выбывает: ${winner.name}`;
     resultEl.className = 'result out';
     spinBtn.disabled = false;
     shuffleBtn.disabled = false;
@@ -1221,7 +596,7 @@ shuffleBtn.addEventListener('click', () => {
 });
 
 resetBtn.addEventListener('click', () => {
-  if (spinning) return;
+  if (spinning || !loaded) return;
   initGame();
 });
 
@@ -1232,7 +607,7 @@ window.addEventListener('resize', () => {
 });
 
 // ====== СТАРТ ======
-initGame();
+loadGames();
 </script>
 </body>
 </html>
