@@ -196,12 +196,14 @@ const COLORS = [
 ];
 
 // ====== СОСТОЯНИЕ ======
-let ALL_GAMES = [];   // загружается из games.txt
-let games = [];
+let ALL_GAMES = [];   // полный список из games.txt
+let games = [];       // текущие игры для крутки (до 50)
 let history = [];
 let spinning = false;
 let rotation = 0;
 let loaded = false;
+
+const SPIN_COUNT = 50; // сколько случайных игр выбираем для крутки
 
 const canvas = document.getElementById('wheel');
 const ctx = canvas.getContext('2d', { alpha: true, desynchronized: true });
@@ -262,6 +264,19 @@ function invalidateCache() {
   cachedSegs = null;
 }
 
+// ====== ВЫБОР СЛУЧАЙНЫХ ИГР ДЛЯ КРУТКИ ======
+function pickRandomGames() {
+  // Копируем полный список и перемешиваем (Fisher-Yates)
+  const pool = ALL_GAMES.slice();
+  for (let i = pool.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [pool[i], pool[j]] = [pool[j], pool[i]];
+  }
+  // Берём не больше SPIN_COUNT, но и не больше, чем есть
+  const count = Math.min(SPIN_COUNT, pool.length);
+  return pool.slice(0, count).map(g => ({ ...g, weight: 0 }));
+}
+
 // ====== ЗАГРУЗКА ИГР ИЗ games.txt ======
 async function loadGames() {
   try {
@@ -282,7 +297,12 @@ async function loadGames() {
     ALL_GAMES = names.map(name => ({ name, size: '' }));
     loaded = true;
     initGame();
-    resultEl.textContent = `✅ Загружено игр: ${ALL_GAMES.length}. Крутите!`;
+
+    if (ALL_GAMES.length <= SPIN_COUNT) {
+      resultEl.textContent = `✅ Загружено игр: ${ALL_GAMES.length}. Крутите!`;
+    } else {
+      resultEl.textContent = `✅ Загружено игр: ${ALL_GAMES.length}. В крутку выбрано ${SPIN_COUNT}. Крутите!`;
+    }
     resultEl.className = 'result';
   } catch (err) {
     console.error('Ошибка загрузки games.txt:', err);
@@ -296,7 +316,8 @@ async function loadGames() {
 // ====== ИНИЦИАЛИЗАЦИЯ ======
 function initGame() {
   if (!loaded) return;
-  games = ALL_GAMES.map(g => ({ ...g, weight: 0 }));
+  // Выбираем случайные SPIN_COUNT игр из полного списка
+  games = pickRandomGames();
   history = [];
   rotation = 0;
   spinning = false;
@@ -427,8 +448,10 @@ function renderVotes() {
   }));
   indexed.sort((a, b) => b.weight - a.weight);
 
+  const maxWeight = Math.max(...games.map(x => x.weight), 1);
+
   voteListEl.innerHTML = indexed.map(g => {
-    const barPct = (g.weight / Math.max(...games.map(x => x.weight), 1)) * 100;
+    const barPct = (g.weight / maxWeight) * 100;
     const color = COLORS[g.colorIdx % COLORS.length];
     return `
       <div class="vote-row">
@@ -581,18 +604,32 @@ spinBtn.addEventListener('click', spin);
 
 shuffleBtn.addEventListener('click', () => {
   if (spinning) return;
-  if (games.length <= 1) return;
+  if (!loaded) return;
+
+  // Заново выбираем случайные SPIN_COUNT игр из полного списка
+  games = pickRandomGames();
+  history = [];
+  rotation = 0;
+  historyListEl.innerHTML = '';
+
   games.forEach(g => {
     let w = Math.floor(Math.random() * 100) + 1;
     if (Math.random() < 0.12) w += Math.floor(Math.random() * 200);
     g.weight = w;
   });
+
   invalidateCache();
   renderVotes();
   renderStaticWheel();
   drawWheel();
-  resultEl.textContent = '🔀 Голоса перераспределены!';
+
+  resultEl.textContent = ALL_GAMES.length > SPIN_COUNT
+    ? `🔀 Выбрано ${SPIN_COUNT} случайных игр из ${ALL_GAMES.length}, голоса перераспределены!`
+    : `🔀 Голоса перераспределены!`;
   resultEl.className = 'result';
+
+  spinBtn.disabled = false;
+  shuffleBtn.disabled = false;
 });
 
 resetBtn.addEventListener('click', () => {
