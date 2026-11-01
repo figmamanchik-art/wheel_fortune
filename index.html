@@ -115,7 +115,20 @@
   .setup-list-item > span:first-child {
     flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
   }
-  .setup-list-item .hidden-votes { color: #ff6b6b; font-weight: bold; letter-spacing: 2px;}
+  
+  /* Ссылка в списке настройки */
+  .setup-link {
+    color: #ffd700;
+    text-decoration: none;
+    font-size: 0.8rem;
+    padding: 4px 10px;
+    border: 1px solid rgba(255,215,0,.3);
+    border-radius: 12px;
+    transition: all .15s;
+    white-space: nowrap;
+  }
+  .setup-link:hover { background: rgba(255,215,0,.15); }
+
   .replace-btn {
     background: transparent; border: 1px solid rgba(255,255,255,.2);
     border-radius: 50%; width: 26px; height: 26px; min-width: 26px;
@@ -210,8 +223,22 @@
   .vote-list, .history-list { max-height: 340px; overflow-y: auto; padding-right: 6px; }
   .vote-list::-webkit-scrollbar, .history-list::-webkit-scrollbar { width: 6px; }
   .vote-list::-webkit-scrollbar-thumb, .history-list::-webkit-scrollbar-thumb { background: rgba(255,255,255,.2); border-radius: 3px; }
+  
   .vote-row { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; font-size: .8rem; }
-  .vote-name { width: 140px; flex-shrink: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  
+  .vote-name { 
+    width: 140px; flex-shrink: 0; display: flex; align-items: center; justify-content: space-between;
+  }
+  .vote-name span {
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  /* Ссылка в панели голосов */
+  .vote-link {
+    color: #ffd700; text-decoration: none; font-size: 1.1em; margin-left: 6px;
+    opacity: 0.7; transition: opacity 0.15s;
+  }
+  .vote-link:hover { opacity: 1; transform: scale(1.1); }
+
   .vote-bar-bg { flex: 1; height: 14px; background: rgba(255,255,255,.08); border-radius: 7px; overflow: hidden; }
   .vote-bar { height: 100%; border-radius: 7px; transition: width .5s ease; }
   .vote-count { width: 36px; text-align: right; font-weight: bold; color: #ffd700; font-size: .75rem; }
@@ -356,14 +383,17 @@
     position: relative;
     z-index: 1;
     padding: 0 8px;
+    margin-top: 15%; /* Сдвигаем текст чуть вниз, чтобы он не перекрывался кнопкой */
     text-shadow:
       0 2px 8px rgba(0,0,0,.95),
       0 0 20px rgba(0,0,0,.8),
       0 0 40px rgba(0,0,0,.6);
   }
+  
   .auction-card .card-votes {
     position: absolute;
-    top: 10px; right: 15px;
+    bottom: 10px; /* Кружок голосов переехал вниз */
+    right: 15px;
     background: #ffd700; color: #1a1a2e;
     border-radius: 50%;
     width: 36px; height: 36px;
@@ -373,26 +403,28 @@
     box-shadow: 0 2px 10px rgba(0,0,0,.5);
   }
 
-  /* Стиль для кнопки "ссылка" */
+  /* НОВАЯ КНОПКА НА ВСЮ ШИРИНУ */
   .auction-card .card-link {
     position: absolute;
-    top: 10px;
-    left: 15px;
-    background: rgba(0, 0, 0, 0.6);
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 20%; /* Занимает 20% высоты карточки */
+    background: rgba(0, 0, 0, 0.7);
     color: #fff;
-    padding: 4px 10px;
-    border-radius: 12px;
-    font-size: 0.75rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: clamp(0.8rem, 1.5vw, 1.1rem);
     text-decoration: none;
     z-index: 3;
     transition: all 0.15s;
-    font-weight: normal;
-    border: 1px solid rgba(255,255,255,0.2);
+    font-weight: bold;
+    border-bottom: 1px solid rgba(255,255,255,0.15);
   }
   .auction-card .card-link:hover {
     background: #ffd700;
     color: #1a1a2e;
-    border-color: #ffd700;
   }
 
   .auction-bottom {
@@ -910,13 +942,16 @@
   }
 
   function renderSetupList() {
-    setupListEl.innerHTML = games.map((g, idx) => `
-      <div class="setup-list-item">
-        <span title="${esc(g.name)}">${esc(g.name)}</span>
-        <span class="hidden-votes">???</span>
-        <button class="replace-btn" data-idx="${idx}" title="Заменить на другую игру">🔄</button>
-      </div>
-    `).join('');
+    setupListEl.innerHTML = games.map((g, idx) => {
+      const searchUrl = `https://www.google.com/search?q=${encodeURIComponent(g.name + ' игра')}&tbm=isch`;
+      return `
+        <div class="setup-list-item">
+          <span title="${esc(g.name)}">${esc(g.name)}</span>
+          <a href="${searchUrl}" target="_blank" class="setup-link">ссылка</a>
+          <button class="replace-btn" data-idx="${idx}" title="Заменить на другую игру">🔄</button>
+        </div>
+      `;
+    }).join('');
   }
 
   function replaceGame(idx) {
@@ -1053,8 +1088,12 @@
     voteListEl.innerHTML = idx.map(g => {
       const barPct = (g.weight / maxW) * 100;
       const color = COLORS[g.colorIdx % COLORS.length];
+      const searchUrl = `https://www.google.com/search?q=${encodeURIComponent(g.name + ' игра')}&tbm=isch`;
       return `<div class="vote-row">
-        <div class="vote-name" title="${esc(g.name)}">${esc(g.name)}</div>
+        <div class="vote-name" title="${esc(g.name)}">
+          <span>${esc(g.name)}</span>
+          <a href="${searchUrl}" target="_blank" class="vote-link" title="Искать картинки">🔍</a>
+        </div>
         <div class="vote-bar-bg"><div class="vote-bar" style="width:${barPct}%;background:${color}"></div></div>
         <div class="vote-count">${g.weight}</div>
         <div class="chance" title="Шанс вылета">${g.chance.toFixed(1)}%</div>
