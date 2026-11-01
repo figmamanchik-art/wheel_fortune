@@ -3,157 +3,128 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>🎡 Колесо Фортуны Папича — инверсия</title>
+<title>🎡 Колесо Фортуны Папича</title>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body {
     font-family: 'Segoe UI', Tahoma, sans-serif;
     background: radial-gradient(circle at 50% 20%, #2a1a4a, #0d0d1a 70%);
-    color: #fff;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 20px;
+    color: #fff; min-height: 100vh; display: flex; flex-direction: column;
+    align-items: center; padding: 20px;
   }
   h1 {
-    font-size: 2rem;
-    margin-bottom: 6px;
-    text-align: center;
+    font-size: 2rem; margin-bottom: 6px; text-align: center;
     background: linear-gradient(90deg, #ffd700, #ff6b6b, #ffd700);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-    text-shadow: 0 0 20px rgba(255,215,0,.3);
+    -webkit-background-clip: text; background-clip: text;
+    color: transparent; text-shadow: 0 0 20px rgba(255,215,0,.3);
   }
   .subtitle { color: #aaa; margin-bottom: 18px; text-align: center; font-size: .9rem; }
-
   .wheel-wrap {
-    position: relative;
-    width: 720px;
-    height: 720px;
-    max-width: 94vw;
-    max-height: 94vw;
-    margin-bottom: 22px;
-    will-change: transform;
+    position: relative; width: 720px; height: 720px;
+    max-width: 94vw; max-height: 94vw; margin-bottom: 22px;
   }
-  canvas { width: 100%; height: 100%; display: block; filter: drop-shadow(0 0 40px rgba(255,215,0,.25)); }
-
+  canvas { width: 100%; height: 100%; display: block;
+    filter: drop-shadow(0 0 40px rgba(255,215,0,.25)); }
   .pointer {
-    position: absolute;
-    top: -4px;
-    left: 50%;
-    transform: translateX(-50%);
+    position: absolute; top: -4px; left: 50%; transform: translateX(-50%);
     width: 0; height: 0;
-    border-left: 24px solid transparent;
-    border-right: 24px solid transparent;
+    border-left: 24px solid transparent; border-right: 24px solid transparent;
     border-top: 46px solid #ffd700;
-    filter: drop-shadow(0 0 10px #ffd700);
-    z-index: 10;
-    pointer-events: none;
+    filter: drop-shadow(0 0 10px #ffd700); z-index: 10; pointer-events: none;
   }
-
-  .controls {
-    display: flex;
-    gap: 16px;
-    flex-wrap: wrap;
-    justify-content: center;
-    margin-bottom: 18px;
-  }
-  .btn {
-    padding: 16px 42px;
-    font-size: 1.15rem;
-    font-weight: bold;
-    border: none;
-    border-radius: 50px;
-    cursor: pointer;
-    transition: transform .15s, box-shadow .15s;
-  }
+  .controls { display: flex; gap: 16px; flex-wrap: wrap;
+    justify-content: center; margin-bottom: 18px; }
+  .btn { padding: 16px 42px; font-size: 1.15rem; font-weight: bold;
+    border: none; border-radius: 50px; cursor: pointer;
+    transition: transform .15s, box-shadow .15s; }
   .btn:hover:not(:disabled) { transform: scale(1.05); }
   .btn:disabled { opacity: .5; cursor: not-allowed; }
   .btn-spin {
     background: linear-gradient(135deg, #ffd700, #ff8c00);
-    color: #1a1a2e;
-    box-shadow: 0 6px 25px rgba(255,215,0,.4);
+    color: #1a1a2e; box-shadow: 0 6px 25px rgba(255,215,0,.4);
   }
   .btn-spin:hover:not(:disabled) { box-shadow: 0 8px 35px rgba(255,215,0,.6); }
   .btn-shuffle {
     background: linear-gradient(135deg, #4d96ff, #6bcB77);
-    color: #fff;
-    box-shadow: 0 6px 25px rgba(77,150,255,.4);
+    color: #fff; box-shadow: 0 6px 25px rgba(77,150,255,.4);
   }
   .btn-shuffle:hover:not(:disabled) { box-shadow: 0 8px 35px rgba(77,150,255,.6); }
   .btn-reset {
-    padding: 10px 24px;
-    font-size: .9rem;
-    border: 1px solid rgba(255,255,255,.2);
-    border-radius: 30px;
-    background: transparent;
-    color: #aaa;
-    cursor: pointer;
-    transition: all .15s;
+    padding: 10px 24px; font-size: .9rem;
+    border: 1px solid rgba(255,255,255,.2); border-radius: 30px;
+    background: transparent; color: #aaa; cursor: pointer; transition: all .15s;
   }
   .btn-reset:hover { background: rgba(255,255,255,.1); color: #fff; }
-
   .result {
-    text-align: center;
-    font-size: 1.3rem;
-    min-height: 2em;
-    margin-bottom: 14px;
-    font-weight: bold;
+    text-align: center; font-size: 1.3rem; min-height: 2em;
+    margin-bottom: 14px; font-weight: bold;
   }
-  .result.winner { color: #ffd700; text-shadow: 0 0 20px rgba(255,215,0,.6); animation: pulse 1s infinite; }
+  .result.winner { color: #ffd700; text-shadow: 0 0 20px rgba(255,215,0,.6);
+    animation: pulse 1s infinite; }
   .result.out { color: #ff6b6b; }
   .result.error { color: #ff6b6b; }
   @keyframes pulse { 0%,100% { transform: scale(1); } 50% { transform: scale(1.06); } }
-
-  .panels {
-    display: flex;
-    gap: 16px;
-    width: 100%;
-    max-width: 960px;
-    flex-wrap: wrap;
-    justify-content: center;
-  }
+  .panels { display: flex; gap: 16px; width: 100%; max-width: 960px;
+    flex-wrap: wrap; justify-content: center; }
   .panel {
-    flex: 1;
-    min-width: 280px;
-    background: rgba(255,255,255,.05);
-    border-radius: 16px;
-    padding: 16px;
+    flex: 1; min-width: 280px;
+    background: rgba(255,255,255,.05); border-radius: 16px; padding: 16px;
     border: 1px solid rgba(255,255,255,.1);
   }
-  .panel h2 { font-size: 1rem; margin-bottom: 12px; color: #ffd700; text-align: center; }
+  .panel h2 { font-size: 1rem; margin-bottom: 12px;
+    color: #ffd700; text-align: center; }
   .vote-list, .history-list {
-    max-height: 340px;
-    overflow-y: auto;
-    padding-right: 6px;
+    max-height: 340px; overflow-y: auto; padding-right: 6px;
   }
   .vote-list::-webkit-scrollbar, .history-list::-webkit-scrollbar { width: 6px; }
-  .vote-list::-webkit-scrollbar-thumb, .history-list::-webkit-scrollbar-thumb { background: rgba(255,255,255,.2); border-radius: 3px; }
-
-  .vote-row {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin-bottom: 6px;
-    font-size: .8rem;
+  .vote-list::-webkit-scrollbar-thumb, .history-list::-webkit-scrollbar-thumb {
+    background: rgba(255,255,255,.2); border-radius: 3px;
   }
-  .vote-name { width: 140px; flex-shrink: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .vote-bar-bg { flex: 1; height: 14px; background: rgba(255,255,255,.08); border-radius: 7px; overflow: hidden; }
+  .vote-row { display: flex; align-items: center; gap: 8px;
+    margin-bottom: 6px; font-size: .8rem; }
+  .vote-name { width: 140px; flex-shrink: 0; white-space: nowrap;
+    overflow: hidden; text-overflow: ellipsis; }
+  .vote-bar-bg { flex: 1; height: 14px; background: rgba(255,255,255,.08);
+    border-radius: 7px; overflow: hidden; }
   .vote-bar { height: 100%; border-radius: 7px; transition: width .5s ease; }
-  .vote-count { width: 36px; text-align: right; font-weight: bold; color: #ffd700; font-size: .75rem; }
+  .vote-count { width: 36px; text-align: right; font-weight: bold;
+    color: #ffd700; font-size: .75rem; }
   .chance { width: 52px; text-align: right; font-size: .7rem; color: #6bcB77; }
-
   .history-list ol { padding-left: 24px; font-size: .85rem; }
   .history-list li { margin-bottom: 4px; }
   .history-list li:last-child { color: #ffd700; font-weight: bold; }
+  .winner-overlay {
+    position: fixed; inset: 0;
+    background: radial-gradient(circle at 50% 40%, #2a1a4a, #0d0d1a 80%);
+    display: flex; flex-direction: column; align-items: center;
+    justify-content: center; z-index: 1000; opacity: 0;
+    pointer-events: none; transition: opacity .8s ease;
+  }
+  .winner-overlay.show { opacity: 1; pointer-events: auto; }
+  .winner-overlay h2 {
+    font-size: 3.5rem; color: #ffd700;
+    text-shadow: 0 0 40px rgba(255,215,0,.8); margin-bottom: 20px;
+    text-align: center;
+  }
+  .winner-overlay .winner-name {
+    font-size: 4.5rem; font-weight: bold;
+    background: linear-gradient(90deg, #ffd700, #ff6b6b, #ffd700);
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+    text-align: center; padding: 0 40px; word-break: break-word;
+  }
+  .winner-overlay .close-btn {
+    margin-top: 60px; padding: 14px 50px; font-size: 1.2rem;
+    font-weight: bold; border: none; border-radius: 50px;
+    background: linear-gradient(135deg, #ffd700, #ff8c00);
+    color: #1a1a2e; cursor: pointer; transition: transform .15s;
+  }
+  .winner-overlay .close-btn:hover { transform: scale(1.05); }
 </style>
 </head>
 <body>
 
 <h1>🎡 Колесо Фортуны Папича</h1>
-<p class="subtitle">Больше голосов → уже сектор → меньше шанс вылета. Защищённые игры — тонкие полоски.</p>
+<p class="subtitle">Больше отзывов в Steam → уже сектор → меньше шанс вылета.</p>
 
 <div class="wheel-wrap">
   <div class="pointer"></div>
@@ -165,11 +136,11 @@
   <button class="btn btn-shuffle" id="shuffleBtn" disabled>Перераспределить голоса 🔀</button>
 </div>
 
-<div class="result" id="result">⏳ Загрузка списка игр из games.txt...</div>
+<div class="result" id="result">⏳ Загрузка games.json...</div>
 
 <div class="panels">
   <div class="panel">
-    <h2>📊 Голоса и шанс вылета</h2>
+    <h2>📊 Игры и шанс вылета</h2>
     <div class="vote-list" id="voteList"></div>
   </div>
   <div class="panel">
@@ -181,35 +152,40 @@
   </div>
 </div>
 
+<div class="winner-overlay" id="winnerOverlay">
+  <h2>🏆 Победитель</h2>
+  <div class="winner-name" id="winnerName"></div>
+  <button class="close-btn" id="closeWinnerBtn">Закрыть</button>
+</div>
+
+<audio id="bgMusic" loop preload="auto">
+  <source src="pole-chudes.mp3" type="audio/mpeg">
+</audio>
+<audio id="anthem" preload="auto">
+  <source src="papa-anthem.mp3" type="audio/mpeg">
+</audio>
+
 <script>
 (function () {
   'use strict';
 
-  // ====== КОНСТАНТЫ ======
   const COLORS = [
-    "#ff6b6b", "#ffd93d", "#6bcB77", "#4d96ff", "#c77dff",
-    "#ff9f1c", "#2ec4b6", "#e71d36", "#9d4edd", "#06d6a0",
-    "#f72585", "#7209b7", "#f4a261", "#e76f51", "#264653",
-    "#e9c46a", "#a8dadc", "#457b9d", "#1d3557", "#ffb703",
-    "#fb8500", "#8ecae6", "#219ebc", "#023047", "#bde0fe",
-    "#a2d2ff", "#cdb4db", "#ffc8dd", "#ffafcc", "#bde0fe",
-    "#ff006e", "#8338ec", "#3a86ff", "#ffbe0b", "#fb5607",
-    "#06d6a0", "#118ab2", "#073b4c", "#ef476f", "#ffd166",
-    "#06d6a0", "#118ab2", "#073b4c", "#ef476f", "#ffd166",
-    "#8ac926", "#1982c4", "#6a4c93", "#ff595e", "#ffca3a"
+    "#ff6b6b","#ffd93d","#6bcB77","#4d96ff","#c77dff",
+    "#ff9f1c","#2ec4b6","#e71d36","#9d4edd","#06d6a0",
+    "#f72585","#7209b7","#f4a261","#e76f51","#264653",
+    "#e9c46a","#a8dadc","#457b9d","#1d3557","#ffb703",
+    "#fb8500","#8ecae6","#219ebc","#023047","#bde0fe",
+    "#a2d2ff","#cdb4db","#ffc8dd","#ffafcc","#bde0fe",
+    "#ff006e","#8338ec","#3a86ff","#ffbe0b","#fb5607",
+    "#06d6a0","#118ab2","#073b4c","#ef476f","#ffd166"
   ];
 
   const TAU = Math.PI * 2;
-  const SPIN_COUNT = 50;
-  const SIZE = 1000;
-  const CX = SIZE / 2;
-  const CY = SIZE / 2;
-  const R = SIZE / 2 - 10;
-  const POINTER_ANGLE = -Math.PI / 2; // указатель сверху колеса
-  const SPIN_DURATION = 5000;
-  const SPIN_TURNS = 6;
+  const MAX_ON_WHEEL = 50;
+  const SIZE = 1000, CX = 500, CY = 500, R = 490;
+  const POINTER_ANGLE = -Math.PI / 2;
+  const SPIN_DURATION = 5000, SPIN_TURNS = 6;
 
-  // ====== СОСТОЯНИЕ ======
   let ALL_GAMES = [];
   let games = [];
   let history = [];
@@ -218,9 +194,8 @@
   let loaded = false;
   let cachedSegs = null;
 
-  // ====== DOM ======
   const canvas = document.getElementById('wheel');
-  const ctx = canvas.getContext('2d', { alpha: true, desynchronized: true });
+  const ctx = canvas.getContext('2d', { alpha: true });
   const off = document.createElement('canvas');
   const offCtx = off.getContext('2d');
 
@@ -230,94 +205,67 @@
   const resultEl = document.getElementById('result');
   const voteListEl = document.getElementById('voteList');
   const historyListEl = document.getElementById('historyList');
+  const bgMusic = document.getElementById('bgMusic');
+  const anthem = document.getElementById('anthem');
+  const winnerOverlay = document.getElementById('winnerOverlay');
+  const winnerName = document.getElementById('winnerName');
+  const closeWinnerBtn = document.getElementById('closeWinnerBtn');
 
-  // ====== УТИЛИТЫ ======
-  function norm(a) {
-    return ((a % TAU) + TAU) % TAU;
-  }
-
-  function escapeHtml(s) {
+  function norm(a) { return ((a % TAU) + TAU) % TAU; }
+  function esc(s) {
     return String(s).replace(/[&<>"']/g, c => ({
-      '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+      '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
     }[c]));
   }
 
   function setupCanvas() {
     const dpr = Math.min(window.devicePixelRatio || 1, 2);
-    canvas.width = SIZE * dpr;
-    canvas.height = SIZE * dpr;
-    canvas.style.width = '100%';
-    canvas.style.height = '100%';
+    canvas.width = SIZE * dpr; canvas.height = SIZE * dpr;
+    canvas.style.width = '100%'; canvas.style.height = '100%';
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-
-    off.width = SIZE * dpr;
-    off.height = SIZE * dpr;
+    off.width = SIZE * dpr; off.height = SIZE * dpr;
     offCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
   }
 
-  // ====== ИНВЕРТИРОВАННЫЙ ВЕС ======
-  // Чем больше голосов (weight), тем МЕНЬШЕ inverseWeight,
-  // а значит — уже сектор и ниже шанс вылета.
-  function inverseWeight(g) {
-    return 1 / (g.weight + 1);
-  }
+  // чем больше weight → тем МЕНЬШЕ inverseWeight → уже сектор
+  function inverseWeight(g) { return 1 / (g.weight + 1); }
 
-  // ====== СЕГМЕНТЫ ======
   function computeSegments() {
     if (cachedSegs) return cachedSegs;
-    if (games.length === 0) {
-      cachedSegs = [];
-      return cachedSegs;
-    }
-    const totalInv = games.reduce((s, g) => s + inverseWeight(g), 0) || 1;
-    let angle = 0;
-    const segs = [];
-    for (let i = 0; i < games.length; i++) {
-      const g = games[i];
+    if (!games.length) { cachedSegs = []; return cachedSegs; }
+    const total = games.reduce((s, g) => s + inverseWeight(g), 0) || 1;
+    let angle = 0; const segs = [];
+    for (const g of games) {
       const inv = inverseWeight(g);
-      const sweep = (inv / totalInv) * TAU;
+      const sweep = (inv / total) * TAU;
       segs.push({ game: g, start: angle, sweep, inv });
       angle += sweep;
     }
-    cachedSegs = segs;
-    return segs;
+    cachedSegs = segs; return segs;
   }
+  function invalidate() { cachedSegs = null; }
 
-  function invalidateCache() {
-    cachedSegs = null;
-  }
-
-  // ====== ВЫБОР СЛУЧАЙНЫХ ИГР ======
-  function pickRandomGames() {
-    const pool = ALL_GAMES.slice();
-    for (let i = pool.length - 1; i > 0; i--) {
+  // выбрать до 50 игр для колеса
+  function pickForWheel(pool) {
+    const copy = pool.slice();
+    for (let i = copy.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
-      [pool[i], pool[j]] = [pool[j], pool[i]];
+      [copy[i], copy[j]] = [copy[j], copy[i]];
     }
-    const count = Math.min(SPIN_COUNT, pool.length);
-    return pool.slice(0, count).map((g, i) => ({
-      name: g.name,
-      weight: 0,
-      colorIdx: i
+    const count = Math.min(MAX_ON_WHEEL, copy.length);
+    return copy.slice(0, count).map((g, i) => ({
+      name: g.name, weight: g.weight, colorIdx: i
     }));
   }
 
-  // ====== РАСПРЕДЕЛЕНИЕ ГОЛОСОВ ======
   function distributeVotes() {
-    games.forEach(g => {
-      let w = Math.floor(Math.random() * 100) + 1;
-      if (Math.random() < 0.12) w += Math.floor(Math.random() * 200);
-      g.weight = w;
-    });
-    invalidateCache();
+    // веса уже пришли с сервера — просто пересчитать панель
+    invalidate();
     renderVotes();
     renderStaticWheel();
     drawWheel();
   }
 
-  // ====== ЧЕСТНЫЙ ВЗВЕШЕННЫЙ ВЫБОР ======
-  // Вероятность выбора ровно пропорциональна inverseWeight,
-  // т.е. в точности размеру сектора на колесе.
   function weightedPick(items) {
     const total = items.reduce((s, i) => s + inverseWeight(i), 0);
     let r = Math.random() * total;
@@ -328,77 +276,52 @@
     return items[items.length - 1];
   }
 
-  // ====== ОТРИСОВКА КОЛЕСА ======
   function renderStaticWheel() {
     offCtx.clearRect(0, 0, SIZE, SIZE);
     const segs = computeSegments();
-
-    if (segs.length === 0) {
-      offCtx.fillStyle = '#ffd700';
-      offCtx.font = 'bold 44px sans-serif';
-      offCtx.textAlign = 'center';
-      offCtx.textBaseline = 'middle';
+    if (!segs.length) {
+      offCtx.fillStyle = '#ffd700'; offCtx.font = 'bold 44px sans-serif';
+      offCtx.textAlign = 'center'; offCtx.textBaseline = 'middle';
       offCtx.fillText('🏆 Победитель определён!', CX, CY);
       return;
     }
-
     const maxInv = Math.max(...segs.map(s => s.inv), 0.001);
-
-    segs.forEach(seg => {
-      const { game, start, sweep, inv } = seg;
+    segs.forEach(({ game, start, sweep, inv }) => {
       const color = COLORS[game.colorIdx % COLORS.length];
       const intensity = 0.35 + 0.65 * (inv / maxInv);
-
       offCtx.globalAlpha = 0.55 + 0.45 * intensity;
       offCtx.beginPath();
       offCtx.moveTo(CX, CY);
       offCtx.arc(CX, CY, R, start, start + sweep);
       offCtx.closePath();
-      offCtx.fillStyle = color;
-      offCtx.fill();
+      offCtx.fillStyle = color; offCtx.fill();
       offCtx.globalAlpha = 1;
-      offCtx.strokeStyle = 'rgba(0,0,0,.35)';
-      offCtx.lineWidth = 1.5;
+      offCtx.strokeStyle = 'rgba(0,0,0,.35)'; offCtx.lineWidth = 1.5;
       offCtx.stroke();
     });
-
-    segs.forEach(seg => {
-      const { game, start, sweep } = seg;
+    segs.forEach(({ game, start, sweep }) => {
       if (sweep < 0.04) return;
-
       const mid = start + sweep / 2;
       offCtx.save();
-      offCtx.translate(CX, CY);
-      offCtx.rotate(mid);
-
-      const fontSize = Math.max(16, Math.min(34, 14 + sweep * 90));
-      offCtx.font = `bold ${fontSize}px 'Segoe UI', sans-serif`;
-      offCtx.textAlign = 'right';
-      offCtx.textBaseline = 'middle';
-      offCtx.shadowColor = 'rgba(0,0,0,.9)';
-      offCtx.shadowBlur = 6;
-
+      offCtx.translate(CX, CY); offCtx.rotate(mid);
+      const fs = Math.max(16, Math.min(34, 14 + sweep * 90));
+      offCtx.font = `bold ${fs}px 'Segoe UI', sans-serif`;
+      offCtx.textAlign = 'right'; offCtx.textBaseline = 'middle';
+      offCtx.shadowColor = 'rgba(0,0,0,.9)'; offCtx.shadowBlur = 6;
       offCtx.fillStyle = '#fff';
       offCtx.fillText(game.name, R - 18, 0);
-
-      offCtx.font = `bold ${Math.max(12, fontSize - 8)}px 'Segoe UI', sans-serif`;
+      offCtx.font = `bold ${Math.max(12, fs - 8)}px 'Segoe UI', sans-serif`;
       offCtx.fillStyle = 'rgba(255,255,255,.75)';
-      offCtx.fillText(`[${game.weight}]`, R - 18, fontSize + 4);
-
+      offCtx.fillText(`[${game.weight}]`, R - 18, fs + 4);
       offCtx.restore();
     });
-
     offCtx.beginPath();
     offCtx.arc(CX, CY, 70, 0, TAU);
-    offCtx.fillStyle = '#0d0d1a';
-    offCtx.fill();
-    offCtx.strokeStyle = '#ffd700';
-    offCtx.lineWidth = 6;
+    offCtx.fillStyle = '#0d0d1a'; offCtx.fill();
+    offCtx.strokeStyle = '#ffd700'; offCtx.lineWidth = 6;
     offCtx.stroke();
-    offCtx.fillStyle = '#ffd700';
-    offCtx.font = 'bold 34px sans-serif';
-    offCtx.textAlign = 'center';
-    offCtx.textBaseline = 'middle';
+    offCtx.fillStyle = '#ffd700'; offCtx.font = 'bold 34px sans-serif';
+    offCtx.textAlign = 'center'; offCtx.textBaseline = 'middle';
     offCtx.fillText('🎡', CX, CY + 2);
   }
 
@@ -411,278 +334,210 @@
     ctx.restore();
   }
 
-  // ====== ПАНЕЛЬ ГОЛОСОВ ======
   function renderVotes() {
-    if (games.length === 0) {
-      voteListEl.innerHTML =
-        '<div style="text-align:center;color:#aaa;padding:20px;">🎉 Игра завершена</div>';
+    if (!games.length) {
+      voteListEl.innerHTML = '<div style="text-align:center;color:#aaa;padding:20px;">🎉 Игра завершена</div>';
       return;
     }
-    const totalInv = games.reduce((s, g) => s + inverseWeight(g), 0) || 1;
-    const indexed = games.map(g => ({
-      ...g,
-      chance: (inverseWeight(g) / totalInv) * 100
-    }));
-    indexed.sort((a, b) => b.weight - a.weight);
-
-    const maxWeight = Math.max(...games.map(x => x.weight), 1);
-
-    voteListEl.innerHTML = indexed.map(g => {
-      const barPct = (g.weight / maxWeight) * 100;
+    const total = games.reduce((s, g) => s + inverseWeight(g), 0) || 1;
+    const idx = games.map(g => ({...g, chance: (inverseWeight(g) / total) * 100}));
+    idx.sort((a, b) => b.weight - a.weight);
+    const maxW = Math.max(...games.map(x => x.weight), 1);
+    voteListEl.innerHTML = idx.map(g => {
+      const barPct = (g.weight / maxW) * 100;
       const color = COLORS[g.colorIdx % COLORS.length];
-      return `
-        <div class="vote-row">
-          <div class="vote-name" title="${escapeHtml(g.name)}">${escapeHtml(g.name)}</div>
-          <div class="vote-bar-bg">
-            <div class="vote-bar" style="width:${barPct}%;background:${color}"></div>
-          </div>
-          <div class="vote-count">${g.weight}</div>
-          <div class="chance" title="Шанс вылета">${g.chance.toFixed(1)}%</div>
-        </div>`;
+      return `<div class="vote-row">
+        <div class="vote-name" title="${esc(g.name)}">${esc(g.name)}</div>
+        <div class="vote-bar-bg"><div class="vote-bar" style="width:${barPct}%;background:${color}"></div></div>
+        <div class="vote-count">${g.weight}</div>
+        <div class="chance" title="Шанс вылета">${g.chance.toFixed(1)}%</div>
+      </div>`;
     }).join('');
   }
 
-  // ====== СЕКТОР ПОД УКАЗАТЕЛЕМ ======
   function gameUnderPointer(rot) {
     const segs = computeSegments();
-    if (segs.length === 0) return null;
+    if (!segs.length) return null;
     const pa = norm(POINTER_ANGLE);
     for (const seg of segs) {
       const s = norm(seg.start + rot);
       const e = norm(seg.start + seg.sweep + rot);
-      if (s <= e) {
-        if (pa >= s && pa < e) return seg.game;
-      } else {
-        if (pa >= s || pa < e) return seg.game;
-      }
+      if (s <= e) { if (pa >= s && pa < e) return seg.game; }
+      else { if (pa >= s || pa < e) return seg.game; }
     }
     return null;
   }
 
-  // ====== ИНИЦИАЛИЗАЦИЯ ======
   function initGame() {
     if (!loaded) return;
-    games = pickRandomGames();
-    history = [];
-    rotation = 0;
-    spinning = false;
-    spinBtn.disabled = false;
-    shuffleBtn.disabled = false;
-    resultEl.textContent = '';
-    resultEl.className = 'result';
+    games = pickForWheel(ALL_GAMES);
+    history = []; rotation = 0; spinning = false;
+    spinBtn.disabled = false; shuffleBtn.disabled = false;
+    resultEl.textContent = ''; resultEl.className = 'result';
     historyListEl.innerHTML = '';
     distributeVotes();
+    hideWinnerOverlay();
+    stopAllAudio();
   }
 
-  // ====== ЗАГРУЗКА ======
   async function loadGames() {
     try {
-      const resp = await fetch('games.txt', { cache: 'no-store' });
+      const resp = await fetch('games.json', { cache: 'no-store' });
       if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
-      const text = await resp.text();
-
-      const names = text
-        .split(',')
-        .map(s => s.trim())
-        .filter(s => s.length > 0);
-
-      if (names.length === 0) {
-        throw new Error('Файл games.txt пуст или не содержит игр');
-      }
-
-      ALL_GAMES = names.map(name => ({ name }));
+      const data = await resp.json();
+      if (!Array.isArray(data) || !data.length) throw new Error('Пустой или невалидный games.json');
+      ALL_GAMES = data.filter(g => g && typeof g.name === 'string' && typeof g.weight === 'number');
+      if (!ALL_GAMES.length) throw new Error('Нет валидных записей');
       loaded = true;
       initGame();
-
-      resultEl.textContent = ALL_GAMES.length <= SPIN_COUNT
-        ? `✅ Загружено игр: ${ALL_GAMES.length}. Крутите!`
-        : `✅ Загружено игр: ${ALL_GAMES.length}. В крутку выбрано ${SPIN_COUNT}. Крутите!`;
+      resultEl.textContent = `✅ Загружено игр: ${ALL_GAMES.length}. На колесе ${Math.min(MAX_ON_WHEEL, ALL_GAMES.length)}. Крутите!`;
       resultEl.className = 'result';
-    } catch (err) {
-      console.error('Ошибка загрузки games.txt:', err);
-      resultEl.textContent =
-        `❌ Не удалось загрузить games.txt (${err.message}). ` +
-        'Проверьте, что файл лежит рядом с HTML и сервер запущен.';
+    } catch (e) {
+      console.error(e);
+      resultEl.textContent = `❌ Не удалось загрузить games.json (${e.message}). Файл должен лежать рядом с HTML.`;
       resultEl.className = 'result error';
-      spinBtn.disabled = true;
-      shuffleBtn.disabled = true;
+      spinBtn.disabled = true; shuffleBtn.disabled = true;
     }
   }
 
-  // ====== ПРОКРУТКА ======
   function spin() {
-    if (spinning || games.length === 0) return;
+    if (spinning || !games.length) return;
+    startBgMusic();
+    if (games.length === 1) { finishGame(games[0]); return; }
 
-    if (games.length === 1) {
-      resultEl.textContent = `🏆 Победитель: ${games[0].name}`;
-      resultEl.className = 'result winner';
-      return;
-    }
+    spinning = true; spinBtn.disabled = true; shuffleBtn.disabled = true;
+    resultEl.textContent = '🎲 Крутим...'; resultEl.className = 'result';
 
-    spinning = true;
-    spinBtn.disabled = true;
-    shuffleBtn.disabled = true;
-    resultEl.textContent = '🎲 Крутим...';
-    resultEl.className = 'result';
-
-    // Честный выбор: вероятность ∝ размеру сектора.
     const winner = weightedPick(games);
     const segs = computeSegments();
-    const winnerIdx = games.indexOf(winner);
-    const wSeg = segs[winnerIdx];
-    const winnerCenter = wSeg.start + wSeg.sweep / 2;
+    const idx = games.indexOf(winner);
+    const wSeg = segs[idx];
+    const wCenter = wSeg.start + wSeg.sweep / 2;
 
-    // Нужное вращение, чтобы центр сектора победителя попал под указатель.
-    const targetNorm = norm(POINTER_ANGLE - winnerCenter);
+    const targetNorm = norm(POINTER_ANGLE - wCenter);
     const currentNorm = norm(rotation);
     let delta = targetNorm - currentNorm;
     if (delta < 0) delta += TAU;
 
-    // Джиттер — чтобы колесо не останавливалось всегда в центре сектора,
-    // но так, чтобы указатель гарантированно остался внутри сектора победителя.
-    const maxJitter = wSeg.sweep * 0.3;
-    const jitter = (Math.random() * 2 - 1) * maxJitter;
-
+    const jitter = (Math.random() * 2 - 1) * (wSeg.sweep * 0.3);
     const totalRotation = TAU * SPIN_TURNS + delta + jitter;
-
     const startRot = rotation;
     const startTime = performance.now();
     let lastFrame = 0;
     const frameInterval = 1000 / 60;
+    const isFinalSpin = games.length === 2;
 
     function animate(now) {
-      const elapsed = now - startTime;
-      const t = Math.min(elapsed / SPIN_DURATION, 1);
+      const t = Math.min((now - startTime) / SPIN_DURATION, 1);
       const eased = 1 - Math.pow(1 - t, 3);
       rotation = startRot + totalRotation * eased;
-
       if (now - lastFrame >= frameInterval || t >= 1) {
-        drawWheel();
-        lastFrame = now;
+        drawWheel(); lastFrame = now;
       }
-
-      if (t < 1) {
-        requestAnimationFrame(animate);
-        return;
-      }
-
+      if (t < 1) { requestAnimationFrame(animate); return; }
       rotation = startRot + totalRotation;
-
-      // Страховка от накопленных ошибок округления.
       if (gameUnderPointer(rotation) !== winner) {
-        const curSeg = computeSegments()[winnerIdx];
+        const curSeg = computeSegments()[idx];
         const curCenterAbs = curSeg.start + curSeg.sweep / 2 + rotation;
         let adjust = norm(POINTER_ANGLE - curCenterAbs);
         if (adjust > Math.PI) adjust -= TAU;
         rotation += adjust;
         drawWheel();
       }
-
+      if (isFinalSpin) startAnthem();
       finishSpin(winner);
     }
-
     requestAnimationFrame(animate);
   }
 
   function finishSpin(winner) {
     games = games.filter(g => g !== winner);
     history.push(winner);
-    invalidateCache();
-    spinning = false;
+    invalidate(); spinning = false;
 
-    // Финальная победа: осталась ровно одна игра.
     if (games.length === 1) {
       const champ = games[0];
       history.push(champ);
       renderHistory(true);
-
       resultEl.textContent = `🏆 Победитель: ${champ.name}`;
       resultEl.className = 'result winner';
-
-      games = [];
-      invalidateCache();
-      spinBtn.disabled = true;
-      shuffleBtn.disabled = true;
-
-      renderVotes();
-      renderStaticWheel();
-      drawWheel();
+      games = []; invalidate();
+      spinBtn.disabled = true; shuffleBtn.disabled = true;
+      renderVotes(); renderStaticWheel(); drawWheel();
+      showWinner(champ.name);
       return;
     }
-
     renderHistory(false);
-
-    // Теоретически невозможно (в spin() есть guard для length === 1),
-    // но на всякий случай.
-    if (games.length === 0) {
-      resultEl.textContent = `🏆 Победитель: ${winner.name}`;
-      resultEl.className = 'result winner';
-      spinBtn.disabled = true;
-      shuffleBtn.disabled = true;
-      renderVotes();
-      renderStaticWheel();
-      drawWheel();
-      return;
-    }
-
     resultEl.textContent = `❌ Выбывает: ${winner.name}`;
     resultEl.className = 'result out';
-    spinBtn.disabled = false;
-    shuffleBtn.disabled = false;
+    spinBtn.disabled = false; shuffleBtn.disabled = false;
     rotation = norm(rotation);
-
-    renderVotes();
-    renderStaticWheel();
-    drawWheel();
+    renderVotes(); renderStaticWheel(); drawWheel();
   }
 
-  function renderHistory(finalWinner) {
+  function finishGame(champ) {
+    games = []; history.push(champ); invalidate();
+    renderHistory(true);
+    resultEl.textContent = `🏆 Победитель: ${champ.name}`;
+    resultEl.className = 'result winner';
+    spinBtn.disabled = true; shuffleBtn.disabled = true;
+    renderVotes(); renderStaticWheel(); drawWheel();
+    startAnthem();
+    showWinner(champ.name);
+  }
+
+  function renderHistory(finalW) {
     historyListEl.innerHTML = history.map((g, i) => {
       const isLast = i === history.length - 1;
-      let suffix;
-      if (finalWinner) {
-        suffix = isLast ? ' 🏆' : ' ← выбыла';
-      } else {
-        suffix = isLast ? ' ← выбыла' : '';
-      }
-      return `<li>${escapeHtml(g.name)}${suffix}</li>`;
+      const suffix = finalW
+        ? (isLast ? ' 🏆' : ' ← выбыла')
+        : (isLast ? ' ← выбыла' : '');
+      return `<li>${esc(g.name)}${suffix}</li>`;
     }).join('');
   }
 
-  // ====== ОБРАБОТЧИКИ ======
-  spinBtn.addEventListener('click', spin);
+  function startBgMusic() {
+    if (bgMusic.paused) {
+      bgMusic.volume = 0.35;
+      bgMusic.play().catch(() => {});
+    }
+  }
+  function startAnthem() {
+    bgMusic.pause(); bgMusic.currentTime = 0;
+    anthem.volume = 0.6; anthem.currentTime = 0;
+    anthem.play().catch(() => {});
+  }
+  function stopAllAudio() {
+    bgMusic.pause(); bgMusic.currentTime = 0;
+    anthem.pause(); anthem.currentTime = 0;
+  }
 
+  function showWinner(name) {
+    winnerName.textContent = name;
+    winnerOverlay.classList.add('show');
+  }
+  function hideWinnerOverlay() {
+    winnerOverlay.classList.remove('show');
+  }
+
+  spinBtn.addEventListener('click', spin);
   shuffleBtn.addEventListener('click', () => {
     if (spinning || !loaded) return;
-
-    games = pickRandomGames();
-    history = [];
-    rotation = 0;
-    historyListEl.innerHTML = '';
-
-    distributeVotes();
-
-    resultEl.textContent = ALL_GAMES.length > SPIN_COUNT
-      ? `🔀 Выбрано ${SPIN_COUNT} случайных игр из ${ALL_GAMES.length}, голоса перераспределены!`
-      : `🔀 Голоса перераспределены!`;
+    initGame();
+    resultEl.textContent = '🔀 Голоса перераспределены!';
     resultEl.className = 'result';
-
-    spinBtn.disabled = false;
-    shuffleBtn.disabled = false;
   });
-
   resetBtn.addEventListener('click', () => {
     if (spinning || !loaded) return;
     initGame();
   });
-
+  closeWinnerBtn.addEventListener('click', () => {
+    hideWinnerOverlay(); stopAllAudio();
+  });
   window.addEventListener('resize', () => {
-    setupCanvas();
-    renderStaticWheel();
-    drawWheel();
+    setupCanvas(); renderStaticWheel(); drawWheel();
   });
 
-  // ====== СТАРТ ======
   setupCanvas();
   loadGames();
 })();
