@@ -364,6 +364,9 @@
   .auction-card .card-cover.loaded {
     opacity: 0.55;
   }
+  .auction-card .card-cover.instant {
+    transition: none;
+  }
   .auction-card .card-name {
     position: relative;
     z-index: 1;
@@ -696,39 +699,32 @@
     }
   }
 
-  // ===== ОБЛОЖКИ: LOREMFLICKR =====
-  // Детерминированный URL: одна и та же игра всегда получает одну и ту же картинку.
-  // Нет API-запросов, нет риска блокировок — просто <img src="...">.
-  function hashCode(str) {
-    let h = 0;
-    for (let i = 0; i < str.length; i++) {
-      h = ((h << 5) - h + str.charCodeAt(i)) | 0;
-    }
-    return Math.abs(h);
-  }
-
-  function getCoverUrl(gameName) {
-    const lock = hashCode(gameName) % 1000;
-    return `https://loremflickr.com/400/200/${encodeURIComponent(gameName)}?lock=${lock}`;
-  }
+  // ===== ОБЛОЖКИ: PLACEHOLD.CO =====
+  const seenCovers = new Set();
 
   function applyCoverToCard(card, gameName) {
+    const wasSeen = seenCovers.has(gameName);
     let img = card.querySelector('.card-cover');
     if (!img) {
       img = document.createElement('img');
-      img.className = 'card-cover';
+      img.className = 'card-cover' + (wasSeen ? ' instant' : '');
       img.alt = '';
-      img.referrerPolicy = 'no-referrer';
       card.insertBefore(img, card.firstChild);
     }
-    const markLoaded = () => img.classList.add('loaded');
+    const markLoaded = () => {
+      img.classList.add('loaded');
+      seenCovers.add(gameName);
+    };
     img.onload = markLoaded;
     img.onerror = () => {
-      // LoremFlickr не отдал картинку — останется градиент
-      console.warn('LoremFlickr не сработал для:', gameName);
+      console.warn('Placehold.co не сработал для:', gameName);
       img.remove();
     };
-    img.src = getCoverUrl(gameName);
+    
+    // Генерируем изображение с текстом (названием игры) через Placehold.co
+    const encodedText = encodeURIComponent(gameName);
+    img.src = `https://placehold.co/400x200/1a1a2e/FFFFFF?text=${encodedText}`;
+    
     if (img.complete && img.naturalWidth > 0) markLoaded();
   }
 
@@ -1521,17 +1517,43 @@
   function renderAuctionGrid() {
     const n = auctionState.currentGames.length;
     auctionGridEl.className = 'auction-grid n' + n;
-    auctionGridEl.innerHTML = '';
-    auctionState.currentGames.forEach(g => {
-      const card = document.createElement('div');
-      card.className = 'auction-card';
+
+    // Проверяем: нужно ли пересоздавать карточки?
+    const existingNames = Array.from(auctionGridEl.children).map(c => c.dataset.gameName);
+    const newNames = auctionState.currentGames.map(g => g.name);
+    const needsRebuild =
+      existingNames.length !== newNames.length ||
+      existingNames.some((n, i) => n !== newNames[i]);
+
+    if (needsRebuild) {
+      auctionGridEl.innerHTML = '';
+      auctionState.currentGames.forEach(g => {
+        const card = document.createElement('div');
+        card.className = 'auction-card';
+        card.dataset.gameName = g.name;
+        card.innerHTML = `<span class="card-name">${esc(g.name)}</span>`;
+        card.addEventListener('click', () => clickAuctionGame(g));
+        auctionGridEl.appendChild(card);
+        applyCoverToCard(card, g.name);
+      });
+    }
+
+    // Обновляем только бейджи и класс voted
+    auctionState.currentGames.forEach((g, i) => {
+      const card = auctionGridEl.children[i];
       const rv = auctionState.roundVotes[g.name] || 0;
-      if (rv > 0) card.classList.add('voted');
-      const badge = rv > 0 ? `<div class="card-votes">${rv}</div>` : '';
-      card.innerHTML = `<span class="card-name">${esc(g.name)}</span>` + badge;
-      card.addEventListener('click', () => clickAuctionGame(g));
-      auctionGridEl.appendChild(card);
-      applyCoverToCard(card, g.name);
+      card.classList.toggle('voted', rv > 0);
+      let badge = card.querySelector('.card-votes');
+      if (rv > 0) {
+        if (!badge) {
+          badge = document.createElement('div');
+          badge.className = 'card-votes';
+          card.appendChild(badge);
+        }
+        badge.textContent = rv;
+      } else if (badge) {
+        badge.remove();
+      }
     });
   }
 
