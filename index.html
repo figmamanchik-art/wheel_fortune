@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>🎡 Колесо Фортуны Папича</title>
+<link rel="icon" href="data:,"> <!-- Убирает ошибку favicon.ico -->
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body {
@@ -103,7 +104,6 @@
     to   { filter: drop-shadow(0 0 30px #ffd700) drop-shadow(0 0 80px #ff6b6b); }
   }
 
-  /* Вращающиеся прожекторы вокруг колеса */
   .wheel-wrap.finale-active::before {
     content: '';
     position: absolute;
@@ -123,7 +123,6 @@
     z-index: 1;
     filter: blur(1.5px);
   }
-  /* Мягкий ореол за колесом */
   .wheel-wrap.finale-active::after {
     content: '';
     position: absolute;
@@ -239,7 +238,7 @@
   </div>
   <div class="controls">
     <button class="btn btn-spin" id="spinBtn">Крутить! 🎲</button>
-    <button class="btn-reset" id="resetBtn">🔄 В настройки</button>
+    <button class="btn btn-reset" id="resetBtn">🔄 В настройки</button>
   </div>
   <div class="result" id="result"></div>
   <div class="panels">
@@ -264,12 +263,8 @@
   <button class="close-btn" id="closeWinnerBtn">Закрыть</button>
 </div>
 
-<audio id="bgMusic" loop preload="auto">
-  <source src="pole-chudes.mp3" type="audio/mpeg">
-</audio>
-<audio id="anthem" preload="auto">
-  <source src="papa-anthem.mp3" type="audio/mpeg">
-</audio>
+<audio id="bgMusic" loop preload="auto" src="pole-chudes.mp3"></audio>
+<audio id="anthem" preload="auto" src="papa-anthem.mp3"></audio>
 
 <script>
 (function () {
@@ -557,7 +552,6 @@
     return totalAngle * (0.65 + 0.35 * ease);
   }
 
-  // Запуск гимна с сохранением user gesture + плавное нарастание громкости
   function playAnthemWithFade() {
     try {
       anthem.pause();
@@ -570,17 +564,21 @@
           const targetV = 0.6;
           const t0 = performance.now();
           function fade(now) {
-            const t = Math.min((now - t0) / 800, 1);
+            // Защита от отрицательного времени (баг с requestAnimationFrame)
+            const timePassed = Math.max(0, now - t0);
+            const t = Math.min(timePassed / 800, 1);
             anthem.volume = targetV * t;
             if (t < 1) requestAnimationFrame(fade);
           }
           requestAnimationFrame(fade);
         }).catch(err => {
           console.error('❌ Гимн не запустился:', err);
-          if (err.name === 'NotAllowedError') {
+          if (err.name === 'NotSupportedError') {
+            showAudioToast('⚠️ Файл papa-anthem.mp3 не найден или битый. Проверь расширение файла!');
+          } else if (err.name === 'NotAllowedError') {
             showAudioToast('⚠️ Браузер заблокировал звук. Кликни в любое место и нажми «Крутить» ещё раз.');
           } else {
-            showAudioToast('⚠️ Не удалось воспроизвести papa-anthem.mp3 (' + err.name + ')');
+            showAudioToast('⚠️ Ошибка гимна: ' + err.name);
           }
         });
       }
@@ -602,7 +600,6 @@
     showFinaleOverlay();
     wheelWrap.classList.add('finale-active');
 
-    // Гимн СРАЗУ — сохраняет user gesture
     playAnthemWithFade();
 
     const segs = computeSegments();
@@ -831,15 +828,16 @@
     }
   });
 
-  // Диагностика аудио
-  bgMusic.addEventListener('error', () => {
-    console.error('❌ pole-chudes.mp3 не загрузился');
-    showAudioToast('⚠️ Файл pole-chudes.mp3 не найден или битый');
-  });
+  // Диагностика аудио принудительно
+  bgMusic.load();
+  anthem.load();
+
+  bgMusic.addEventListener('error', () => console.error('❌ Ошибка загрузки pole-chudes.mp3. Проверь файл!'));
   bgMusic.addEventListener('canplaythrough', () => console.log('✅ pole-chudes.mp3 загружен'));
+  
   anthem.addEventListener('error', () => {
-    console.error('❌ papa-anthem.mp3 не загрузился');
-    showAudioToast('⚠️ Файл papa-anthem.mp3 не найден или битый');
+    console.error('❌ Ошибка загрузки papa-anthem.mp3. Проверь расширение (не .mp3.mp3 ли?)');
+    showAudioToast('⚠️ Ошибка: файл papa-anthem.mp3 не найден или битый');
   });
   anthem.addEventListener('canplaythrough', () => console.log('✅ papa-anthem.mp3 загружен'));
 
