@@ -42,7 +42,6 @@
   }
   .size-btn:hover { background: rgba(255,255,255,.1); }
   .size-btn.active { background: rgba(255, 215, 0, 0.15); border-color: #ffd700; color: #ffd700; box-shadow: 0 0 15px rgba(255,215,0,.2); }
-  
   .setup-right { flex: 2; min-width: 300px; display: flex; flex-direction: column; }
   .setup-right h2 { color: #ffd700; font-size: 1.2rem; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center;}
   .setup-right h2 span { font-size: 0.8rem; color: #aaa; font-weight: normal; }
@@ -57,7 +56,7 @@
     border-radius: 6px; font-size: 0.9rem; display: flex; justify-content: space-between;
   }
   .setup-list-item .hidden-votes { color: #ff6b6b; font-weight: bold; letter-spacing: 2px;}
-  
+
   .action-buttons { display: flex; gap: 16px; margin-top: 20px; width: 100%; max-width: 900px; flex-wrap: wrap; }
   .btn {
     padding: 16px 42px; font-size: 1.15rem; font-weight: bold;
@@ -96,13 +95,6 @@
     z-index: 6;
     transform: scale(1.08);
   }
-  
-  /* Колесо больше не засвечивается, остается как есть */
-  .wheel-wrap.finale-active canvas {
-    filter: drop-shadow(0 0 40px rgba(255,215,0,.25));
-  }
-  
-  /* Указатель пульсирует */
   .wheel-wrap.finale-active .pointer {
     animation: pointerPulse .5s ease-in-out infinite alternate;
   }
@@ -131,7 +123,6 @@
     z-index: 1;
     filter: blur(1.5px);
   }
-  
   /* Мягкий ореол за колесом */
   .wheel-wrap.finale-active::after {
     content: '';
@@ -566,6 +557,39 @@
     return totalAngle * (0.65 + 0.35 * ease);
   }
 
+  // Запуск гимна с сохранением user gesture + плавное нарастание громкости
+  function playAnthemWithFade() {
+    try {
+      anthem.pause();
+      anthem.currentTime = 0;
+      anthem.volume = 0;
+      const promise = anthem.play();
+      if (promise && promise.then) {
+        promise.then(() => {
+          console.log('✅ Гимн стартовал');
+          const targetV = 0.6;
+          const t0 = performance.now();
+          function fade(now) {
+            const t = Math.min((now - t0) / 800, 1);
+            anthem.volume = targetV * t;
+            if (t < 1) requestAnimationFrame(fade);
+          }
+          requestAnimationFrame(fade);
+        }).catch(err => {
+          console.error('❌ Гимн не запустился:', err);
+          if (err.name === 'NotAllowedError') {
+            showAudioToast('⚠️ Браузер заблокировал звук. Кликни в любое место и нажми «Крутить» ещё раз.');
+          } else {
+            showAudioToast('⚠️ Не удалось воспроизвести papa-anthem.mp3 (' + err.name + ')');
+          }
+        });
+      }
+    } catch (e) {
+      console.error('❌ Ошибка запуска гимна:', e);
+      showAudioToast('⚠️ Ошибка воспроизведения гимна');
+    }
+  }
+
   function spinFinale(winner) {
     spinning = true;
     spinBtn.disabled = true;
@@ -578,11 +602,8 @@
     showFinaleOverlay();
     wheelWrap.classList.add('finale-active');
 
-    setTimeout(() => {
-      anthem.volume = 0.6;
-      anthem.currentTime = 0;
-      anthem.play().catch(() => {});
-    }, 800);
+    // Гимн СРАЗУ — сохраняет user gesture
+    playAnthemWithFade();
 
     const segs = computeSegments();
     const idx = games.indexOf(winner);
@@ -706,7 +727,7 @@
     resultEl.className = 'result winner';
     spinBtn.disabled = true;
     renderVotes(); renderStaticWheel(); drawWheel();
-    startAnthem();
+    playAnthemWithFade();
     showWinner(champ.name);
   }
 
@@ -723,14 +744,12 @@
   function startBgMusic() {
     if (bgMusic.paused) {
       bgMusic.volume = 0.35;
-      bgMusic.play().catch(() => {});
+      bgMusic.play().catch(err => {
+        console.error('❌ pole-chudes.mp3 не запустился:', err);
+      });
     }
   }
-  function startAnthem() {
-    bgMusic.pause(); bgMusic.currentTime = 0;
-    anthem.volume = 0.6; anthem.currentTime = 0;
-    anthem.play().catch(() => {});
-  }
+
   function stopAllAudio() {
     bgMusic.pause(); bgMusic.currentTime = 0;
     anthem.pause(); anthem.currentTime = 0;
@@ -745,6 +764,17 @@
   function hideFinaleOverlay() {
     finaleOverlay.classList.remove('show');
     wheelWrap.classList.remove('finale-active');
+  }
+
+  function showAudioToast(msg) {
+    const t = document.createElement('div');
+    t.textContent = msg;
+    t.style.cssText = 'position:fixed;bottom:20px;left:50%;transform:translateX(-50%);' +
+      'background:#ff6b6b;color:#fff;padding:12px 24px;border-radius:10px;' +
+      'z-index:9999;font-weight:bold;font-family:"Segoe UI",sans-serif;max-width:80vw;text-align:center;' +
+      'box-shadow:0 4px 20px rgba(0,0,0,.5);';
+    document.body.appendChild(t);
+    setTimeout(() => t.remove(), 8000);
   }
 
   async function loadGames() {
@@ -790,7 +820,6 @@
   resetBtn.addEventListener('click', backToSetup);
   spinBtn.addEventListener('click', spin);
 
-  // Гимн продолжает играть после закрытия окна победителя
   closeWinnerBtn.addEventListener('click', () => {
     hideWinnerOverlay();
     hideFinaleOverlay();
@@ -801,6 +830,18 @@
       setupCanvas(); renderStaticWheel(); drawWheel();
     }
   });
+
+  // Диагностика аудио
+  bgMusic.addEventListener('error', () => {
+    console.error('❌ pole-chudes.mp3 не загрузился');
+    showAudioToast('⚠️ Файл pole-chudes.mp3 не найден или битый');
+  });
+  bgMusic.addEventListener('canplaythrough', () => console.log('✅ pole-chudes.mp3 загружен'));
+  anthem.addEventListener('error', () => {
+    console.error('❌ papa-anthem.mp3 не загрузился');
+    showAudioToast('⚠️ Файл papa-anthem.mp3 не найден или битый');
+  });
+  anthem.addEventListener('canplaythrough', () => console.log('✅ papa-anthem.mp3 загружен'));
 
   setupCanvas();
   loadGames();
