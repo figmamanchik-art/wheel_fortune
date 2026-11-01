@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>🎡 Колесо Фортуны Папича</title>
-<link rel="icon" href="data:,"> <!-- Убирает ошибку favicon.ico -->
+<link rel="icon" href="data:,">
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body {
@@ -22,12 +22,68 @@
   }
   .subtitle { color: #aaa; margin-bottom: 18px; text-align: center; font-size: .9rem; position: relative; z-index: 7; }
 
+  /* ===== МИКШЕР ГРОМКОСТИ ===== */
+  .volume-mixer {
+    position: fixed; top: 15px; right: 15px; z-index: 1100;
+    background: rgba(20,10,40,.9);
+    border: 1px solid rgba(255,255,255,.15);
+    border-radius: 14px; padding: 10px 12px;
+    display: flex; flex-direction: column; gap: 6px;
+    backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+    box-shadow: 0 4px 20px rgba(0,0,0,.5);
+    font-size: .75rem; min-width: 175px;
+  }
+  .volume-mixer .mixer-header {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 2px; gap: 8px;
+  }
+  .volume-mixer .mixer-title {
+    color: #ffd700; font-weight: bold; font-size: .72rem;
+    letter-spacing: 1px; text-transform: uppercase;
+  }
+  .mixer-mute {
+    background: transparent; border: 1px solid rgba(255,255,255,.2);
+    border-radius: 6px; width: 26px; height: 24px; cursor: pointer;
+    color: #aaa; font-size: 14px; display: flex; align-items: center; justify-content: center;
+    transition: all .15s; padding: 0;
+  }
+  .mixer-mute:hover { color: #ffd700; border-color: #ffd700; }
+  .mixer-mute.muted { color: #ff6b6b; border-color: #ff6b6b; }
+  .vol-row {
+    display: flex; align-items: center; gap: 6px; color: #ddd;
+  }
+  .vol-row .label { width: 20px; text-align: center; font-size: .85rem; }
+  .vol-row .name { width: 46px; font-size: .65rem; color: #999; }
+  .vol-row input[type="range"] {
+    flex: 1; min-width: 0; cursor: pointer; accent-color: #ffd700; height: 14px;
+  }
+  @media (max-width: 480px) {
+    .volume-mixer { min-width: 140px; padding: 8px; }
+    .vol-row .name { display: none; }
+  }
+
   /* ===== ЭКРАНЫ ===== */
   .screen { display: none; width: 100%; flex-direction: column; align-items: center; animation: fadeIn 0.4s ease-out; }
   .screen.active { display: flex; }
   @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-  /* ===== ЭКРАН НАСТРОЙКИ ===== */
+  /* ===== ВЫБОР РЕЖИМА ===== */
+  .mode-selector {
+    display: flex; gap: 8px; margin-bottom: 20px;
+    width: 100%; max-width: 900px;
+    background: rgba(255,255,255,.05); border-radius: 12px; padding: 6px;
+  }
+  .mode-btn {
+    flex: 1; padding: 14px; border: none; border-radius: 8px;
+    background: transparent; color: #aaa; font-weight: bold; font-size: 1.1rem;
+    cursor: pointer; transition: all .2s;
+  }
+  .mode-btn.active { background: rgba(255,215,0,.2); color: #ffd700; }
+  .mode-btn:hover:not(.active) { background: rgba(255,255,255,.08); }
+  .mode-content { display: none; width: 100%; flex-direction: column; align-items: center; }
+  .mode-content.active { display: flex; }
+
+  /* ===== НАСТРОЙКИ КОЛЕСА ===== */
   .setup-container {
     display: flex; gap: 30px; width: 100%; max-width: 900px;
     background: rgba(255,255,255,.03); border: 1px solid rgba(255,255,255,.1);
@@ -88,8 +144,15 @@
     flex: 2; background: linear-gradient(135deg, #ffd700, #ff8c00); color: #1a1a2e;
     box-shadow: 0 6px 25px rgba(255,215,0,.4); font-size: 1.4rem;
   }
+  .btn-play-sm {
+    padding: 16px 30px; font-size: 1.1rem; font-weight: bold;
+    border: none; border-radius: 50px; cursor: pointer; transition: transform .15s;
+    background: linear-gradient(135deg, #ffd700, #ff8c00); color: #1a1a2e;
+  }
+  .btn-play-sm:hover { transform: scale(1.05); }
+  .btn-play-sm:disabled { opacity: .5; cursor: not-allowed; }
 
-  /* ===== ЭКРАН ИГРЫ ===== */
+  /* ===== ИГРА ===== */
   .wheel-wrap {
     position: relative; width: 720px; height: 720px;
     max-width: 94vw; max-height: 94vw; margin-bottom: 22px;
@@ -105,58 +168,29 @@
     border-top: 46px solid #ffd700; filter: drop-shadow(0 0 10px #ffd700); z-index: 10; pointer-events: none;
     transition: filter .5s;
   }
-
-  /* ===== ФИНАЛЬНЫЕ ЭФФЕКТЫ ===== */
-  .wheel-wrap.finale-active {
-    z-index: 6;
-    transform: scale(1.08);
-  }
-  .wheel-wrap.finale-active .pointer {
-    animation: pointerPulse .5s ease-in-out infinite alternate;
-  }
+  .wheel-wrap.finale-active { z-index: 6; transform: scale(1.08); }
+  .wheel-wrap.finale-active .pointer { animation: pointerPulse .5s ease-in-out infinite alternate; }
   @keyframes pointerPulse {
     from { filter: drop-shadow(0 0 10px #ffd700) drop-shadow(0 0 20px #ffd700); }
     to   { filter: drop-shadow(0 0 30px #ffd700) drop-shadow(0 0 80px #ff6b6b); }
   }
-
   .wheel-wrap.finale-active::before {
-    content: '';
-    position: absolute;
-    inset: -50px;
-    border-radius: 50%;
-    background: repeating-conic-gradient(
-      from 0deg,
-      rgba(255,215,0,0) 0deg,
-      rgba(255,215,0,0.9) 4deg,
-      rgba(255,215,0,0) 8deg,
-      rgba(255,215,0,0) 14deg
-    );
+    content: ''; position: absolute; inset: -50px; border-radius: 50%;
+    background: repeating-conic-gradient(from 0deg,
+      rgba(255,215,0,0) 0deg, rgba(255,215,0,0.9) 4deg,
+      rgba(255,215,0,0) 8deg, rgba(255,215,0,0) 14deg);
     -webkit-mask: radial-gradient(circle, transparent 82%, black 90%, black 100%);
     mask: radial-gradient(circle, transparent 82%, black 90%, black 100%);
-    animation: stageRotate 2.5s linear infinite;
-    pointer-events: none;
-    z-index: 1;
-    filter: blur(1.5px);
+    animation: stageRotate 2.5s linear infinite; pointer-events: none; z-index: 1; filter: blur(1.5px);
   }
   .wheel-wrap.finale-active::after {
-    content: '';
-    position: absolute;
-    inset: -90px;
-    border-radius: 50%;
+    content: ''; position: absolute; inset: -90px; border-radius: 50%;
     background: radial-gradient(circle, rgba(255,215,0,.25) 0%, transparent 70%);
     animation: haloPulse 1.2s ease-in-out infinite alternate;
-    pointer-events: none;
-    z-index: -1;
-    filter: blur(25px);
+    pointer-events: none; z-index: -1; filter: blur(25px);
   }
-  @keyframes stageRotate {
-    from { transform: rotate(0deg); }
-    to   { transform: rotate(360deg); }
-  }
-  @keyframes haloPulse {
-    from { opacity: 0.5; }
-    to   { opacity: 1; }
-  }
+  @keyframes stageRotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+  @keyframes haloPulse { from { opacity: 0.5; } to { opacity: 1; } }
 
   .controls { display: flex; gap: 16px; flex-wrap: wrap; justify-content: center; margin-bottom: 18px; }
   .btn-spin { background: linear-gradient(135deg, #ffd700, #ff8c00); color: #1a1a2e; }
@@ -165,7 +199,7 @@
     border-radius: 30px; background: transparent; color: #aaa; cursor: pointer; transition: all .15s;
   }
   .btn-reset:hover { background: rgba(255,255,255,.1); color: #fff; }
-  
+
   .result { text-align: center; font-size: 1.3rem; min-height: 2em; margin-bottom: 14px; font-weight: bold; }
   .result.winner { color: #ffd700; text-shadow: 0 0 20px rgba(255,215,0,.6); animation: pulse 1s infinite; }
   .result.out { color: #ff6b6b; }
@@ -187,16 +221,13 @@
   .history-list li { margin-bottom: 4px; }
   .history-list li:last-child { color: #ffd700; font-weight: bold; }
 
-  /* ===== ЗАТЕМНЕНИЕ ФИНАЛА ===== */
   .finale-overlay {
     position: fixed; inset: 0;
     background: radial-gradient(circle at 50% 40%, rgba(10,0,30,.85) 0%, rgba(0,0,0,.97) 90%);
-    opacity: 0; pointer-events: none; z-index: 5;
-    transition: opacity 1.2s ease;
+    opacity: 0; pointer-events: none; z-index: 5; transition: opacity 1.2s ease;
   }
   .finale-overlay.show { opacity: 1; }
 
-  /* ===== ОКНО ПОБЕДИТЕЛЯ ===== */
   .winner-overlay {
     position: fixed; inset: 0; background: radial-gradient(circle at 50% 40%, #2a1a4a, #0d0d1a 80%);
     display: flex; flex-direction: column; align-items: center; justify-content: center;
@@ -213,35 +244,232 @@
     border: none; border-radius: 50px; background: linear-gradient(135deg, #ffd700, #ff8c00); color: #1a1a2e; cursor: pointer; transition: transform .15s;
   }
   .winner-overlay .close-btn:hover { transform: scale(1.05); }
+
+  /* ===== АУКЦИОН: выбор роли ===== */
+  .auction-role-select {
+    display: flex; flex-direction: column; gap: 20px; align-items: center;
+    margin-top: 40px; width: 100%; max-width: 500px;
+    background: rgba(255,255,255,.03); border: 1px solid rgba(255,255,255,.1);
+    border-radius: 20px; padding: 40px;
+  }
+  .auction-role-select h2 { font-size: 1.6rem; color: #ffd700; margin-bottom: 10px; }
+  .auction-role-select p { color: #aaa; text-align: center; font-size: .9rem; margin-bottom: 10px; }
+  .role-btn {
+    width: 100%; padding: 20px; border: 2px solid rgba(255,255,255,.15);
+    border-radius: 12px; background: rgba(255,255,255,.05);
+    color: #fff; font-weight: bold; font-size: 1.2rem; cursor: pointer;
+    transition: all .2s;
+  }
+  .role-btn:hover { background: rgba(255,215,0,.15); border-color: #ffd700; color: #ffd700; }
+  .role-btn .role-icon { font-size: 1.5rem; margin-right: 10px; }
+
+  /* ===== АУКЦИОН: зритель ===== */
+  #auction-viewer-screen {
+    position: fixed; inset: 0; z-index: 50;
+    display: none; flex-direction: column;
+    background: radial-gradient(circle at 50% 20%, #2a1a4a, #0d0d1a 70%);
+    padding: 10px; overflow: hidden;
+  }
+  #auction-viewer-screen.active { display: flex; }
+
+  .auction-timer {
+    text-align: center; font-size: clamp(2rem, 5vw, 3.5rem); font-weight: bold;
+    color: #ffd700; padding: 10px; text-shadow: 0 0 20px rgba(255,215,0,.5);
+    font-family: 'Courier New', monospace;
+    flex-shrink: 0;
+  }
+  .auction-timer.warning { color: #ff6b6b; animation: pulse 1s infinite; }
+
+  .auction-grid {
+    flex: 1; display: grid; gap: 15px; padding: 10px;
+    min-height: 0;
+  }
+  .auction-grid.n2 { grid-template-columns: 1fr 1fr; }
+  .auction-grid.n3 { grid-template-columns: 1fr 1fr 1fr; }
+  .auction-grid.n4 { grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; }
+
+  .auction-card {
+    background: rgba(255,255,255,.08);
+    border: 2px solid rgba(255,255,255,.15);
+    border-radius: 16px;
+    display: flex; align-items: center; justify-content: center; text-align: center;
+    padding: 15px; cursor: pointer; transition: all .15s;
+    font-size: clamp(.9rem, 2.5vw, 1.8rem); font-weight: bold;
+    user-select: none; overflow: hidden; word-break: break-word;
+    position: relative;
+  }
+  .auction-card:hover {
+    background: rgba(255,215,0,.15);
+    border-color: #ffd700;
+    transform: scale(1.02);
+  }
+  .auction-card.voted { border-color: #ffd700; background: rgba(255,215,0,.1); }
+  .auction-card .card-votes {
+    position: absolute; top: 10px; right: 15px;
+    background: #ffd700; color: #1a1a2e;
+    border-radius: 50%; width: 36px; height: 36px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: .95rem; font-weight: bold;
+  }
+
+  .auction-bottom {
+    display: flex; gap: 20px; align-items: center; justify-content: center;
+    padding: 15px; flex-shrink: 0; flex-wrap: wrap;
+  }
+  .auction-votes {
+    font-size: 1.5rem; font-weight: bold;
+    padding: 10px 30px; background: rgba(255,215,0,.15);
+    border-radius: 30px; color: #ffd700;
+  }
+  .auction-votes span { font-size: 2rem; }
+  #auctionSkip {
+    padding: 14px 34px; border: 2px solid rgba(255,255,255,.3);
+    background: transparent; color: #fff; font-weight: bold;
+    border-radius: 30px; cursor: pointer; transition: all .15s;
+    font-size: 1.1rem;
+  }
+  #auctionSkip:hover { background: rgba(255,255,255,.15); border-color: #fff; }
+  #auctionViewerExit {
+    padding: 10px 20px; border: 1px solid rgba(255,255,255,.15);
+    background: transparent; color: #888; font-size: .85rem;
+    border-radius: 20px; cursor: pointer; transition: all .15s;
+    margin-left: auto;
+  }
+  #auctionViewerExit:hover { color: #ff6b6b; border-color: #ff6b6b; }
+
+  /* ===== АУКЦИОН: результаты ===== */
+  #auction-results-screen {
+    position: fixed; inset: 0; z-index: 50;
+    display: none; flex-direction: column;
+    background: radial-gradient(circle at 50% 40%, #2a1a4a, #0d0d1a 80%);
+    padding: 30px; align-items: center; justify-content: center;
+    overflow-y: auto;
+  }
+  #auction-results-screen.active { display: flex; }
+  #auction-results-screen h2 {
+    font-size: 2rem; color: #ffd700; margin-bottom: 8px; text-align: center;
+    text-shadow: 0 0 20px rgba(255,215,0,.5);
+  }
+  #auction-results-screen .subtitle2 { color: #aaa; margin-bottom: 20px; text-align: center; font-size: .9rem; }
+
+  .auction-results-list {
+    max-height: 50vh; overflow-y: auto; width: 100%; max-width: 600px;
+    background: rgba(0,0,0,.3); border-radius: 12px; padding: 15px;
+    margin: 10px 0;
+  }
+  .auction-results-list::-webkit-scrollbar { width: 6px; }
+  .auction-results-list::-webkit-scrollbar-thumb { background: rgba(255,255,255,.2); border-radius: 3px; }
+  .auction-result-row {
+    display: flex; justify-content: space-between; gap: 10px;
+    padding: 8px 12px; border-bottom: 1px solid rgba(255,255,255,.05);
+    font-size: .95rem;
+  }
+  .auction-result-row:last-child { border-bottom: none; }
+  .auction-result-row .name { color: #fff; flex: 1; word-break: break-word; }
+  .auction-result-row .votes { color: #ffd700; font-weight: bold; white-space: nowrap; }
+
+  .auction-results-actions { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; margin-top: 20px; }
+
+  /* ===== АУКЦИОН: участник ===== */
+  #auction-participant-screen {
+    position: fixed; inset: 0; z-index: 50;
+    display: none; flex-direction: column;
+    background: radial-gradient(circle at 50% 40%, #2a1a4a, #0d0d1a 80%);
+    padding: 30px 20px; align-items: center;
+    overflow-y: auto;
+  }
+  #auction-participant-screen.active { display: flex; }
+  #auction-participant-screen h2 {
+    font-size: 1.8rem; color: #ffd700; margin-bottom: 8px; text-align: center;
+    text-shadow: 0 0 20px rgba(255,215,0,.4);
+  }
+  #auction-participant-screen .hint {
+    color: #aaa; margin-bottom: 20px; text-align: center; font-size: .9rem;
+    max-width: 600px;
+  }
+
+  .auction-paste {
+    width: 100%; max-width: 700px; min-height: 70px;
+    background: rgba(0,0,0,.4); border: 1px solid rgba(255,255,255,.2);
+    border-radius: 10px; padding: 12px; color: #fff;
+    font-family: inherit; font-size: .9rem;
+    margin-bottom: 12px; resize: vertical;
+    transition: border-color .2s;
+  }
+  .auction-paste:focus { outline: none; border-color: #ffd700; }
+  .auction-paste::placeholder { color: #666; }
+
+  #auctionPreview {
+    color: #6bcB77; margin: 10px 0 20px; font-size: .95rem;
+    text-align: center; min-height: 1.4em;
+  }
+  #auctionPreview.error { color: #ff6b6b; }
 </style>
 </head>
 <body>
+
+<!-- ===== МИКШЕР ГРОМКОСТИ ===== -->
+<div class="volume-mixer" id="volumeMixer">
+  <div class="mixer-header">
+    <span class="mixer-title">🔊 Громкость</span>
+    <button class="mixer-mute" id="mixerMute" title="Выключить/включить звук">🔊</button>
+  </div>
+  <div class="vol-row">
+    <span class="label">🎵</span><span class="name">Фон</span>
+    <input type="range" min="0" max="100" value="100" data-ch="bg">
+  </div>
+  <div class="vol-row">
+    <span class="label">🗳</span><span class="name">Голос</span>
+    <input type="range" min="0" max="100" value="100" data-ch="vote">
+  </div>
+  <div class="vol-row">
+    <span class="label">🏆</span><span class="name">Гимн</span>
+    <input type="range" min="0" max="100" value="100" data-ch="anthem">
+  </div>
+</div>
 
 <h1>🎡 Колесо Фортуны Папича</h1>
 <p class="subtitle">Больше отзывов в Steam → больше шансов получить высокий вес и попасть в крутку.</p>
 
 <!-- ЭКРАН НАСТРОЙКИ -->
 <div id="setup-screen" class="screen active">
-  <div class="setup-container">
-    <div class="setup-left">
-      <h2>Сколько игр в крутке?</h2>
-      <div class="size-options">
-        <button class="size-btn" data-size="10">10</button>
-        <button class="size-btn" data-size="25">25</button>
-        <button class="size-btn active" data-size="50">50</button>
+
+  <div class="mode-selector" id="modeSelector">
+    <button class="mode-btn active" data-mode="wheel">🎡 Колесо Фортуны</button>
+    <button class="mode-btn" data-mode="auction">🔨 Аукцион</button>
+  </div>
+
+  <div class="mode-content active" id="wheel-mode-content">
+    <div class="setup-container">
+      <div class="setup-left">
+        <h2>Сколько игр в крутке?</h2>
+        <div class="size-options">
+          <button class="size-btn" data-size="10">10</button>
+          <button class="size-btn" data-size="25">25</button>
+          <button class="size-btn active" data-size="50">50</button>
+        </div>
+        <p style="color: #aaa; font-size: 0.8rem; margin-top: 10px;">
+          Игры выбираются случайно, но популярные попадаются чаще. Нажми «Перераспределить», чтобы заново раздать скрытые голоса.
+        </p>
       </div>
-      <p style="color: #aaa; font-size: 0.8rem; margin-top: 10px;">
-        Игры выбираются случайно, но популярные попадаются чаще. Нажми «Перераспределить», чтобы заново раздать скрытые голоса.
-      </p>
+      <div class="setup-right">
+        <h2>Игры в крутке <span>Голоса скрыты (сюрприз!)</span></h2>
+        <div class="setup-list" id="setup-list"></div>
+      </div>
     </div>
-    <div class="setup-right">
-      <h2>Игры в крутке <span>Голоса скрыты (сюрприз!)</span></h2>
-      <div class="setup-list" id="setup-list"></div>
+    <div class="action-buttons">
+      <button class="btn btn-shuffle-setup" id="setup-shuffle-btn">🔀 Перераспределить голоса</button>
+      <button class="btn btn-play" id="play-btn">ИГРАТЬ! 🎲</button>
     </div>
   </div>
-  <div class="action-buttons">
-    <button class="btn btn-shuffle-setup" id="setup-shuffle-btn">🔀 Перераспределить голоса</button>
-    <button class="btn btn-play" id="play-btn">ИГРАТЬ! 🎲</button>
+
+  <div class="mode-content" id="auction-mode-content">
+    <div class="auction-role-select">
+      <h2>🔨 Аукцион</h2>
+      <p>Выберите роль. Зритель голосует за игры 5 минут, участник запускает крутку по полученным голосам.</p>
+      <button class="role-btn" id="role-viewer"><span class="role-icon">👁</span>Зритель</button>
+      <button class="role-btn" id="role-participant"><span class="role-icon">🎮</span>Участник</button>
+    </div>
   </div>
 </div>
 
@@ -268,18 +496,57 @@
   </div>
 </div>
 
-<!-- ЗАТЕМНЕНИЕ ФИНАЛА -->
 <div class="finale-overlay" id="finaleOverlay"></div>
 
-<!-- ОКНО ПОБЕДИТЕЛЯ -->
 <div class="winner-overlay" id="winnerOverlay">
   <h2>🏆 Победитель</h2>
   <div class="winner-name" id="winnerName"></div>
   <button class="close-btn" id="closeWinnerBtn">Закрыть</button>
 </div>
 
+<!-- ================== АУКЦИОН: ЗРИТЕЛЬ ================== -->
+<div id="auction-viewer-screen">
+  <div class="auction-timer" id="auctionTimer">5:00</div>
+  <div class="auction-grid n2" id="auctionGrid"></div>
+  <div class="auction-bottom">
+    <div class="auction-votes">Голоса: <span id="auctionVotes">0</span></div>
+    <button id="auctionSkip">⏭ Скип</button>
+    <button id="auctionViewerExit">Выйти</button>
+  </div>
+</div>
+
+<!-- ================== АУКЦИОН: РЕЗУЛЬТАТЫ ================== -->
+<div id="auction-results-screen">
+  <h2>✅ Голосование завершено</h2>
+  <p class="subtitle2">Скопируйте результат и передайте участнику</p>
+  <div class="auction-results-list" id="auctionResultsList"></div>
+  <div class="auction-results-actions">
+    <button class="btn-play-sm" id="auctionCopyBtn">📋 Скопировать</button>
+    <button class="btn btn-reset" id="auctionResultsBack">← Назад</button>
+  </div>
+</div>
+
+<!-- ================== АУКЦИОН: УЧАСТНИК ================== -->
+<div id="auction-participant-screen">
+  <h2>🔨 Вставьте результаты голосования</h2>
+  <p class="hint">Формат: «Игра, 3, Игра, 5» или «Игра: 3, Игра: 5». Можно использовать до 4 полей (остальные оставьте пустыми).</p>
+
+  <textarea class="auction-paste" placeholder="Вставьте сюда результат от первого зрителя"></textarea>
+  <textarea class="auction-paste" placeholder="Второе поле (опционально)"></textarea>
+  <textarea class="auction-paste" placeholder="Третье поле (опционально)"></textarea>
+  <textarea class="auction-paste" placeholder="Четвёртое поле (опционально)"></textarea>
+
+  <div id="auctionPreview">Распознано: 0 игр</div>
+
+  <div style="display:flex; gap:15px; margin-top:10px; flex-wrap:wrap; justify-content:center;">
+    <button class="btn-play-sm" id="auctionStartWheel" disabled>🎲 Начать крутку</button>
+    <button class="btn btn-reset" id="auctionParticipantBack">← Назад</button>
+  </div>
+</div>
+
 <audio id="bgMusic" loop preload="auto" src="pole-chudes.mp3"></audio>
 <audio id="anthem" preload="auto" src="papa-anthem.mp3"></audio>
+<audio id="voteMusic" loop preload="auto" src="vote.mp3"></audio>
 
 <script>
 (function () {
@@ -303,6 +570,8 @@
   const FINALE_MAX_END = 0.45;
   const FINALE_TURNS = 100;
 
+  const AUCTION_DURATION_SEC = 300;
+
   let ALL_GAMES = [];
   let games = [];
   let history = [];
@@ -311,13 +580,19 @@
   let loaded = false;
   let cachedSegs = null;
   let currentSize = 50;
+  let activeMode = 'wheel';
+  let lastStartMode = 'wheel';
 
+  // DOM
   const setupScreen = document.getElementById('setup-screen');
   const gameScreen = document.getElementById('game-screen');
   const setupListEl = document.getElementById('setup-list');
   const setupShuffleBtn = document.getElementById('setup-shuffle-btn');
   const playBtn = document.getElementById('play-btn');
   const sizeBtns = document.querySelectorAll('.size-btn');
+  const modeSelector = document.getElementById('modeSelector');
+  const wheelModeContent = document.getElementById('wheel-mode-content');
+  const auctionModeContent = document.getElementById('auction-mode-content');
 
   const canvas = document.getElementById('wheel');
   const ctx = canvas.getContext('2d', { alpha: true });
@@ -330,21 +605,97 @@
   const resultEl = document.getElementById('result');
   const voteListEl = document.getElementById('voteList');
   const historyListEl = document.getElementById('historyList');
-  
+
   const bgMusic = document.getElementById('bgMusic');
   const anthem = document.getElementById('anthem');
+  const voteMusic = document.getElementById('voteMusic');
   const finaleOverlay = document.getElementById('finaleOverlay');
   const winnerOverlay = document.getElementById('winnerOverlay');
   const winnerName = document.getElementById('winnerName');
   const closeWinnerBtn = document.getElementById('closeWinnerBtn');
 
+  const auctionRoleViewer = document.getElementById('role-viewer');
+  const auctionRoleParticipant = document.getElementById('role-participant');
+
+  const auctionViewerScreen = document.getElementById('auction-viewer-screen');
+  const auctionTimerEl = document.getElementById('auctionTimer');
+  const auctionGridEl = document.getElementById('auctionGrid');
+  const auctionVotesEl = document.getElementById('auctionVotes');
+  const auctionSkipBtn = document.getElementById('auctionSkip');
+  const auctionViewerExit = document.getElementById('auctionViewerExit');
+
+  const auctionResultsScreen = document.getElementById('auction-results-screen');
+  const auctionResultsListEl = document.getElementById('auctionResultsList');
+  const auctionCopyBtn = document.getElementById('auctionCopyBtn');
+  const auctionResultsBack = document.getElementById('auctionResultsBack');
+
+  const auctionParticipantScreen = document.getElementById('auction-participant-screen');
+  const auctionPastes = document.querySelectorAll('.auction-paste');
+  const auctionPreview = document.getElementById('auctionPreview');
+  const auctionStartWheelBtn = document.getElementById('auctionStartWheel');
+  const auctionParticipantBack = document.getElementById('auctionParticipantBack');
+
+  // ===== МИКШЕР ГРОМКОСТИ =====
+  const mixerMuteBtn = document.getElementById('mixerMute');
+  const mixerState = {
+    muted: false,
+    channels: {
+      bg:     { base: 0.35, audio: bgMusic },
+      vote:   { base: 0.50, audio: voteMusic },
+      anthem: { base: 0.60, audio: anthem },
+      // slider элементы добавим ниже
+    },
+  };
+  document.querySelectorAll('.vol-row input[type="range"]').forEach(inp => {
+    const ch = inp.dataset.ch;
+    if (mixerState.channels[ch]) mixerState.channels[ch].slider = inp;
+    inp.addEventListener('input', () => applyChannelVolume(ch));
+  });
+
+  function applyChannelVolume(ch) {
+    const c = mixerState.channels[ch];
+    if (!c || !c.audio || !c.slider) return;
+    const mult = mixerState.muted ? 0 : (parseFloat(c.slider.value) / 100);
+    c.audio.volume = Math.max(0, Math.min(1, c.base * mult));
+  }
+  function applyAllVolumes() {
+    Object.keys(mixerState.channels).forEach(applyChannelVolume);
+  }
+  mixerMuteBtn.addEventListener('click', () => {
+    mixerState.muted = !mixerState.muted;
+    mixerMuteBtn.textContent = mixerState.muted ? '🔇' : '🔊';
+    mixerMuteBtn.classList.toggle('muted', mixerState.muted);
+    applyAllVolumes();
+  });
+
+  // ===== АУКЦИОН: СОСТОЯНИЕ =====
+  const auctionState = {
+    startPerf: 0,
+    timeLeft: AUCTION_DURATION_SEC,
+    timerId: null,
+    currentGames: [],
+    votesLeft: 0,
+    roundVotes: {},
+    tally: new Map(),
+    locked: false,
+    active: false,
+    copyText: '',
+  };
+
+  // ===== УТИЛИТЫ =====
   function norm(a) { return ((a % TAU) + TAU) % TAU; }
   function esc(s) {
     return String(s).replace(/[&<>"']/g, c => ({
       '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
     }[c]));
   }
+  function fmtTime(sec) {
+    const m = Math.floor(sec / 60);
+    const s = Math.floor(sec % 60);
+    return m + ':' + String(s).padStart(2, '0');
+  }
 
+  // ===== CANVAS =====
   function setupCanvas() {
     const dpr = Math.min(window.devicePixelRatio || 1, 2);
     canvas.width = SIZE * dpr; canvas.height = SIZE * dpr;
@@ -471,7 +822,16 @@
     gameScreen.classList.remove('active');
     setupScreen.classList.add('active');
     stopAllAudio();
-    initSetup();
+    if (lastStartMode === 'auction') {
+      wheelModeContent.classList.remove('active');
+      auctionModeContent.classList.add('active');
+      document.querySelectorAll('.mode-btn').forEach(b => {
+        b.classList.toggle('active', b.dataset.mode === 'auction');
+      });
+      activeMode = 'auction';
+    } else {
+      initSetup();
+    }
   }
 
   function renderStaticWheel() {
@@ -603,8 +963,8 @@
       const promise = anthem.play();
       if (promise && promise.then) {
         promise.then(() => {
-          console.log('✅ Гимн стартовал');
-          const targetV = 0.6;
+          const mult = mixerState.muted ? 0 : (parseFloat(mixerState.channels.anthem.slider.value) / 100);
+          const targetV = mixerState.channels.anthem.base * mult;
           const t0 = performance.now();
           function fade(now) {
             const timePassed = Math.max(0, now - t0);
@@ -616,9 +976,9 @@
         }).catch(err => {
           console.error('❌ Гимн не запустился:', err);
           if (err.name === 'NotSupportedError') {
-            showAudioToast('⚠️ Файл papa-anthem.mp3 не найден или битый. Проверь расширение файла!');
+            showAudioToast('⚠️ Файл papa-anthem.mp3 не найден или битый.');
           } else if (err.name === 'NotAllowedError') {
-            showAudioToast('⚠️ Браузер заблокировал звук. Кликни в любое место и нажми «Крутить» ещё раз.');
+            showAudioToast('⚠️ Браузер заблокировал звук. Кликни и нажми «Крутить» ещё раз.');
           } else {
             showAudioToast('⚠️ Ошибка гимна: ' + err.name);
           }
@@ -626,7 +986,6 @@
       }
     } catch (e) {
       console.error('❌ Ошибка запуска гимна:', e);
-      showAudioToast('⚠️ Ошибка воспроизведения гимна');
     }
   }
 
@@ -641,7 +1000,6 @@
 
     showFinaleOverlay();
     wheelWrap.classList.add('finale-active');
-
     playAnthemWithFade();
 
     const segs = computeSegments();
@@ -782,16 +1140,15 @@
 
   function startBgMusic() {
     if (bgMusic.paused) {
-      bgMusic.volume = 0.35;
-      bgMusic.play().catch(err => {
-        console.error('❌ pole-chudes.mp3 не запустился:', err);
-      });
+      applyChannelVolume('bg');
+      bgMusic.play().catch(err => console.error('❌ pole-chudes.mp3:', err));
     }
   }
 
   function stopAllAudio() {
     bgMusic.pause(); bgMusic.currentTime = 0;
     anthem.pause(); anthem.currentTime = 0;
+    voteMusic.pause(); voteMusic.currentTime = 0;
   }
 
   function showWinner(name) {
@@ -810,10 +1167,10 @@
     t.textContent = msg;
     t.style.cssText = 'position:fixed;bottom:20px;left:50%;transform:translateX(-50%);' +
       'background:#ff6b6b;color:#fff;padding:12px 24px;border-radius:10px;' +
-      'z-index:9999;font-weight:bold;font-family:"Segoe UI",sans-serif;max-width:80vw;text-align:center;' +
+      'z-index:2000;font-weight:bold;font-family:"Segoe UI",sans-serif;max-width:80vw;text-align:center;' +
       'box-shadow:0 4px 20px rgba(0,0,0,.5);';
     document.body.appendChild(t);
-    setTimeout(() => t.remove(), 8000);
+    setTimeout(() => t.remove(), 6000);
   }
 
   async function loadGames() {
@@ -834,6 +1191,25 @@
     }
   }
 
+  // ============ РЕЖИМЫ ============
+  modeSelector.addEventListener('click', (e) => {
+    const btn = e.target.closest('.mode-btn');
+    if (!btn) return;
+    const mode = btn.dataset.mode;
+    if (mode === activeMode) return;
+    document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    activeMode = mode;
+    if (mode === 'wheel') {
+      wheelModeContent.classList.add('active');
+      auctionModeContent.classList.remove('active');
+      if (loaded) initSetup();
+    } else {
+      wheelModeContent.classList.remove('active');
+      auctionModeContent.classList.add('active');
+    }
+  });
+
   sizeBtns.forEach(btn => {
     btn.addEventListener('click', () => {
       sizeBtns.forEach(b => b.classList.remove('active'));
@@ -853,6 +1229,7 @@
 
   playBtn.addEventListener('click', () => {
     if (!loaded || !games.length) return;
+    lastStartMode = 'wheel';
     startGame();
   });
 
@@ -877,20 +1254,288 @@
     }
   });
 
-  // Диагностика аудио принудительно
+  // ============ АУКЦИОН: ЗРИТЕЛЬ ============
+
+  function startAuctionVoting() {
+    auctionState.startPerf = performance.now();
+    auctionState.timeLeft = AUCTION_DURATION_SEC;
+    auctionState.tally = new Map();
+    auctionState.active = true;
+    auctionState.locked = false;
+    auctionState.copyText = '';
+
+    auctionViewerScreen.classList.add('active');
+    auctionResultsScreen.classList.remove('active');
+    auctionParticipantScreen.classList.remove('active');
+
+    startAuctionRound();
+    startVoteMusic();
+    updateAuctionTimer();
+    if (auctionState.timerId) clearInterval(auctionState.timerId);
+    auctionState.timerId = setInterval(tickAuctionTimer, 250);
+  }
+
+  function tickAuctionTimer() {
+    if (!auctionState.active) return;
+    const elapsed = (performance.now() - auctionState.startPerf) / 1000;
+    const left = AUCTION_DURATION_SEC - elapsed;
+    auctionState.timeLeft = Math.max(0, left);
+    updateAuctionTimer();
+    if (left <= 0) endAuctionVoting();
+  }
+
+  function updateAuctionTimer() {
+    auctionTimerEl.textContent = fmtTime(Math.ceil(auctionState.timeLeft));
+    auctionTimerEl.classList.toggle('warning', auctionState.timeLeft <= 30);
+  }
+
+  function startVoteMusic() {
+    if (voteMusic.paused) {
+      voteMusic.currentTime = 0;
+      applyChannelVolume('vote');
+      voteMusic.play().catch(err => console.warn('vote.mp3:', err));
+    }
+  }
+
+  function startAuctionRound() {
+    if (!auctionState.active || auctionState.locked) return;
+    const count = 2 + Math.floor(Math.random() * 3); // 2, 3 или 4
+    const shuffled = ALL_GAMES.slice().sort(() => Math.random() - 0.5);
+    const picked = shuffled.slice(0, Math.min(count, ALL_GAMES.length));
+    auctionState.currentGames = picked;
+    auctionState.votesLeft = 1 + Math.floor(Math.random() * 10);
+    auctionState.roundVotes = {};
+    renderAuctionGrid();
+    updateAuctionVotesDisplay();
+  }
+
+  function renderAuctionGrid() {
+    const n = auctionState.currentGames.length;
+    auctionGridEl.className = 'auction-grid n' + n;
+    auctionGridEl.innerHTML = '';
+    auctionState.currentGames.forEach(g => {
+      const card = document.createElement('div');
+      card.className = 'auction-card';
+      const rv = auctionState.roundVotes[g.name] || 0;
+      if (rv > 0) card.classList.add('voted');
+      const badge = rv > 0 ? `<div class="card-votes">${rv}</div>` : '';
+      card.innerHTML = badge + esc(g.name);
+      card.addEventListener('click', () => clickAuctionGame(g));
+      auctionGridEl.appendChild(card);
+    });
+  }
+
+  function updateAuctionVotesDisplay() {
+    auctionVotesEl.textContent = auctionState.votesLeft;
+  }
+
+  function clickAuctionGame(game) {
+    if (!auctionState.active || auctionState.locked) return;
+    if (auctionState.votesLeft <= 0) return;
+
+    const cur = auctionState.tally.get(game.name) || 0;
+    auctionState.tally.set(game.name, cur + 1);
+    auctionState.roundVotes[game.name] = (auctionState.roundVotes[game.name] || 0) + 1;
+    auctionState.votesLeft -= 1;
+
+    renderAuctionGrid();
+    updateAuctionVotesDisplay();
+
+    if (auctionState.votesLeft <= 0) {
+      auctionState.locked = true;
+      setTimeout(() => {
+        if (!auctionState.active) return;
+        auctionState.locked = false;
+        startAuctionRound();
+      }, 700);
+    }
+  }
+
+  auctionSkipBtn.addEventListener('click', () => {
+    if (!auctionState.active || auctionState.locked) return;
+    // откатываем голоса текущего раунда
+    Object.entries(auctionState.roundVotes).forEach(([name, v]) => {
+      const cur = auctionState.tally.get(name) || 0;
+      if (cur - v > 0) auctionState.tally.set(name, cur - v);
+      else auctionState.tally.delete(name);
+    });
+    startAuctionRound();
+  });
+
+  auctionViewerExit.addEventListener('click', () => {
+    if (auctionState.active) {
+      if (!confirm('Прервать голосование? Результаты будут потеряны.')) return;
+    }
+    stopAuction();
+    auctionViewerScreen.classList.remove('active');
+  });
+
+  function stopAuction() {
+    auctionState.active = false;
+    if (auctionState.timerId) { clearInterval(auctionState.timerId); auctionState.timerId = null; }
+    voteMusic.pause();
+    voteMusic.currentTime = 0;
+  }
+
+  function endAuctionVoting() {
+    stopAuction();
+    auctionViewerScreen.classList.remove('active');
+    showAuctionResults();
+  }
+
+  function showAuctionResults() {
+    // сортировка по индексу в ALL_GAMES
+    const indexOf = (name) => {
+      const i = ALL_GAMES.findIndex(g => g.name === name);
+      return i === -1 ? 99999 : i;
+    };
+    const entries = Array.from(auctionState.tally.entries())
+      .map(([name, votes]) => ({ name, votes }))
+      .sort((a, b) => indexOf(a.name) - indexOf(b.name));
+
+    auctionResultsListEl.innerHTML = entries.length
+      ? entries.map(e => `<div class="auction-result-row"><span class="name">${esc(e.name)}</span><span class="votes">${e.votes} гол.</span></div>`).join('')
+      : '<div style="text-align:center;color:#aaa;padding:20px;">Вы не проголосовали ни за одну игру</div>';
+
+    // формат для копирования: "Игра, 3, Игра, 5, ..."
+    auctionState.copyText = entries.map(e => `${e.name}, ${e.votes}`).join(', ');
+
+    auctionResultsScreen.classList.add('active');
+  }
+
+  auctionCopyBtn.addEventListener('click', async () => {
+    if (!auctionState.copyText) return;
+    const prev = auctionCopyBtn.textContent;
+    try {
+      await navigator.clipboard.writeText(auctionState.copyText);
+    } catch (e) {
+      const ta = document.createElement('textarea');
+      ta.value = auctionState.copyText;
+      ta.style.position = 'fixed'; ta.style.left = '-9999px';
+      document.body.appendChild(ta);
+      ta.select();
+      try { document.execCommand('copy'); } catch (ee) {}
+      document.body.removeChild(ta);
+    }
+    auctionCopyBtn.textContent = '✅ Скопировано!';
+    setTimeout(() => auctionCopyBtn.textContent = prev, 1500);
+  });
+
+  auctionResultsBack.addEventListener('click', () => {
+    auctionResultsScreen.classList.remove('active');
+  });
+
+  // ============ АУКЦИОН: УЧАСТНИК ============
+
+  auctionRoleViewer.addEventListener('click', () => {
+    if (!loaded) { showAudioToast('⚠️ Сначала дождитесь загрузки games.json'); return; }
+    startAuctionVoting();
+  });
+
+  auctionRoleParticipant.addEventListener('click', () => {
+    if (!loaded) { showAudioToast('⚠️ Сначала дождитесь загрузки games.json'); return; }
+    auctionParticipantScreen.classList.add('active');
+    updateParticipantPreview();
+  });
+
+  auctionParticipantBack.addEventListener('click', () => {
+    auctionParticipantScreen.classList.remove('active');
+  });
+
+  auctionPastes.forEach(ta => {
+    ta.addEventListener('input', updateParticipantPreview);
+  });
+
+  function parseGameVotes(text) {
+    if (!text || !text.trim()) return [];
+    const chunks = text.split(',').map(s => s.trim()).filter(Boolean);
+    const hasColons = chunks.some(c => /:\s*\d+$/.test(c));
+    const result = [];
+    if (hasColons) {
+      chunks.forEach(c => {
+        const m = c.match(/^(.+?):\s*(\d+)$/);
+        if (m) {
+          const v = parseInt(m[2], 10);
+          if (!isNaN(v) && v > 0) result.push({ name: m[1].trim(), votes: v });
+        }
+      });
+    } else {
+      for (let i = 0; i < chunks.length; i += 2) {
+        if (i + 1 >= chunks.length) break;
+        const v = parseInt(chunks[i + 1], 10);
+        if (!isNaN(v) && v > 0 && chunks[i]) {
+          result.push({ name: chunks[i], votes: v });
+        }
+      }
+    }
+    return result;
+  }
+
+  function collectParticipantGames() {
+    const all = [];
+    auctionPastes.forEach(ta => {
+      all.push(...parseGameVotes(ta.value));
+    });
+    // объединяем одинаковые игры
+    const map = new Map();
+    all.forEach(g => {
+      const key = g.name.toLowerCase();
+      if (map.has(key)) map.get(key).votes += g.votes;
+      else map.set(key, { name: g.name, votes: g.votes });
+    });
+    return Array.from(map.values());
+  }
+
+  function updateParticipantPreview() {
+    const gamesList = collectParticipantGames();
+    if (!gamesList.length) {
+      auctionPreview.textContent = 'Распознано: 0 игр';
+      auctionPreview.classList.remove('error');
+      auctionStartWheelBtn.disabled = true;
+      return;
+    }
+    const totalVotes = gamesList.reduce((s, g) => s + g.votes, 0);
+    auctionPreview.textContent = `Распознано: ${gamesList.length} игр, всего ${totalVotes} голосов`;
+    auctionPreview.classList.remove('error');
+    auctionStartWheelBtn.disabled = false;
+  }
+
+  auctionStartWheelBtn.addEventListener('click', () => {
+    const gamesList = collectParticipantGames();
+    if (!gamesList.length) return;
+    // находим каноничные имена в ALL_GAMES
+    games = gamesList.map((g, i) => {
+      const canonical = ALL_GAMES.find(x => x.name.toLowerCase() === g.name.toLowerCase());
+      return {
+        name: canonical ? canonical.name : g.name,
+        baseWeight: g.votes,
+        weight: g.votes,
+        colorIdx: i
+      };
+    });
+    invalidate();
+    lastStartMode = 'auction';
+    auctionParticipantScreen.classList.remove('active');
+    startGame();
+  });
+
+  // ============ СТАРТ ============
   bgMusic.load();
   anthem.load();
+  voteMusic.load();
 
-  bgMusic.addEventListener('error', () => console.error('❌ Ошибка загрузки pole-chudes.mp3. Проверь файл!'));
-  bgMusic.addEventListener('canplaythrough', () => console.log('✅ pole-chudes.mp3 загружен'));
-  
+  bgMusic.addEventListener('error', () => console.error('❌ Ошибка загрузки pole-chudes.mp3'));
   anthem.addEventListener('error', () => {
-    console.error('❌ Ошибка загрузки papa-anthem.mp3. Проверь расширение (не .mp3.mp3 ли?)');
-    showAudioToast('⚠️ Ошибка: файл papa-anthem.mp3 не найден или битый');
+    console.error('❌ Ошибка загрузки papa-anthem.mp3');
+    showAudioToast('⚠️ Файл papa-anthem.mp3 не найден или битый');
   });
-  anthem.addEventListener('canplaythrough', () => console.log('✅ papa-anthem.mp3 загружен'));
+  voteMusic.addEventListener('error', () => {
+    console.error('❌ Ошибка загрузки vote.mp3');
+    showAudioToast('⚠️ Файл vote.mp3 не найден или битый');
+  });
 
   setupCanvas();
+  applyAllVolumes();
   loadGames();
 })();
 </script>
