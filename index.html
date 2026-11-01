@@ -55,8 +55,23 @@
   .setup-list-item {
     padding: 8px 12px; margin-bottom: 6px; background: rgba(255,255,255,.05);
     border-radius: 6px; font-size: 0.9rem; display: flex; justify-content: space-between;
+    align-items: center; gap: 8px;
+  }
+  .setup-list-item > span:first-child {
+    flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
   }
   .setup-list-item .hidden-votes { color: #ff6b6b; font-weight: bold; letter-spacing: 2px;}
+  .replace-btn {
+    background: transparent; border: 1px solid rgba(255,255,255,.2);
+    border-radius: 50%; width: 26px; height: 26px; min-width: 26px;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; font-size: 12px; color: #aaa;
+    transition: all .15s; padding: 0;
+  }
+  .replace-btn:hover {
+    background: rgba(255,215,0,.2); color: #ffd700; border-color: #ffd700;
+    transform: rotate(180deg);
+  }
 
   .action-buttons { display: flex; gap: 16px; margin-top: 20px; width: 100%; max-width: 900px; flex-wrap: wrap; }
   .btn {
@@ -395,12 +410,40 @@
   }
 
   function renderSetupList() {
-    setupListEl.innerHTML = games.map(g => `
+    setupListEl.innerHTML = games.map((g, idx) => `
       <div class="setup-list-item">
-        <span>${esc(g.name)}</span>
+        <span title="${esc(g.name)}">${esc(g.name)}</span>
         <span class="hidden-votes">???</span>
+        <button class="replace-btn" data-idx="${idx}" title="Заменить на другую игру">🔄</button>
       </div>
     `).join('');
+  }
+
+  function replaceGame(idx) {
+    if (spinning) return;
+    const currentNames = new Set(games.map(g => g.name));
+    const candidates = ALL_GAMES.filter(g => !currentNames.has(g.name));
+    if (!candidates.length) {
+      setupShuffleBtn.textContent = '⚠️ Нечем заменить — все записи уже в крутке!';
+      setTimeout(() => setupShuffleBtn.textContent = '🔀 Перераспределить голоса', 2000);
+      return;
+    }
+    const newGame = candidates[Math.floor(Math.random() * candidates.length)];
+    const keepColor = games[idx].colorIdx;
+    games[idx] = {
+      name: newGame.name,
+      baseWeight: newGame.weight || 0,
+      weight: 0,
+      colorIdx: keepColor
+    };
+    const maxBase = Math.max(...games.map(g => g.baseWeight || 0), 1);
+    const pop = (games[idx].baseWeight || 0) / maxBase;
+    let w = Math.floor(Math.random() * 100) + 1;
+    w += Math.floor(pop * 150 * Math.random());
+    if (Math.random() < 0.15) w += Math.floor(Math.random() * 100);
+    games[idx].weight = w;
+    invalidate();
+    renderSetupList();
   }
 
   function startGame() {
@@ -564,7 +607,6 @@
           const targetV = 0.6;
           const t0 = performance.now();
           function fade(now) {
-            // Защита от отрицательного времени (баг с requestAnimationFrame)
             const timePassed = Math.max(0, now - t0);
             const t = Math.min(timePassed / 800, 1);
             anthem.volume = targetV * t;
@@ -820,6 +862,13 @@
   closeWinnerBtn.addEventListener('click', () => {
     hideWinnerOverlay();
     hideFinaleOverlay();
+  });
+
+  setupListEl.addEventListener('click', (e) => {
+    const btn = e.target.closest('.replace-btn');
+    if (!btn) return;
+    const idx = parseInt(btn.dataset.idx, 10);
+    if (!isNaN(idx)) replaceGame(idx);
   });
 
   window.addEventListener('resize', () => {
