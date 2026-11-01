@@ -699,31 +699,141 @@
     }
   }
 
-  // ===== ОБЛОЖКИ: PLACEHOLD.CO =====
+  // ===== ОБЛОЖКИ: STEAM + БЕЗОПАСНАЯ ОЧЕРЕДЬ =====
   const seenCovers = new Set();
+  const steamCache = new Map();
+  const steamQueue = [];
+  let isProcessingQueue = false;
+  let steamFailures = 0;
 
-  function applyCoverToCard(card, gameName) {
+  // Загружаем кэш из localStorage
+  (function loadSteamCache() {
+    try {
+      const raw = localStorage.getItem('papaWheelSteamCache_v2');
+      if (raw) {
+        const obj = JSON.parse(raw);
+        Object.entries(obj).forEach(([k, v]) => steamCache.set(k, v));
+      }
+    } catch (e) {}
+  })();
+
+  function saveSteamCache() {
+    try {
+      const obj = {};
+      steamCache.forEach((v, k) => { obj[k] = v; });
+      localStorage.setItem('papaWheelSteamCache_v2', JSON.stringify(obj));
+    } catch (e) {}
+  }
+
+  function hashCode(str) {
+    let h = 0;
+    for (let i = 0; i < str.length; i++) {
+      h = ((h << 5) - h + str.charCodeAt(i)) | 0;
+    }
+    return Math.abs(h);
+  }
+
+  // Умная очередь запросов
+  async function getSteamCover(gameName) {
+    if (steamCache.has(gameName)) return steamCache.get(gameName);
+
+    return new Promise((resolve) => {
+      steamQueue.push({ gameName, resolve });
+      processSteamQueue();
+    });
+  }
+
+  async function processSteamQueue() {
+    if (isProcessingQueue || steamQueue.length === 0) return;
+    isProcessingQueue = true;
+
+    while (steamQueue.length > 0) {
+      // Предохранитель: если было 3 ошибки подряд — стопорим очередь на минуту
+      if (steamFailures >= 3) {
+        console.warn('Steam API: предохранитель активирован. Ждём 60 секунд.');
+        setTimeout(() => {
+          steamFailures = 0;
+          isProcessingQueue = false;
+          processSteamQueue();
+        }, 60000);
+        break;
+      }
+
+      const task = steamQueue.shift();
+      
+      try {
+        const url = `https://store.steampowered.com/api/storesearch/?term=${encodeURIComponent(task.gameName)}&cc=us&l=en`;
+        const res = await fetch(url);
+        
+        if (res.status === 429) {
+          steamFailures += 5; // Жёстко триггерим предохранитель
+          steamQueue.unshift(task); // Возвращаем задачу обратно
+          throw new Error('429 Too Many Requests');
+        }
+        
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        
+        const data = await res.json();
+        const item = (data.items && data.items[0]) || null;
+        
+        if (item && item.id) {
+          const coverUrl = `https://cdn.cloudflare.steamstatic.com/steam/apps/${item.id}/header.jpg`;
+          steamCache.set(task.gameName, coverUrl);
+          task.resolve(coverUrl);
+        } else {
+          steamCache.set(task.gameName, null); // Игра не найдена
+          task.resolve(null);
+        }
+        
+        steamFailures = 0; // Сбрасываем счетчик при успехе
+        saveSteamCache(); // Сохраняем результат
+        
+      } catch (e) {
+        console.warn('Ошибка поиска Steam для:', task.gameName, e);
+        task.resolve(null); // Возвращаем null, чтобы сработал фолбэк
+      }
+
+      // Строгая пауза 2 секунды между запросами
+      await new Promise(r => setTimeout(r, 2000));
+    }
+
+    isProcessingQueue = false;
+  }
+
+  async function applyCoverToCard(card, gameName) {
     const wasSeen = seenCovers.has(gameName);
     let img = card.querySelector('.card-cover');
     if (!img) {
       img = document.createElement('img');
       img.className = 'card-cover' + (wasSeen ? ' instant' : '');
       img.alt = '';
+      img.referrerPolicy = 'no-referrer';
       card.insertBefore(img, card.firstChild);
     }
+    
     const markLoaded = () => {
       img.classList.add('loaded');
       seenCovers.add(gameName);
     };
+    
     img.onload = markLoaded;
     img.onerror = () => {
-      console.warn('Placehold.co не сработал для:', gameName);
-      img.remove();
+      // Если обложка не загрузилась, ставим заглушку
+      img.src = `https://placehold.co/400x200/1a1a2e/FFFFFF?text=${encodeURIComponent(gameName)}`;
+      img.onerror = null;
     };
-    
-    // Генерируем изображение с текстом (названием игры) через Placehold.co
-    const encodedText = encodeURIComponent(gameName);
-    img.src = `https://placehold.co/400x200/1a1a2e/FFFFFF?text=${encodedText}`;
+
+    // Ждём ответа от безопасной очереди Steam
+    const steamUrl = await getSteamCover(gameName);
+
+    // Если карточку уже убрали с экрана — прерываемся
+    if (!document.body.contains(card)) return;
+
+    if (steamUrl) {
+      img.src = steamUrl;
+    } else {
+      img.src = `https://placehold.co/400x200/1a1a2e/FFFFFF?text=${encodeURIComponent(gameName)}`;
+    }
     
     if (img.complete && img.naturalWidth > 0) markLoaded();
   }
