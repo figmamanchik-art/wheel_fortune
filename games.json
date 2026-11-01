@@ -1,0 +1,5002 @@
+[
+  {
+    "name": "Counter-Strike 2",
+    "popularity": 0.9999,
+    "weight": 300
+  },
+  {
+    "name": "Dota 2",
+    "popularity": 0.9996,
+    "weight": 294
+  },
+  {
+    "name": "Grand Theft Auto V Legacy",
+    "popularity": 0.9995,
+    "weight": 292
+  },
+  {
+    "name": "Terraria",
+    "popularity": 0.9993,
+    "weight": 288
+  },
+  {
+    "name": "Rust",
+    "popularity": 0.9992,
+    "weight": 286
+  },
+  {
+    "name": "Team Fortress 2",
+    "popularity": 0.9992,
+    "weight": 286
+  },
+  {
+    "name": "Garry's Mod",
+    "popularity": 0.9992,
+    "weight": 286
+  },
+  {
+    "name": "Black Myth: Wukong",
+    "popularity": 0.9992,
+    "weight": 286
+  },
+  {
+    "name": "ELDEN RING",
+    "popularity": 0.9991,
+    "weight": 284
+  },
+  {
+    "name": "HELLDIVERS™ 2",
+    "popularity": 0.9991,
+    "weight": 284
+  },
+  {
+    "name": "Left 4 Dead 2",
+    "popularity": 0.9991,
+    "weight": 284
+  },
+  {
+    "name": "Wallpaper Engine",
+    "popularity": 0.999,
+    "weight": 282
+  },
+  {
+    "name": "Stardew Valley",
+    "popularity": 0.999,
+    "weight": 282
+  },
+  {
+    "name": "Euro Truck Simulator 2",
+    "popularity": 0.999,
+    "weight": 282
+  },
+  {
+    "name": "Cyberpunk 2077",
+    "popularity": 0.9989,
+    "weight": 280
+  },
+  {
+    "name": "The Witcher 3: Wild Hunt",
+    "popularity": 0.9989,
+    "weight": 280
+  },
+  {
+    "name": "Dead by Daylight",
+    "popularity": 0.9989,
+    "weight": 280
+  },
+  {
+    "name": "Phasmophobia",
+    "popularity": 0.9989,
+    "weight": 280
+  },
+  {
+    "name": "Baldur's Gate 3",
+    "popularity": 0.9988,
+    "weight": 278
+  },
+  {
+    "name": "Red Dead Redemption 2",
+    "popularity": 0.9988,
+    "weight": 278
+  },
+  {
+    "name": "ARK: Survival Evolved",
+    "popularity": 0.9988,
+    "weight": 278
+  },
+  {
+    "name": "Among Us",
+    "popularity": 0.9988,
+    "weight": 278
+  },
+  {
+    "name": "PAYDAY 2",
+    "popularity": 0.9987,
+    "weight": 276
+  },
+  {
+    "name": "The Forest",
+    "popularity": 0.9986,
+    "weight": 274
+  },
+  {
+    "name": "Warframe",
+    "popularity": 0.9986,
+    "weight": 274
+  },
+  {
+    "name": "Destiny 2",
+    "popularity": 0.9986,
+    "weight": 274
+  },
+  {
+    "name": "Rocket League®",
+    "popularity": 0.9985,
+    "weight": 272
+  },
+  {
+    "name": "Unturned",
+    "popularity": 0.9985,
+    "weight": 272
+  },
+  {
+    "name": "Valheim",
+    "popularity": 0.9983,
+    "weight": 268
+  },
+  {
+    "name": "Don't Starve Together",
+    "popularity": 0.9983,
+    "weight": 268
+  },
+  {
+    "name": "Monster Hunter: World",
+    "popularity": 0.9983,
+    "weight": 268
+  },
+  {
+    "name": "Lethal Company",
+    "popularity": 0.9983,
+    "weight": 268
+  },
+  {
+    "name": "Fall Guys",
+    "popularity": 0.9983,
+    "weight": 268
+  },
+  {
+    "name": "Dying Light",
+    "popularity": 0.9982,
+    "weight": 266
+  },
+  {
+    "name": "DayZ",
+    "popularity": 0.9981,
+    "weight": 265
+  },
+  {
+    "name": "Geometry Dash",
+    "popularity": 0.9981,
+    "weight": 265
+  },
+  {
+    "name": "Hollow Knight",
+    "popularity": 0.9981,
+    "weight": 265
+  },
+  {
+    "name": "DARK SOULS™ III",
+    "popularity": 0.998,
+    "weight": 263
+  },
+  {
+    "name": "Fallout 4",
+    "popularity": 0.9979,
+    "weight": 261
+  },
+  {
+    "name": "Brawlhalla",
+    "popularity": 0.9979,
+    "weight": 261
+  },
+  {
+    "name": "Palworld",
+    "popularity": 0.9979,
+    "weight": 261
+  },
+  {
+    "name": "Project Zomboid",
+    "popularity": 0.9979,
+    "weight": 261
+  },
+  {
+    "name": "Tom Clancy's Rainbow Six® Siege X",
+    "popularity": 0.9979,
+    "weight": 261
+  },
+  {
+    "name": "7 Days to Die",
+    "popularity": 0.9978,
+    "weight": 259
+  },
+  {
+    "name": "Sea of Thieves: 2025 Edition",
+    "popularity": 0.9978,
+    "weight": 259
+  },
+  {
+    "name": "Bloons TD 6",
+    "popularity": 0.9978,
+    "weight": 259
+  },
+  {
+    "name": "No Man's Sky",
+    "popularity": 0.9978,
+    "weight": 259
+  },
+  {
+    "name": "Sid Meier’s Civilization® VI",
+    "popularity": 0.9977,
+    "weight": 257
+  },
+  {
+    "name": "Paladins®",
+    "popularity": 0.9977,
+    "weight": 257
+  },
+  {
+    "name": "Raft",
+    "popularity": 0.9977,
+    "weight": 257
+  },
+  {
+    "name": "The Binding of Isaac: Rebirth",
+    "popularity": 0.9977,
+    "weight": 257
+  },
+  {
+    "name": "Deep Rock Galactic",
+    "popularity": 0.9977,
+    "weight": 257
+  },
+  {
+    "name": "Hearts of Iron IV",
+    "popularity": 0.9977,
+    "weight": 257
+  },
+  {
+    "name": "The Elder Scrolls V: Skyrim Special Edition",
+    "popularity": 0.9977,
+    "weight": 257
+  },
+  {
+    "name": "BeamNG.drive",
+    "popularity": 0.9976,
+    "weight": 255
+  },
+  {
+    "name": "Sekiro™: Shadows Die Twice - GOTY Edition",
+    "popularity": 0.9976,
+    "weight": 255
+  },
+  {
+    "name": "Hogwarts Legacy",
+    "popularity": 0.9976,
+    "weight": 255
+  },
+  {
+    "name": "The Elder Scrolls V: Skyrim",
+    "popularity": 0.9975,
+    "weight": 253
+  },
+  {
+    "name": "Subnautica",
+    "popularity": 0.9975,
+    "weight": 253
+  },
+  {
+    "name": "Risk of Rain 2",
+    "popularity": 0.9975,
+    "weight": 253
+  },
+  {
+    "name": "Borderlands 2",
+    "popularity": 0.9974,
+    "weight": 251
+  },
+  {
+    "name": "Marvel Rivals",
+    "popularity": 0.9973,
+    "weight": 249
+  },
+  {
+    "name": "Arma 3",
+    "popularity": 0.9973,
+    "weight": 249
+  },
+  {
+    "name": "People Playground",
+    "popularity": 0.9973,
+    "weight": 249
+  },
+  {
+    "name": "Hades",
+    "popularity": 0.9973,
+    "weight": 249
+  },
+  {
+    "name": "Cities: Skylines",
+    "popularity": 0.9972,
+    "weight": 248
+  },
+  {
+    "name": "Undertale",
+    "popularity": 0.9972,
+    "weight": 248
+  },
+  {
+    "name": "Mount & Blade II: Bannerlord",
+    "popularity": 0.9971,
+    "weight": 246
+  },
+  {
+    "name": "Titanfall® 2",
+    "popularity": 0.997,
+    "weight": 244
+  },
+  {
+    "name": "Sons Of The Forest",
+    "popularity": 0.997,
+    "weight": 244
+  },
+  {
+    "name": "Vampire Survivors",
+    "popularity": 0.997,
+    "weight": 244
+  },
+  {
+    "name": "Battlefield™ V",
+    "popularity": 0.997,
+    "weight": 244
+  },
+  {
+    "name": "Counter-Strike",
+    "popularity": 0.997,
+    "weight": 244
+  },
+  {
+    "name": "Hunt: Showdown 1896",
+    "popularity": 0.997,
+    "weight": 244
+  },
+  {
+    "name": "Tomb Raider Game of the Year",
+    "popularity": 0.9969,
+    "weight": 242
+  },
+  {
+    "name": "Half-Life 2",
+    "popularity": 0.9969,
+    "weight": 242
+  },
+  {
+    "name": "Halo: The Master Chief Collection",
+    "popularity": 0.9969,
+    "weight": 242
+  },
+  {
+    "name": "VRChat",
+    "popularity": 0.9969,
+    "weight": 242
+  },
+  {
+    "name": "Ready or Not",
+    "popularity": 0.9968,
+    "weight": 240
+  },
+  {
+    "name": "Path of Exile",
+    "popularity": 0.9968,
+    "weight": 240
+  },
+  {
+    "name": "Satisfactory",
+    "popularity": 0.9968,
+    "weight": 240
+  },
+  {
+    "name": "Fallout: New Vegas",
+    "popularity": 0.9967,
+    "weight": 238
+  },
+  {
+    "name": "Forza Horizon 5",
+    "popularity": 0.9967,
+    "weight": 238
+  },
+  {
+    "name": "It Takes Two",
+    "popularity": 0.9966,
+    "weight": 237
+  },
+  {
+    "name": "Factorio",
+    "popularity": 0.9965,
+    "weight": 235
+  },
+  {
+    "name": "Call of Duty®: Black Ops III",
+    "popularity": 0.9965,
+    "weight": 235
+  },
+  {
+    "name": "SCP: Secret Laboratory",
+    "popularity": 0.9965,
+    "weight": 235
+  },
+  {
+    "name": "Human Fall Flat",
+    "popularity": 0.9965,
+    "weight": 235
+  },
+  {
+    "name": "Doki Doki Literature Club!",
+    "popularity": 0.9965,
+    "weight": 235
+  },
+  {
+    "name": "Squad",
+    "popularity": 0.9965,
+    "weight": 235
+  },
+  {
+    "name": "RimWorld",
+    "popularity": 0.9965,
+    "weight": 235
+  },
+  {
+    "name": "DOOM",
+    "popularity": 0.9964,
+    "weight": 233
+  },
+  {
+    "name": "DOOM Eternal",
+    "popularity": 0.9964,
+    "weight": 233
+  },
+  {
+    "name": "Sid Meier's Civilization® V",
+    "popularity": 0.9964,
+    "weight": 233
+  },
+  {
+    "name": "Schedule I",
+    "popularity": 0.9964,
+    "weight": 233
+  },
+  {
+    "name": "Lost Ark",
+    "popularity": 0.9964,
+    "weight": 233
+  },
+  {
+    "name": "Dying Light 2 Stay Human: Reloaded Edition",
+    "popularity": 0.9962,
+    "weight": 229
+  },
+  {
+    "name": "Battlefield™ 1",
+    "popularity": 0.9962,
+    "weight": 229
+  },
+  {
+    "name": "Divinity: Original Sin 2 - Definitive Edition",
+    "popularity": 0.9962,
+    "weight": 229
+  },
+  {
+    "name": "Cuphead",
+    "popularity": 0.9961,
+    "weight": 228
+  },
+  {
+    "name": "R.E.P.O.",
+    "popularity": 0.9961,
+    "weight": 228
+  },
+  {
+    "name": "Stellaris",
+    "popularity": 0.9961,
+    "weight": 228
+  },
+  {
+    "name": "Slay the Spire",
+    "popularity": 0.996,
+    "weight": 226
+  },
+  {
+    "name": "Counter-Strike: Source",
+    "popularity": 0.996,
+    "weight": 226
+  },
+  {
+    "name": "Resident Evil 4",
+    "popularity": 0.996,
+    "weight": 226
+  },
+  {
+    "name": "theHunter: Call of the Wild™",
+    "popularity": 0.9959,
+    "weight": 224
+  },
+  {
+    "name": "American Truck Simulator",
+    "popularity": 0.9959,
+    "weight": 224
+  },
+  {
+    "name": "Grand Theft Auto IV: The Complete Edition",
+    "popularity": 0.9959,
+    "weight": 224
+  },
+  {
+    "name": "Far Cry® 5",
+    "popularity": 0.9958,
+    "weight": 222
+  },
+  {
+    "name": "Resident Evil 2",
+    "popularity": 0.9958,
+    "weight": 222
+  },
+  {
+    "name": "Assassin's Creed® Odyssey",
+    "popularity": 0.9958,
+    "weight": 222
+  },
+  {
+    "name": "The Sims™ 4",
+    "popularity": 0.9958,
+    "weight": 222
+  },
+  {
+    "name": "ULTRAKILL",
+    "popularity": 0.9958,
+    "weight": 222
+  },
+  {
+    "name": "Life is Strange - Episode 1",
+    "popularity": 0.9958,
+    "weight": 222
+  },
+  {
+    "name": "Detroit: Become Human",
+    "popularity": 0.9958,
+    "weight": 222
+  },
+  {
+    "name": "Path of Exile 2",
+    "popularity": 0.9957,
+    "weight": 221
+  },
+  {
+    "name": "Dead Cells",
+    "popularity": 0.9957,
+    "weight": 221
+  },
+  {
+    "name": "Mount & Blade: Warband",
+    "popularity": 0.9957,
+    "weight": 221
+  },
+  {
+    "name": "Starbound",
+    "popularity": 0.9957,
+    "weight": 221
+  },
+  {
+    "name": "Warhammer 40,000: Space Marine 2",
+    "popularity": 0.9956,
+    "weight": 219
+  },
+  {
+    "name": "Age of Empires II: Definitive Edition",
+    "popularity": 0.9956,
+    "weight": 219
+  },
+  {
+    "name": "Kingdom Come: Deliverance",
+    "popularity": 0.9956,
+    "weight": 219
+  },
+  {
+    "name": "STAR WARS Jedi: Fallen Order™",
+    "popularity": 0.9955,
+    "weight": 217
+  },
+  {
+    "name": "God of War",
+    "popularity": 0.9955,
+    "weight": 217
+  },
+  {
+    "name": "Stray",
+    "popularity": 0.9955,
+    "weight": 217
+  },
+  {
+    "name": "Portal 2",
+    "popularity": 0.9954,
+    "weight": 215
+  },
+  {
+    "name": "The Elder Scrolls® Online",
+    "popularity": 0.9954,
+    "weight": 215
+  },
+  {
+    "name": "Balatro",
+    "popularity": 0.9954,
+    "weight": 215
+  },
+  {
+    "name": "Crab Game",
+    "popularity": 0.9953,
+    "weight": 214
+  },
+  {
+    "name": "Assetto Corsa",
+    "popularity": 0.9953,
+    "weight": 214
+  },
+  {
+    "name": "Darkest Dungeon®",
+    "popularity": 0.9953,
+    "weight": 214
+  },
+  {
+    "name": "Borderlands 3",
+    "popularity": 0.9953,
+    "weight": 214
+  },
+  {
+    "name": "Half-Life",
+    "popularity": 0.9952,
+    "weight": 212
+  },
+  {
+    "name": "World of Tanks Blitz",
+    "popularity": 0.9952,
+    "weight": 212
+  },
+  {
+    "name": "World of Warships",
+    "popularity": 0.9952,
+    "weight": 212
+  },
+  {
+    "name": "Devil May Cry 5",
+    "popularity": 0.9952,
+    "weight": 212
+  },
+  {
+    "name": "Content Warning",
+    "popularity": 0.9951,
+    "weight": 210
+  },
+  {
+    "name": "BattleBit Remastered",
+    "popularity": 0.9951,
+    "weight": 210
+  },
+  {
+    "name": "BioShock Infinite",
+    "popularity": 0.995,
+    "weight": 209
+  },
+  {
+    "name": "NieR:Automata™",
+    "popularity": 0.995,
+    "weight": 209
+  },
+  {
+    "name": "Batman™: Arkham Knight",
+    "popularity": 0.995,
+    "weight": 209
+  },
+  {
+    "name": "Plants vs. Zombies GOTY Edition",
+    "popularity": 0.995,
+    "weight": 209
+  },
+  {
+    "name": "Slime Rancher",
+    "popularity": 0.9949,
+    "weight": 207
+  },
+  {
+    "name": "Hell Let Loose",
+    "popularity": 0.9949,
+    "weight": 207
+  },
+  {
+    "name": "Ori and the Will of the Wisps",
+    "popularity": 0.9949,
+    "weight": 207
+  },
+  {
+    "name": "Rise of the Tomb Raider™",
+    "popularity": 0.9949,
+    "weight": 207
+  },
+  {
+    "name": "Totally Accurate Battle Simulator",
+    "popularity": 0.9949,
+    "weight": 207
+  },
+  {
+    "name": "Europa Universalis IV",
+    "popularity": 0.9948,
+    "weight": 205
+  },
+  {
+    "name": "Warhammer: Vermintide 2",
+    "popularity": 0.9948,
+    "weight": 205
+  },
+  {
+    "name": "Need for Speed™ Heat",
+    "popularity": 0.9948,
+    "weight": 205
+  },
+  {
+    "name": "Space Engineers",
+    "popularity": 0.9947,
+    "weight": 204
+  },
+  {
+    "name": "Inscryption",
+    "popularity": 0.9947,
+    "weight": 204
+  },
+  {
+    "name": "DAVE THE DIVER",
+    "popularity": 0.9946,
+    "weight": 202
+  },
+  {
+    "name": "DARK SOULS™: REMASTERED",
+    "popularity": 0.9946,
+    "weight": 202
+  },
+  {
+    "name": "ASTRONEER",
+    "popularity": 0.9946,
+    "weight": 202
+  },
+  {
+    "name": "Oxygen Not Included",
+    "popularity": 0.9946,
+    "weight": 202
+  },
+  {
+    "name": "Stumble Guys",
+    "popularity": 0.9946,
+    "weight": 202
+  },
+  {
+    "name": "Black Mesa",
+    "popularity": 0.9946,
+    "weight": 202
+  },
+  {
+    "name": "Kerbal Space Program",
+    "popularity": 0.9946,
+    "weight": 202
+  },
+  {
+    "name": "Insurgency: Sandstorm",
+    "popularity": 0.9946,
+    "weight": 202
+  },
+  {
+    "name": "Crusader Kings III",
+    "popularity": 0.9946,
+    "weight": 202
+  },
+  {
+    "name": "Killing Floor 2",
+    "popularity": 0.9946,
+    "weight": 202
+  },
+  {
+    "name": "Outlast",
+    "popularity": 0.9945,
+    "weight": 200
+  },
+  {
+    "name": "Castle Crashers®",
+    "popularity": 0.9945,
+    "weight": 200
+  },
+  {
+    "name": "Horizon Zero Dawn™ Complete Edition",
+    "popularity": 0.9945,
+    "weight": 200
+  },
+  {
+    "name": "Helltaker",
+    "popularity": 0.9945,
+    "weight": 200
+  },
+  {
+    "name": "Insurgency",
+    "popularity": 0.9945,
+    "weight": 200
+  },
+  {
+    "name": "Total War: WARHAMMER II",
+    "popularity": 0.9945,
+    "weight": 200
+  },
+  {
+    "name": "Frostpunk",
+    "popularity": 0.9944,
+    "weight": 199
+  },
+  {
+    "name": "Stick Fight: The Game",
+    "popularity": 0.9944,
+    "weight": 199
+  },
+  {
+    "name": "Fallout 76",
+    "popularity": 0.9944,
+    "weight": 199
+  },
+  {
+    "name": "Just Cause™ 3",
+    "popularity": 0.9944,
+    "weight": 199
+  },
+  {
+    "name": "Metro Exodus",
+    "popularity": 0.9943,
+    "weight": 197
+  },
+  {
+    "name": "FIFA 22",
+    "popularity": 0.9943,
+    "weight": 197
+  },
+  {
+    "name": "Celeste",
+    "popularity": 0.9943,
+    "weight": 197
+  },
+  {
+    "name": "Total War: WARHAMMER III",
+    "popularity": 0.9943,
+    "weight": 197
+  },
+  {
+    "name": "SMITE®",
+    "popularity": 0.9943,
+    "weight": 197
+  },
+  {
+    "name": "V Rising",
+    "popularity": 0.9943,
+    "weight": 197
+  },
+  {
+    "name": "Muse Dash",
+    "popularity": 0.9943,
+    "weight": 197
+  },
+  {
+    "name": "Resident Evil Village",
+    "popularity": 0.9943,
+    "weight": 197
+  },
+  {
+    "name": "DARK SOULS™ II: Scholar of the First Sin",
+    "popularity": 0.9941,
+    "weight": 194
+  },
+  {
+    "name": "POSTAL 2",
+    "popularity": 0.9941,
+    "weight": 194
+  },
+  {
+    "name": "Far Cry 3",
+    "popularity": 0.994,
+    "weight": 192
+  },
+  {
+    "name": "Assassin's Creed® Origins",
+    "popularity": 0.994,
+    "weight": 192
+  },
+  {
+    "name": "S.T.A.L.K.E.R. 2: Heart of Chornobyl",
+    "popularity": 0.994,
+    "weight": 192
+  },
+  {
+    "name": "Scrap Mechanic",
+    "popularity": 0.994,
+    "weight": 192
+  },
+  {
+    "name": "Warhammer 40,000: Darktide",
+    "popularity": 0.994,
+    "weight": 192
+  },
+  {
+    "name": "MONSTER HUNTER RISE",
+    "popularity": 0.994,
+    "weight": 192
+  },
+  {
+    "name": "The Long Dark",
+    "popularity": 0.994,
+    "weight": 192
+  },
+  {
+    "name": "Marvel’s Spider-Man Remastered",
+    "popularity": 0.9939,
+    "weight": 190
+  },
+  {
+    "name": "MORDHAU",
+    "popularity": 0.9939,
+    "weight": 190
+  },
+  {
+    "name": "SCUM",
+    "popularity": 0.9939,
+    "weight": 190
+  },
+  {
+    "name": "Splitgate",
+    "popularity": 0.9939,
+    "weight": 190
+  },
+  {
+    "name": "Disco Elysium - The Final Cut",
+    "popularity": 0.9939,
+    "weight": 190
+  },
+  {
+    "name": "MiSide",
+    "popularity": 0.9939,
+    "weight": 190
+  },
+  {
+    "name": "Clair Obscur: Expedition 33",
+    "popularity": 0.9939,
+    "weight": 190
+  },
+  {
+    "name": "Metro 2033 Redux",
+    "popularity": 0.9939,
+    "weight": 190
+  },
+  {
+    "name": "Last Epoch",
+    "popularity": 0.9939,
+    "weight": 190
+  },
+  {
+    "name": "Little Nightmares",
+    "popularity": 0.9938,
+    "weight": 189
+  },
+  {
+    "name": "Company of Heroes 2",
+    "popularity": 0.9938,
+    "weight": 189
+  },
+  {
+    "name": "Don't Starve",
+    "popularity": 0.9938,
+    "weight": 189
+  },
+  {
+    "name": "Teardown",
+    "popularity": 0.9938,
+    "weight": 189
+  },
+  {
+    "name": "Conan Exiles",
+    "popularity": 0.9937,
+    "weight": 187
+  },
+  {
+    "name": "Middle-earth™: Shadow of War™",
+    "popularity": 0.9937,
+    "weight": 187
+  },
+  {
+    "name": "Hotline Miami",
+    "popularity": 0.9937,
+    "weight": 187
+  },
+  {
+    "name": "Mortal Kombat 11",
+    "popularity": 0.9936,
+    "weight": 186
+  },
+  {
+    "name": "Total War: THREE KINGDOMS",
+    "popularity": 0.9935,
+    "weight": 184
+  },
+  {
+    "name": "Cult of the Lamb",
+    "popularity": 0.9935,
+    "weight": 184
+  },
+  {
+    "name": "Persona 5 Royal",
+    "popularity": 0.9935,
+    "weight": 184
+  },
+  {
+    "name": "Days Gone",
+    "popularity": 0.9935,
+    "weight": 184
+  },
+  {
+    "name": "Escape the Backrooms",
+    "popularity": 0.9934,
+    "weight": 182
+  },
+  {
+    "name": "Kingdom Come: Deliverance II",
+    "popularity": 0.9934,
+    "weight": 182
+  },
+  {
+    "name": "This War of Mine",
+    "popularity": 0.9934,
+    "weight": 182
+  },
+  {
+    "name": "XCOM® 2",
+    "popularity": 0.9934,
+    "weight": 182
+  },
+  {
+    "name": "Age of Empires II (Retired)",
+    "popularity": 0.9934,
+    "weight": 182
+  },
+  {
+    "name": "Elite Dangerous",
+    "popularity": 0.9933,
+    "weight": 181
+  },
+  {
+    "name": "METAL GEAR SOLID V: THE PHANTOM PAIN",
+    "popularity": 0.9933,
+    "weight": 181
+  },
+  {
+    "name": "Grim Dawn",
+    "popularity": 0.9933,
+    "weight": 181
+  },
+  {
+    "name": "Gunfire Reborn",
+    "popularity": 0.9933,
+    "weight": 181
+  },
+  {
+    "name": "Poppy Playtime",
+    "popularity": 0.9932,
+    "weight": 179
+  },
+  {
+    "name": "Kenshi",
+    "popularity": 0.9932,
+    "weight": 179
+  },
+  {
+    "name": "Resident Evil 7 Biohazard",
+    "popularity": 0.9932,
+    "weight": 179
+  },
+  {
+    "name": "Brotato",
+    "popularity": 0.9932,
+    "weight": 179
+  },
+  {
+    "name": "Half-Life: Alyx",
+    "popularity": 0.9931,
+    "weight": 178
+  },
+  {
+    "name": "Subnautica: Below Zero",
+    "popularity": 0.9931,
+    "weight": 178
+  },
+  {
+    "name": "Tom Clancy's Ghost Recon® Wildlands",
+    "popularity": 0.9931,
+    "weight": 178
+  },
+  {
+    "name": "Buckshot Roulette",
+    "popularity": 0.993,
+    "weight": 176
+  },
+  {
+    "name": "House Flipper",
+    "popularity": 0.993,
+    "weight": 176
+  },
+  {
+    "name": "The Isle",
+    "popularity": 0.993,
+    "weight": 176
+  },
+  {
+    "name": "The Crew™ 2",
+    "popularity": 0.9929,
+    "weight": 175
+  },
+  {
+    "name": "Tom Clancy’s The Division™",
+    "popularity": 0.9929,
+    "weight": 175
+  },
+  {
+    "name": "Deceit",
+    "popularity": 0.9929,
+    "weight": 175
+  },
+  {
+    "name": "TEKKEN 7",
+    "popularity": 0.9929,
+    "weight": 175
+  },
+  {
+    "name": "Trove",
+    "popularity": 0.9928,
+    "weight": 173
+  },
+  {
+    "name": "Mafia: Definitive Edition",
+    "popularity": 0.9928,
+    "weight": 173
+  },
+  {
+    "name": "My Summer Car",
+    "popularity": 0.9928,
+    "weight": 173
+  },
+  {
+    "name": "Resident Evil 3",
+    "popularity": 0.9928,
+    "weight": 173
+  },
+  {
+    "name": "Dota Underlords",
+    "popularity": 0.9927,
+    "weight": 171
+  },
+  {
+    "name": "Middle-earth™: Shadow of Mordor™",
+    "popularity": 0.9927,
+    "weight": 171
+  },
+  {
+    "name": "Firewatch",
+    "popularity": 0.9927,
+    "weight": 171
+  },
+  {
+    "name": "NARUTO SHIPPUDEN: Ultimate Ninja STORM 4",
+    "popularity": 0.9926,
+    "weight": 170
+  },
+  {
+    "name": "Soundpad",
+    "popularity": 0.9926,
+    "weight": 170
+  },
+  {
+    "name": "Total War: ROME II - Emperor Edition",
+    "popularity": 0.9925,
+    "weight": 168
+  },
+  {
+    "name": "Planet Zoo",
+    "popularity": 0.9925,
+    "weight": 168
+  },
+  {
+    "name": "World of Tanks",
+    "popularity": 0.9925,
+    "weight": 168
+  },
+  {
+    "name": "The Witcher 2: Assassins of Kings Enhanced Edition",
+    "popularity": 0.9925,
+    "weight": 168
+  },
+  {
+    "name": "Totally Accurate Battlegrounds",
+    "popularity": 0.9925,
+    "weight": 168
+  },
+  {
+    "name": "Black Desert",
+    "popularity": 0.9924,
+    "weight": 167
+  },
+  {
+    "name": "Enter the Gungeon",
+    "popularity": 0.9923,
+    "weight": 165
+  },
+  {
+    "name": "Dyson Sphere Program",
+    "popularity": 0.9923,
+    "weight": 165
+  },
+  {
+    "name": "Grounded",
+    "popularity": 0.9923,
+    "weight": 165
+  },
+  {
+    "name": "Farming Simulator 22",
+    "popularity": 0.9923,
+    "weight": 165
+  },
+  {
+    "name": "Outer Wilds",
+    "popularity": 0.9923,
+    "weight": 165
+  },
+  {
+    "name": "Aimlabs",
+    "popularity": 0.9922,
+    "weight": 164
+  },
+  {
+    "name": "GRIS",
+    "popularity": 0.9922,
+    "weight": 164
+  },
+  {
+    "name": "CarX Drift Racing Online",
+    "popularity": 0.9922,
+    "weight": 164
+  },
+  {
+    "name": "METAL GEAR RISING: REVENGEANCE",
+    "popularity": 0.9922,
+    "weight": 164
+  },
+  {
+    "name": "Albion Online",
+    "popularity": 0.9921,
+    "weight": 162
+  },
+  {
+    "name": "Mirror",
+    "popularity": 0.9921,
+    "weight": 162
+  },
+  {
+    "name": "The Witcher: Enhanced Edition Director's Cut",
+    "popularity": 0.9921,
+    "weight": 162
+  },
+  {
+    "name": "Mad Max",
+    "popularity": 0.9921,
+    "weight": 162
+  },
+  {
+    "name": "DEVOUR",
+    "popularity": 0.9921,
+    "weight": 162
+  },
+  {
+    "name": "A Way Out",
+    "popularity": 0.9921,
+    "weight": 162
+  },
+  {
+    "name": "Resident Evil 4 (2005)",
+    "popularity": 0.9921,
+    "weight": 162
+  },
+  {
+    "name": "Watch_Dogs® 2",
+    "popularity": 0.9921,
+    "weight": 162
+  },
+  {
+    "name": "Dishonored",
+    "popularity": 0.9921,
+    "weight": 162
+  },
+  {
+    "name": "Black Squad",
+    "popularity": 0.992,
+    "weight": 161
+  },
+  {
+    "name": "Split Fiction",
+    "popularity": 0.992,
+    "weight": 161
+  },
+  {
+    "name": "Age of Empires IV: Anniversary Edition",
+    "popularity": 0.992,
+    "weight": 161
+  },
+  {
+    "name": "Green Hell",
+    "popularity": 0.9919,
+    "weight": 159
+  },
+  {
+    "name": "To the Moon",
+    "popularity": 0.9919,
+    "weight": 159
+  },
+  {
+    "name": "OMORI",
+    "popularity": 0.9919,
+    "weight": 159
+  },
+  {
+    "name": "FINAL FANTASY XIV Online",
+    "popularity": 0.9919,
+    "weight": 159
+  },
+  {
+    "name": "Cookie Clicker",
+    "popularity": 0.9919,
+    "weight": 159
+  },
+  {
+    "name": "The Last of Us™ Part I",
+    "popularity": 0.9919,
+    "weight": 159
+  },
+  {
+    "name": "Noita",
+    "popularity": 0.9918,
+    "weight": 158
+  },
+  {
+    "name": "Persona 4 Golden",
+    "popularity": 0.9917,
+    "weight": 156
+  },
+  {
+    "name": "Enshrouded",
+    "popularity": 0.9917,
+    "weight": 156
+  },
+  {
+    "name": "Saints Row IV: Re-Elected",
+    "popularity": 0.9916,
+    "weight": 155
+  },
+  {
+    "name": "ARMORED CORE™ VI FIRES OF RUBICON™",
+    "popularity": 0.9916,
+    "weight": 155
+  },
+  {
+    "name": "Getting Over It with Bennett Foddy",
+    "popularity": 0.9916,
+    "weight": 155
+  },
+  {
+    "name": "Everlasting Summer",
+    "popularity": 0.9915,
+    "weight": 153
+  },
+  {
+    "name": "Barotrauma",
+    "popularity": 0.9915,
+    "weight": 153
+  },
+  {
+    "name": "FTL: Faster Than Light",
+    "popularity": 0.9914,
+    "weight": 152
+  },
+  {
+    "name": "Farming Simulator 19",
+    "popularity": 0.9914,
+    "weight": 152
+  },
+  {
+    "name": "Beat Saber",
+    "popularity": 0.9914,
+    "weight": 152
+  },
+  {
+    "name": "Fallout Shelter",
+    "popularity": 0.9914,
+    "weight": 152
+  },
+  {
+    "name": "Cry of Fear",
+    "popularity": 0.9914,
+    "weight": 152
+  },
+  {
+    "name": "Assassin's Creed® Unity",
+    "popularity": 0.9914,
+    "weight": 152
+  },
+  {
+    "name": "No More Room in Hell",
+    "popularity": 0.9913,
+    "weight": 151
+  },
+  {
+    "name": "Papers, Please",
+    "popularity": 0.9913,
+    "weight": 151
+  },
+  {
+    "name": "Crusader Kings II",
+    "popularity": 0.9913,
+    "weight": 151
+  },
+  {
+    "name": "PlanetSide 2",
+    "popularity": 0.9913,
+    "weight": 151
+  },
+  {
+    "name": "Batman: Arkham Asylum Game of the Year Edition",
+    "popularity": 0.9913,
+    "weight": 151
+  },
+  {
+    "name": "The Walking Dead",
+    "popularity": 0.9913,
+    "weight": 151
+  },
+  {
+    "name": "Ravenfield",
+    "popularity": 0.9913,
+    "weight": 151
+  },
+  {
+    "name": "Yakuza 0",
+    "popularity": 0.9913,
+    "weight": 151
+  },
+  {
+    "name": "Hellblade: Senua's Sacrifice",
+    "popularity": 0.9913,
+    "weight": 151
+  },
+  {
+    "name": "A Dance of Fire and Ice",
+    "popularity": 0.9913,
+    "weight": 151
+  },
+  {
+    "name": "DRAGON BALL FighterZ",
+    "popularity": 0.9912,
+    "weight": 149
+  },
+  {
+    "name": "Blender",
+    "popularity": 0.9912,
+    "weight": 149
+  },
+  {
+    "name": "Overcooked! 2",
+    "popularity": 0.9912,
+    "weight": 149
+  },
+  {
+    "name": "Prison Architect",
+    "popularity": 0.9912,
+    "weight": 149
+  },
+  {
+    "name": "Manor Lords",
+    "popularity": 0.9911,
+    "weight": 148
+  },
+  {
+    "name": "BattleBlock Theater®",
+    "popularity": 0.9911,
+    "weight": 148
+  },
+  {
+    "name": "Rec Room",
+    "popularity": 0.991,
+    "weight": 146
+  },
+  {
+    "name": "STAR WARS™ Battlefront™ II",
+    "popularity": 0.991,
+    "weight": 146
+  },
+  {
+    "name": "Gorilla Tag",
+    "popularity": 0.991,
+    "weight": 146
+  },
+  {
+    "name": "Battlefield 4™",
+    "popularity": 0.991,
+    "weight": 146
+  },
+  {
+    "name": "Katana ZERO",
+    "popularity": 0.991,
+    "weight": 146
+  },
+  {
+    "name": "Tabletop Simulator",
+    "popularity": 0.991,
+    "weight": 146
+  },
+  {
+    "name": "Planet Coaster",
+    "popularity": 0.9909,
+    "weight": 145
+  },
+  {
+    "name": "Metro: Last Light Redux",
+    "popularity": 0.9909,
+    "weight": 145
+  },
+  {
+    "name": "Sleeping Dogs: Definitive Edition",
+    "popularity": 0.9908,
+    "weight": 143
+  },
+  {
+    "name": "Batman: Arkham City - Game of the Year Edition",
+    "popularity": 0.9907,
+    "weight": 142
+  },
+  {
+    "name": "Saints Row: The Third",
+    "popularity": 0.9907,
+    "weight": 142
+  },
+  {
+    "name": "Goat Simulator",
+    "popularity": 0.9907,
+    "weight": 142
+  },
+  {
+    "name": "Supermarket Simulator",
+    "popularity": 0.9907,
+    "weight": 142
+  },
+  {
+    "name": "South Park™: The Stick of Truth™",
+    "popularity": 0.9907,
+    "weight": 142
+  },
+  {
+    "name": "INSIDE",
+    "popularity": 0.9907,
+    "weight": 142
+  },
+  {
+    "name": "STAR WARS™: The Old Republic™",
+    "popularity": 0.9907,
+    "weight": 142
+  },
+  {
+    "name": "Killing Floor",
+    "popularity": 0.9906,
+    "weight": 141
+  },
+  {
+    "name": "Supermarket Together",
+    "popularity": 0.9906,
+    "weight": 141
+  },
+  {
+    "name": "Golf With Your Friends",
+    "popularity": 0.9906,
+    "weight": 141
+  },
+  {
+    "name": "Ori and the Blind Forest: Definitive Edition",
+    "popularity": 0.9905,
+    "weight": 139
+  },
+  {
+    "name": "The Outlast Trials",
+    "popularity": 0.9905,
+    "weight": 139
+  },
+  {
+    "name": "Red Dead Online",
+    "popularity": 0.9905,
+    "weight": 139
+  },
+  {
+    "name": "Pizza Tower",
+    "popularity": 0.9905,
+    "weight": 139
+  },
+  {
+    "name": "Hotline Miami 2: Wrong Number",
+    "popularity": 0.9905,
+    "weight": 139
+  },
+  {
+    "name": "SPORE™",
+    "popularity": 0.9904,
+    "weight": 138
+  },
+  {
+    "name": "WEBFISHING",
+    "popularity": 0.9904,
+    "weight": 138
+  },
+  {
+    "name": "Fishing Planet",
+    "popularity": 0.9904,
+    "weight": 138
+  },
+  {
+    "name": "ELDEN RING NIGHTREIGN",
+    "popularity": 0.9904,
+    "weight": 138
+  },
+  {
+    "name": "Microsoft Flight Simulator (2020) 40th Anniversary Edition",
+    "popularity": 0.9904,
+    "weight": 138
+  },
+  {
+    "name": "Chivalry: Medieval Warfare",
+    "popularity": 0.9904,
+    "weight": 138
+  },
+  {
+    "name": "DRAGON BALL: Sparking! ZERO",
+    "popularity": 0.9903,
+    "weight": 137
+  },
+  {
+    "name": "Ghost of Tsushima DIRECTOR'S CUT",
+    "popularity": 0.9903,
+    "weight": 137
+  },
+  {
+    "name": "Eternal Return",
+    "popularity": 0.9903,
+    "weight": 137
+  },
+  {
+    "name": "Minion Masters",
+    "popularity": 0.9903,
+    "weight": 137
+  },
+  {
+    "name": "Five Nights at Freddy's: Security Breach",
+    "popularity": 0.9903,
+    "weight": 137
+  },
+  {
+    "name": "Northgard: Definitive Edition",
+    "popularity": 0.9903,
+    "weight": 137
+  },
+  {
+    "name": "Total War: SHOGUN 2",
+    "popularity": 0.9902,
+    "weight": 135
+  },
+  {
+    "name": "Crossout",
+    "popularity": 0.9902,
+    "weight": 135
+  },
+  {
+    "name": "Hades II",
+    "popularity": 0.9902,
+    "weight": 135
+  },
+  {
+    "name": "Party Animals",
+    "popularity": 0.9902,
+    "weight": 135
+  },
+  {
+    "name": "Ghostrunner",
+    "popularity": 0.9901,
+    "weight": 134
+  },
+  {
+    "name": "A Plague Tale: Innocence",
+    "popularity": 0.99,
+    "weight": 132
+  },
+  {
+    "name": "Dishonored 2",
+    "popularity": 0.99,
+    "weight": 132
+  },
+  {
+    "name": "State of Decay 2: Juggernaut Edition",
+    "popularity": 0.99,
+    "weight": 132
+  },
+  {
+    "name": "GTFO",
+    "popularity": 0.9899,
+    "weight": 131
+  },
+  {
+    "name": "Left 4 Dead",
+    "popularity": 0.9899,
+    "weight": 131
+  },
+  {
+    "name": "Clicker Heroes",
+    "popularity": 0.9898,
+    "weight": 130
+  },
+  {
+    "name": "Far Cry® 4",
+    "popularity": 0.9898,
+    "weight": 130
+  },
+  {
+    "name": "Alien: Isolation",
+    "popularity": 0.9897,
+    "weight": 128
+  },
+  {
+    "name": "The Binding of Isaac",
+    "popularity": 0.9897,
+    "weight": 128
+  },
+  {
+    "name": "REMNANT II®",
+    "popularity": 0.9897,
+    "weight": 128
+  },
+  {
+    "name": "Gang Beasts",
+    "popularity": 0.9896,
+    "weight": 127
+  },
+  {
+    "name": "GUILTY GEAR -STRIVE-",
+    "popularity": 0.9895,
+    "weight": 126
+  },
+  {
+    "name": "Battlerite",
+    "popularity": 0.9895,
+    "weight": 126
+  },
+  {
+    "name": "AdVenture Capitalist",
+    "popularity": 0.9895,
+    "weight": 126
+  },
+  {
+    "name": "Sniper Elite 4",
+    "popularity": 0.9895,
+    "weight": 126
+  },
+  {
+    "name": "Broforce",
+    "popularity": 0.9894,
+    "weight": 124
+  },
+  {
+    "name": "Ultimate Custom Night",
+    "popularity": 0.9893,
+    "weight": 123
+  },
+  {
+    "name": "BioShock™ Remastered",
+    "popularity": 0.9893,
+    "weight": 123
+  },
+  {
+    "name": "Portal",
+    "popularity": 0.9893,
+    "weight": 123
+  },
+  {
+    "name": "Rising Storm 2: Vietnam",
+    "popularity": 0.9892,
+    "weight": 122
+  },
+  {
+    "name": "Blade and Sorcery",
+    "popularity": 0.9892,
+    "weight": 122
+  },
+  {
+    "name": "Ori and the Blind Forest",
+    "popularity": 0.9892,
+    "weight": 122
+  },
+  {
+    "name": "CODE VEIN",
+    "popularity": 0.9892,
+    "weight": 122
+  },
+  {
+    "name": "LIMBO",
+    "popularity": 0.9892,
+    "weight": 122
+  },
+  {
+    "name": "Batman™: Arkham Origins",
+    "popularity": 0.9892,
+    "weight": 122
+  },
+  {
+    "name": "Dirty Bomb®",
+    "popularity": 0.9892,
+    "weight": 122
+  },
+  {
+    "name": "Vampire: The Masquerade - Bloodhunt",
+    "popularity": 0.9892,
+    "weight": 122
+  },
+  {
+    "name": "Max Payne 3",
+    "popularity": 0.9892,
+    "weight": 122
+  },
+  {
+    "name": "Street Fighter™ 6",
+    "popularity": 0.9891,
+    "weight": 121
+  },
+  {
+    "name": "Wolfenstein: The New Order",
+    "popularity": 0.9891,
+    "weight": 121
+  },
+  {
+    "name": "XCOM: Enemy Unknown",
+    "popularity": 0.989,
+    "weight": 119
+  },
+  {
+    "name": "Mass Effect™ Legendary Edition",
+    "popularity": 0.989,
+    "weight": 119
+  },
+  {
+    "name": "EA SPORTS™ FIFA 21",
+    "popularity": 0.989,
+    "weight": 119
+  },
+  {
+    "name": "Mortal Kombat X",
+    "popularity": 0.989,
+    "weight": 119
+  },
+  {
+    "name": "NARUTO TO BORUTO: SHINOBI STRIKER",
+    "popularity": 0.989,
+    "weight": 119
+  },
+  {
+    "name": "Hitman: Absolution™",
+    "popularity": 0.9889,
+    "weight": 118
+  },
+  {
+    "name": "Plague Inc: Evolved",
+    "popularity": 0.9889,
+    "weight": 118
+  },
+  {
+    "name": "Outlast 2",
+    "popularity": 0.9889,
+    "weight": 118
+  },
+  {
+    "name": "Mafia II (Classic)",
+    "popularity": 0.9888,
+    "weight": 117
+  },
+  {
+    "name": "Core Keeper",
+    "popularity": 0.9888,
+    "weight": 117
+  },
+  {
+    "name": "Skul: The Hero Slayer",
+    "popularity": 0.9888,
+    "weight": 117
+  },
+  {
+    "name": "Resident Evil 6",
+    "popularity": 0.9888,
+    "weight": 117
+  },
+  {
+    "name": "DRAGON BALL Z: KAKAROT",
+    "popularity": 0.9887,
+    "weight": 115
+  },
+  {
+    "name": "Assassin's Creed 2",
+    "popularity": 0.9887,
+    "weight": 115
+  },
+  {
+    "name": "The Planet Crafter",
+    "popularity": 0.9887,
+    "weight": 115
+  },
+  {
+    "name": "Jurassic World Evolution",
+    "popularity": 0.9886,
+    "weight": 114
+  },
+  {
+    "name": "Pummel Party",
+    "popularity": 0.9886,
+    "weight": 114
+  },
+  {
+    "name": "OneShot",
+    "popularity": 0.9886,
+    "weight": 114
+  },
+  {
+    "name": "FINAL FANTASY XV WINDOWS EDITION",
+    "popularity": 0.9886,
+    "weight": 114
+  },
+  {
+    "name": "STAR WARS™ Battlefront II (Classic, 2005)",
+    "popularity": 0.9885,
+    "weight": 113
+  },
+  {
+    "name": "Chained Together",
+    "popularity": 0.9885,
+    "weight": 113
+  },
+  {
+    "name": "Stormworks: Build and Rescue",
+    "popularity": 0.9884,
+    "weight": 112
+  },
+  {
+    "name": "DRAGON BALL XENOVERSE 2",
+    "popularity": 0.9884,
+    "weight": 112
+  },
+  {
+    "name": "Remnant: From the Ashes",
+    "popularity": 0.9884,
+    "weight": 112
+  },
+  {
+    "name": "The Hungry Lamb: Traveling in the Late Ming Dynasty",
+    "popularity": 0.9884,
+    "weight": 112
+  },
+  {
+    "name": "The Elder Scrolls IV: Oblivion Remastered",
+    "popularity": 0.9884,
+    "weight": 112
+  },
+  {
+    "name": "Lies of P",
+    "popularity": 0.9883,
+    "weight": 110
+  },
+  {
+    "name": "Total War: WARHAMMER",
+    "popularity": 0.9883,
+    "weight": 110
+  },
+  {
+    "name": "PowerWash Simulator",
+    "popularity": 0.9883,
+    "weight": 110
+  },
+  {
+    "name": "Five Nights at Freddy's",
+    "popularity": 0.9883,
+    "weight": 110
+  },
+  {
+    "name": "A Hat in Time",
+    "popularity": 0.9882,
+    "weight": 109
+  },
+  {
+    "name": "PC Building Simulator",
+    "popularity": 0.9882,
+    "weight": 109
+  },
+  {
+    "name": "Car Mechanic Simulator 2018",
+    "popularity": 0.9882,
+    "weight": 109
+  },
+  {
+    "name": "UNO",
+    "popularity": 0.9882,
+    "weight": 109
+  },
+  {
+    "name": "Blasphemous",
+    "popularity": 0.9881,
+    "weight": 108
+  },
+  {
+    "name": "Dead Space",
+    "popularity": 0.9881,
+    "weight": 108
+  },
+  {
+    "name": "Prey",
+    "popularity": 0.9881,
+    "weight": 108
+  },
+  {
+    "name": "Just Cause 2",
+    "popularity": 0.988,
+    "weight": 107
+  },
+  {
+    "name": "The Henry Stickmin Collection",
+    "popularity": 0.988,
+    "weight": 107
+  },
+  {
+    "name": "The Elder Scrolls IV: Oblivion® Game of the Year Edition Deluxe (2009)",
+    "popularity": 0.988,
+    "weight": 107
+  },
+  {
+    "name": "The Elder Scrolls IV: Oblivion® Game of the Year Edition (2009)",
+    "popularity": 0.988,
+    "weight": 107
+  },
+  {
+    "name": "Fallout 3: Game of the Year Edition",
+    "popularity": 0.988,
+    "weight": 107
+  },
+  {
+    "name": "Call of Duty: World at War",
+    "popularity": 0.988,
+    "weight": 107
+  },
+  {
+    "name": "No Rest for the Wicked",
+    "popularity": 0.988,
+    "weight": 107
+  },
+  {
+    "name": "Control Ultimate Edition",
+    "popularity": 0.9879,
+    "weight": 106
+  },
+  {
+    "name": "Brick Rigs",
+    "popularity": 0.9879,
+    "weight": 106
+  },
+  {
+    "name": "Besiege",
+    "popularity": 0.9878,
+    "weight": 104
+  },
+  {
+    "name": "Alan Wake",
+    "popularity": 0.9877,
+    "weight": 103
+  },
+  {
+    "name": "Resident Evil 5",
+    "popularity": 0.9877,
+    "weight": 103
+  },
+  {
+    "name": "They Are Billions",
+    "popularity": 0.9876,
+    "weight": 102
+  },
+  {
+    "name": "Liar's Bar",
+    "popularity": 0.9875,
+    "weight": 101
+  },
+  {
+    "name": "Age of Empires III: Definitive Edition",
+    "popularity": 0.9875,
+    "weight": 101
+  },
+  {
+    "name": "Ultimate Chicken Horse",
+    "popularity": 0.9875,
+    "weight": 101
+  },
+  {
+    "name": "ACE COMBAT™ 7: SKIES UNKNOWN",
+    "popularity": 0.9875,
+    "weight": 101
+  },
+  {
+    "name": "Granblue Fantasy: Relink",
+    "popularity": 0.9874,
+    "weight": 100
+  },
+  {
+    "name": "Gujian3(古剑奇谭三)",
+    "popularity": 0.9874,
+    "weight": 100
+  },
+  {
+    "name": "The Long Drive",
+    "popularity": 0.9873,
+    "weight": 98
+  },
+  {
+    "name": "S.T.A.L.K.E.R.: Shadow of Chernobyl",
+    "popularity": 0.9873,
+    "weight": 98
+  },
+  {
+    "name": "NEEDY STREAMER OVERLOAD",
+    "popularity": 0.9872,
+    "weight": 97
+  },
+  {
+    "name": "ICARUS",
+    "popularity": 0.9872,
+    "weight": 97
+  },
+  {
+    "name": "Chivalry 2",
+    "popularity": 0.9872,
+    "weight": 97
+  },
+  {
+    "name": "Dragon's Dogma: Dark Arisen",
+    "popularity": 0.9871,
+    "weight": 96
+  },
+  {
+    "name": "Realm of the Mad God Exalt",
+    "popularity": 0.9871,
+    "weight": 96
+  },
+  {
+    "name": "Spiritfarer®: Farewell Edition",
+    "popularity": 0.987,
+    "weight": 95
+  },
+  {
+    "name": "Age of History II",
+    "popularity": 0.987,
+    "weight": 95
+  },
+  {
+    "name": "Stranded Deep",
+    "popularity": 0.9869,
+    "weight": 94
+  },
+  {
+    "name": "HITMAN World of Assassination",
+    "popularity": 0.9869,
+    "weight": 94
+  },
+  {
+    "name": "Watch_Dogs™",
+    "popularity": 0.9869,
+    "weight": 94
+  },
+  {
+    "name": "Nioh 2 – The Complete Edition",
+    "popularity": 0.9868,
+    "weight": 93
+  },
+  {
+    "name": "Love Is All Around",
+    "popularity": 0.9868,
+    "weight": 93
+  },
+  {
+    "name": "SOMA",
+    "popularity": 0.9868,
+    "weight": 93
+  },
+  {
+    "name": "Medieval Dynasty",
+    "popularity": 0.9867,
+    "weight": 92
+  },
+  {
+    "name": "What Remains of Edith Finch",
+    "popularity": 0.9867,
+    "weight": 92
+  },
+  {
+    "name": "LEGO® Star Wars™: The Skywalker Saga",
+    "popularity": 0.9867,
+    "weight": 92
+  },
+  {
+    "name": "Inside the Backrooms",
+    "popularity": 0.9867,
+    "weight": 92
+  },
+  {
+    "name": "The Stanley Parable",
+    "popularity": 0.9867,
+    "weight": 92
+  },
+  {
+    "name": "DiRT Rally 2.0",
+    "popularity": 0.9866,
+    "weight": 90
+  },
+  {
+    "name": "Wolfenstein II: The New Colossus",
+    "popularity": 0.9866,
+    "weight": 90
+  },
+  {
+    "name": "Men of War: Assault Squad 2",
+    "popularity": 0.9865,
+    "weight": 89
+  },
+  {
+    "name": "Torchlight II",
+    "popularity": 0.9865,
+    "weight": 89
+  },
+  {
+    "name": "DARK SOULS™ II",
+    "popularity": 0.9865,
+    "weight": 89
+  },
+  {
+    "name": "Foxhole",
+    "popularity": 0.9865,
+    "weight": 89
+  },
+  {
+    "name": "WorldBox - God Simulator",
+    "popularity": 0.9865,
+    "weight": 89
+  },
+  {
+    "name": "DREDGE",
+    "popularity": 0.9864,
+    "weight": 88
+  },
+  {
+    "name": "Lobotomy Corporation | Monster Management Simulation",
+    "popularity": 0.9864,
+    "weight": 88
+  },
+  {
+    "name": "SnowRunner",
+    "popularity": 0.9864,
+    "weight": 88
+  },
+  {
+    "name": "Marvel’s Spider-Man: Miles Morales",
+    "popularity": 0.9864,
+    "weight": 88
+  },
+  {
+    "name": "Graveyard Keeper",
+    "popularity": 0.9863,
+    "weight": 87
+  },
+  {
+    "name": "Yu-Gi-Oh! Duel Links",
+    "popularity": 0.9863,
+    "weight": 87
+  },
+  {
+    "name": "My Time at Portia",
+    "popularity": 0.9862,
+    "weight": 86
+  },
+  {
+    "name": "SILENT HILL 2",
+    "popularity": 0.9862,
+    "weight": 86
+  },
+  {
+    "name": "Little Nightmares II",
+    "popularity": 0.9862,
+    "weight": 86
+  },
+  {
+    "name": "Persona 3 Reload",
+    "popularity": 0.986,
+    "weight": 84
+  },
+  {
+    "name": "Borderlands: The Pre-Sequel",
+    "popularity": 0.986,
+    "weight": 84
+  },
+  {
+    "name": "Super Animal Royale",
+    "popularity": 0.986,
+    "weight": 84
+  },
+  {
+    "name": "Rain World",
+    "popularity": 0.986,
+    "weight": 84
+  },
+  {
+    "name": "Banished",
+    "popularity": 0.986,
+    "weight": 84
+  },
+  {
+    "name": "Half-Life 2: Episode Two",
+    "popularity": 0.9858,
+    "weight": 82
+  },
+  {
+    "name": "My Singing Monsters",
+    "popularity": 0.9858,
+    "weight": 82
+  },
+  {
+    "name": "Pacify",
+    "popularity": 0.9858,
+    "weight": 82
+  },
+  {
+    "name": "Firework",
+    "popularity": 0.9858,
+    "weight": 82
+  },
+  {
+    "name": "For The King",
+    "popularity": 0.9857,
+    "weight": 81
+  },
+  {
+    "name": "Volcano Princess",
+    "popularity": 0.9856,
+    "weight": 80
+  },
+  {
+    "name": "Brothers - A Tale of Two Sons",
+    "popularity": 0.9856,
+    "weight": 80
+  },
+  {
+    "name": "Forager",
+    "popularity": 0.9856,
+    "weight": 80
+  },
+  {
+    "name": "Skullgirls 2nd Encore",
+    "popularity": 0.9855,
+    "weight": 79
+  },
+  {
+    "name": "Deus Ex: Mankind Divided",
+    "popularity": 0.9855,
+    "weight": 79
+  },
+  {
+    "name": "Ryse: Son of Rome",
+    "popularity": 0.9855,
+    "weight": 79
+  },
+  {
+    "name": "Call of Juarez: Gunslinger",
+    "popularity": 0.9855,
+    "weight": 79
+  },
+  {
+    "name": "Source Filmmaker",
+    "popularity": 0.9855,
+    "weight": 79
+  },
+  {
+    "name": "Generation Zero®",
+    "popularity": 0.9854,
+    "weight": 78
+  },
+  {
+    "name": "Call of Duty®: Black Ops",
+    "popularity": 0.9854,
+    "weight": 78
+  },
+  {
+    "name": "PAYDAY™ The Heist",
+    "popularity": 0.9854,
+    "weight": 78
+  },
+  {
+    "name": "Pavlov",
+    "popularity": 0.9852,
+    "weight": 76
+  },
+  {
+    "name": "ENDER LILIES: Quietus of the Knights",
+    "popularity": 0.9851,
+    "weight": 74
+  },
+  {
+    "name": "DEATH STRANDING DIRECTOR'S CUT",
+    "popularity": 0.9851,
+    "weight": 74
+  },
+  {
+    "name": "TCG Card Shop Simulator",
+    "popularity": 0.9851,
+    "weight": 74
+  },
+  {
+    "name": "Bloodstained: Ritual of the Night",
+    "popularity": 0.9851,
+    "weight": 74
+  },
+  {
+    "name": "STAR WARS™ Empire at War - Gold Pack",
+    "popularity": 0.9851,
+    "weight": 74
+  },
+  {
+    "name": "Marvel's Guardians of the Galaxy",
+    "popularity": 0.985,
+    "weight": 73
+  },
+  {
+    "name": "Assetto Corsa Competizione",
+    "popularity": 0.9849,
+    "weight": 72
+  },
+  {
+    "name": "Temtem",
+    "popularity": 0.9849,
+    "weight": 72
+  },
+  {
+    "name": "RISK: Global Domination",
+    "popularity": 0.9849,
+    "weight": 72
+  },
+  {
+    "name": "SUPERHOT",
+    "popularity": 0.9849,
+    "weight": 72
+  },
+  {
+    "name": "One-armed robber",
+    "popularity": 0.9849,
+    "weight": 72
+  },
+  {
+    "name": "Bright Memory: Infinite",
+    "popularity": 0.9849,
+    "weight": 72
+  },
+  {
+    "name": "KARDS - The WW2 Card Game",
+    "popularity": 0.9849,
+    "weight": 72
+  },
+  {
+    "name": "Wreckfest",
+    "popularity": 0.9848,
+    "weight": 71
+  },
+  {
+    "name": "CRSED: Cuisine Royale",
+    "popularity": 0.9848,
+    "weight": 71
+  },
+  {
+    "name": "Neverwinter",
+    "popularity": 0.9848,
+    "weight": 71
+  },
+  {
+    "name": "Deadside",
+    "popularity": 0.9848,
+    "weight": 71
+  },
+  {
+    "name": "Pathfinder: Wrath of the Righteous - Enhanced Edition",
+    "popularity": 0.9848,
+    "weight": 71
+  },
+  {
+    "name": "Duck Game",
+    "popularity": 0.9848,
+    "weight": 71
+  },
+  {
+    "name": "Quake Champions",
+    "popularity": 0.9848,
+    "weight": 71
+  },
+  {
+    "name": "Atomic Heart",
+    "popularity": 0.9846,
+    "weight": 70
+  },
+  {
+    "name": "HoloCure - Save the Fans!",
+    "popularity": 0.9846,
+    "weight": 70
+  },
+  {
+    "name": "Call of Duty®: Modern Warfare® 3 (2011)",
+    "popularity": 0.9846,
+    "weight": 70
+  },
+  {
+    "name": "MudRunner",
+    "popularity": 0.9845,
+    "weight": 69
+  },
+  {
+    "name": "Mirror's Edge™",
+    "popularity": 0.9845,
+    "weight": 69
+  },
+  {
+    "name": "Red Orchestra 2: Heroes of Stalingrad with Rising Storm",
+    "popularity": 0.9845,
+    "weight": 69
+  },
+  {
+    "name": "Potion Craft: Alchemist Simulator",
+    "popularity": 0.9845,
+    "weight": 69
+  },
+  {
+    "name": "DDNet",
+    "popularity": 0.9844,
+    "weight": 68
+  },
+  {
+    "name": "Bastion",
+    "popularity": 0.9844,
+    "weight": 68
+  },
+  {
+    "name": "Verdun",
+    "popularity": 0.9844,
+    "weight": 68
+  },
+  {
+    "name": "FINAL FANTASY VII REMAKE INTERGRADE",
+    "popularity": 0.9844,
+    "weight": 68
+  },
+  {
+    "name": "Life is Strange: Before the Storm",
+    "popularity": 0.9844,
+    "weight": 68
+  },
+  {
+    "name": "Phoenix Wright: Ace Attorney Trilogy",
+    "popularity": 0.9844,
+    "weight": 68
+  },
+  {
+    "name": "Shadow Tactics: Blades of the Shogun",
+    "popularity": 0.9844,
+    "weight": 68
+  },
+  {
+    "name": "DCS World Steam Edition",
+    "popularity": 0.9843,
+    "weight": 67
+  },
+  {
+    "name": "FPS Chess",
+    "popularity": 0.9843,
+    "weight": 67
+  },
+  {
+    "name": "暖雪 Warm Snow",
+    "popularity": 0.9843,
+    "weight": 67
+  },
+  {
+    "name": "SpeedRunners",
+    "popularity": 0.9842,
+    "weight": 66
+  },
+  {
+    "name": "ROUNDS",
+    "popularity": 0.9841,
+    "weight": 65
+  },
+  {
+    "name": "Jurassic World Evolution 2",
+    "popularity": 0.9841,
+    "weight": 65
+  },
+  {
+    "name": "Life is Strange 2",
+    "popularity": 0.9841,
+    "weight": 65
+  },
+  {
+    "name": "Shakes and Fidget",
+    "popularity": 0.9841,
+    "weight": 65
+  },
+  {
+    "name": "Deep Rock Galactic: Survivor",
+    "popularity": 0.9841,
+    "weight": 65
+  },
+  {
+    "name": "Hand Simulator",
+    "popularity": 0.9841,
+    "weight": 65
+  },
+  {
+    "name": "VA-11 Hall-A: Cyberpunk Bartender Action",
+    "popularity": 0.9841,
+    "weight": 65
+  },
+  {
+    "name": "Town of Salem",
+    "popularity": 0.9841,
+    "weight": 65
+  },
+  {
+    "name": "EVE Online",
+    "popularity": 0.984,
+    "weight": 64
+  },
+  {
+    "name": "Bully: Scholarship Edition",
+    "popularity": 0.984,
+    "weight": 64
+  },
+  {
+    "name": "Fistful of Frags",
+    "popularity": 0.984,
+    "weight": 64
+  },
+  {
+    "name": "Ranch Simulator: Build, Hunt, Farm",
+    "popularity": 0.9839,
+    "weight": 63
+  },
+  {
+    "name": "SANABI",
+    "popularity": 0.9839,
+    "weight": 63
+  },
+  {
+    "name": "Rivals of Aether",
+    "popularity": 0.9838,
+    "weight": 62
+  },
+  {
+    "name": "Thief Simulator",
+    "popularity": 0.9838,
+    "weight": 62
+  },
+  {
+    "name": "Game Dev Tycoon",
+    "popularity": 0.9838,
+    "weight": 62
+  },
+  {
+    "name": "BONEWORKS",
+    "popularity": 0.9838,
+    "weight": 62
+  },
+  {
+    "name": "The Wolf Among Us",
+    "popularity": 0.9838,
+    "weight": 62
+  },
+  {
+    "name": "Titan Quest Anniversary Edition",
+    "popularity": 0.9837,
+    "weight": 61
+  },
+  {
+    "name": "Super Meat Boy",
+    "popularity": 0.9837,
+    "weight": 61
+  },
+  {
+    "name": "Total War: EMPIRE – Definitive Edition",
+    "popularity": 0.9837,
+    "weight": 61
+  },
+  {
+    "name": "Age of Mythology: Extended Edition",
+    "popularity": 0.9836,
+    "weight": 60
+  },
+  {
+    "name": "KovaaK's",
+    "popularity": 0.9836,
+    "weight": 60
+  },
+  {
+    "name": "Unpacking",
+    "popularity": 0.9836,
+    "weight": 60
+  },
+  {
+    "name": "嗜血印 Bloody Spell",
+    "popularity": 0.9836,
+    "weight": 60
+  },
+  {
+    "name": "Total War: ATTILA",
+    "popularity": 0.9835,
+    "weight": 59
+  },
+  {
+    "name": "POLYGON",
+    "popularity": 0.9835,
+    "weight": 59
+  },
+  {
+    "name": "ShellShock Live",
+    "popularity": 0.9835,
+    "weight": 59
+  },
+  {
+    "name": "Nioh: Complete Edition",
+    "popularity": 0.9835,
+    "weight": 59
+  },
+  {
+    "name": "Call of Duty®: Modern Warfare® 2 (2009)",
+    "popularity": 0.9835,
+    "weight": 59
+  },
+  {
+    "name": "Metaphor: ReFantazio",
+    "popularity": 0.9834,
+    "weight": 58
+  },
+  {
+    "name": "Tales of Arise",
+    "popularity": 0.9834,
+    "weight": 58
+  },
+  {
+    "name": "Loop Hero",
+    "popularity": 0.9834,
+    "weight": 58
+  },
+  {
+    "name": "Journey",
+    "popularity": 0.9833,
+    "weight": 57
+  },
+  {
+    "name": "Library Of Ruina",
+    "popularity": 0.9833,
+    "weight": 57
+  },
+  {
+    "name": "Blood and Bacon",
+    "popularity": 0.9833,
+    "weight": 57
+  },
+  {
+    "name": "Plants vs. Zombies™ Garden Warfare 2: Deluxe Edition",
+    "popularity": 0.9832,
+    "weight": 56
+  },
+  {
+    "name": "Amnesia: The Dark Descent",
+    "popularity": 0.9831,
+    "weight": 56
+  },
+  {
+    "name": "L.A. Noire",
+    "popularity": 0.9831,
+    "weight": 56
+  },
+  {
+    "name": "LoveChoice",
+    "popularity": 0.983,
+    "weight": 55
+  },
+  {
+    "name": "Bodycam",
+    "popularity": 0.983,
+    "weight": 55
+  },
+  {
+    "name": "Draw & Guess",
+    "popularity": 0.983,
+    "weight": 55
+  },
+  {
+    "name": "Slime Rancher 2",
+    "popularity": 0.9829,
+    "weight": 54
+  },
+  {
+    "name": "Farming Simulator 25",
+    "popularity": 0.9829,
+    "weight": 54
+  },
+  {
+    "name": "Pathfinder: Kingmaker — Enhanced Plus Edition",
+    "popularity": 0.9828,
+    "weight": 53
+  },
+  {
+    "name": "Total War: MEDIEVAL II – Definitive Edition",
+    "popularity": 0.9828,
+    "weight": 53
+  },
+  {
+    "name": "Hi-Fi RUSH",
+    "popularity": 0.9828,
+    "weight": 53
+  },
+  {
+    "name": "Two Point Hospital",
+    "popularity": 0.9828,
+    "weight": 53
+  },
+  {
+    "name": "Yakuza: Like a Dragon",
+    "popularity": 0.9828,
+    "weight": 53
+  },
+  {
+    "name": "Empyrion - Galactic Survival",
+    "popularity": 0.9828,
+    "weight": 53
+  },
+  {
+    "name": "Clone Drone in the Danger Zone",
+    "popularity": 0.9827,
+    "weight": 52
+  },
+  {
+    "name": "Command & Conquer™ Remastered Collection",
+    "popularity": 0.9826,
+    "weight": 51
+  },
+  {
+    "name": "The Sims™ 3",
+    "popularity": 0.9826,
+    "weight": 51
+  },
+  {
+    "name": "Far Cry® Primal",
+    "popularity": 0.9826,
+    "weight": 51
+  },
+  {
+    "name": "Bright Memory",
+    "popularity": 0.9825,
+    "weight": 50
+  },
+  {
+    "name": "Depth",
+    "popularity": 0.9825,
+    "weight": 50
+  },
+  {
+    "name": "Tom Clancy's Ghost Recon® Breakpoint",
+    "popularity": 0.9825,
+    "weight": 50
+  },
+  {
+    "name": "Borderlands Game of the Year",
+    "popularity": 0.9824,
+    "weight": 50
+  },
+  {
+    "name": "Far Cry® New Dawn",
+    "popularity": 0.9823,
+    "weight": 49
+  },
+  {
+    "name": "Legend of Mortal",
+    "popularity": 0.9822,
+    "weight": 48
+  },
+  {
+    "name": "The Escapists 2",
+    "popularity": 0.9822,
+    "weight": 48
+  },
+  {
+    "name": "Emily is Away",
+    "popularity": 0.9821,
+    "weight": 47
+  },
+  {
+    "name": "Call of Duty®: Black Ops II",
+    "popularity": 0.9821,
+    "weight": 47
+  },
+  {
+    "name": "Your Only Move Is HUSTLE",
+    "popularity": 0.9821,
+    "weight": 47
+  },
+  {
+    "name": "The Talos Principle",
+    "popularity": 0.9821,
+    "weight": 47
+  },
+  {
+    "name": "Half-Life 2: Episode One",
+    "popularity": 0.9821,
+    "weight": 47
+  },
+  {
+    "name": "Football Manager 2020",
+    "popularity": 0.9821,
+    "weight": 47
+  },
+  {
+    "name": "STAR WARS™ Knights of the Old Republic™",
+    "popularity": 0.9821,
+    "weight": 47
+  },
+  {
+    "name": "Timberborn",
+    "popularity": 0.982,
+    "weight": 46
+  },
+  {
+    "name": "The Walking Dead: Season Two",
+    "popularity": 0.982,
+    "weight": 46
+  },
+  {
+    "name": "Zero Hour",
+    "popularity": 0.982,
+    "weight": 46
+  },
+  {
+    "name": "BATTLETECH",
+    "popularity": 0.982,
+    "weight": 46
+  },
+  {
+    "name": "HELLDIVERS™ Dive Harder Edition",
+    "popularity": 0.982,
+    "weight": 46
+  },
+  {
+    "name": "Against the Storm",
+    "popularity": 0.9819,
+    "weight": 46
+  },
+  {
+    "name": "God of War Ragnarök",
+    "popularity": 0.9819,
+    "weight": 46
+  },
+  {
+    "name": "Magicka",
+    "popularity": 0.9819,
+    "weight": 46
+  },
+  {
+    "name": "Crosshair X",
+    "popularity": 0.9819,
+    "weight": 46
+  },
+  {
+    "name": "Sven Co-op",
+    "popularity": 0.9819,
+    "weight": 46
+  },
+  {
+    "name": "Unheard - Voices of Crime",
+    "popularity": 0.9819,
+    "weight": 46
+  },
+  {
+    "name": "Abiotic Factor",
+    "popularity": 0.9818,
+    "weight": 45
+  },
+  {
+    "name": "Senren＊Banka",
+    "popularity": 0.9818,
+    "weight": 45
+  },
+  {
+    "name": "Hurtworld",
+    "popularity": 0.9818,
+    "weight": 45
+  },
+  {
+    "name": "The Walking Dead: The Telltale Definitive Series",
+    "popularity": 0.9817,
+    "weight": 44
+  },
+  {
+    "name": "Starship Troopers: Extermination",
+    "popularity": 0.9817,
+    "weight": 44
+  },
+  {
+    "name": "Creativerse",
+    "popularity": 0.9817,
+    "weight": 44
+  },
+  {
+    "name": "S.T.A.L.K.E.R.: Call of Pripyat",
+    "popularity": 0.9817,
+    "weight": 44
+  },
+  {
+    "name": "BioShock™",
+    "popularity": 0.9817,
+    "weight": 44
+  },
+  {
+    "name": "Wandering Sword",
+    "popularity": 0.9817,
+    "weight": 44
+  },
+  {
+    "name": "Steep™",
+    "popularity": 0.9816,
+    "weight": 43
+  },
+  {
+    "name": "Warhammer 40,000: Rogue Trader",
+    "popularity": 0.9816,
+    "weight": 43
+  },
+  {
+    "name": "Arma Reforger",
+    "popularity": 0.9815,
+    "weight": 42
+  },
+  {
+    "name": "Transistor",
+    "popularity": 0.9815,
+    "weight": 42
+  },
+  {
+    "name": "The Stanley Parable: Ultra Deluxe",
+    "popularity": 0.9815,
+    "weight": 42
+  },
+  {
+    "name": "Danganronpa: Trigger Happy Havoc",
+    "popularity": 0.9814,
+    "weight": 42
+  },
+  {
+    "name": "Warhammer 40,000: Space Marine - Anniversary Edition",
+    "popularity": 0.9814,
+    "weight": 42
+  },
+  {
+    "name": "Who's Your Daddy?!",
+    "popularity": 0.9814,
+    "weight": 42
+  },
+  {
+    "name": "The Evil Within",
+    "popularity": 0.9813,
+    "weight": 41
+  },
+  {
+    "name": "BlazBlue Entropy Effect",
+    "popularity": 0.9813,
+    "weight": 41
+  },
+  {
+    "name": "Mafia II: Definitive Edition",
+    "popularity": 0.9813,
+    "weight": 41
+  },
+  {
+    "name": "Path Of Wuxia",
+    "popularity": 0.9813,
+    "weight": 41
+  },
+  {
+    "name": "Freddy Fazbear's Pizzeria Simulator",
+    "popularity": 0.9813,
+    "weight": 41
+  },
+  {
+    "name": "City Car Driving",
+    "popularity": 0.9813,
+    "weight": 41
+  },
+  {
+    "name": "The Coffin of Andy and Leyley",
+    "popularity": 0.9813,
+    "weight": 41
+  },
+  {
+    "name": "Superliminal",
+    "popularity": 0.9813,
+    "weight": 41
+  },
+  {
+    "name": "Stoneshard",
+    "popularity": 0.9812,
+    "weight": 40
+  },
+  {
+    "name": "We Were Here",
+    "popularity": 0.9812,
+    "weight": 40
+  },
+  {
+    "name": "DmC: Devil May Cry",
+    "popularity": 0.9812,
+    "weight": 40
+  },
+  {
+    "name": "Milk inside a bag of milk inside a bag of milk",
+    "popularity": 0.9812,
+    "weight": 40
+  },
+  {
+    "name": "Mouthwashing",
+    "popularity": 0.9811,
+    "weight": 39
+  },
+  {
+    "name": "Car Mechanic Simulator 2021",
+    "popularity": 0.9811,
+    "weight": 39
+  },
+  {
+    "name": "Kingdoms and Castles",
+    "popularity": 0.981,
+    "weight": 39
+  },
+  {
+    "name": "UNCHARTED™: Legacy of Thieves Collection",
+    "popularity": 0.981,
+    "weight": 39
+  },
+  {
+    "name": "Assassin's Creed® Syndicate",
+    "popularity": 0.981,
+    "weight": 39
+  },
+  {
+    "name": "Risk of Rain (2013)",
+    "popularity": 0.981,
+    "weight": 39
+  },
+  {
+    "name": "Paint the Town Red",
+    "popularity": 0.981,
+    "weight": 39
+  },
+  {
+    "name": "GWENT: The Witcher Card Game",
+    "popularity": 0.9808,
+    "weight": 37
+  },
+  {
+    "name": "Wartales",
+    "popularity": 0.9808,
+    "weight": 37
+  },
+  {
+    "name": "Bendy and the Ink Machine",
+    "popularity": 0.9808,
+    "weight": 37
+  },
+  {
+    "name": "South Park™: The Fractured But Whole™",
+    "popularity": 0.9808,
+    "weight": 37
+  },
+  {
+    "name": "DEATHLOOP",
+    "popularity": 0.9808,
+    "weight": 37
+  },
+  {
+    "name": "DJMAX RESPECT V",
+    "popularity": 0.9807,
+    "weight": 37
+  },
+  {
+    "name": "Bloons TD Battles",
+    "popularity": 0.9807,
+    "weight": 37
+  },
+  {
+    "name": "Divinity: Original Sin - Enhanced Edition",
+    "popularity": 0.9807,
+    "weight": 37
+  },
+  {
+    "name": "Need for Speed™ Payback",
+    "popularity": 0.9807,
+    "weight": 37
+  },
+  {
+    "name": "Halls of Torment",
+    "popularity": 0.9806,
+    "weight": 36
+  },
+  {
+    "name": "Return of the Obra Dinn",
+    "popularity": 0.9806,
+    "weight": 36
+  },
+  {
+    "name": "Golf It!",
+    "popularity": 0.9806,
+    "weight": 36
+  },
+  {
+    "name": "The Room",
+    "popularity": 0.9806,
+    "weight": 36
+  },
+  {
+    "name": "Bayonetta",
+    "popularity": 0.9806,
+    "weight": 36
+  },
+  {
+    "name": "A Story About My Uncle",
+    "popularity": 0.9806,
+    "weight": 36
+  },
+  {
+    "name": "The Evil Within 2",
+    "popularity": 0.9806,
+    "weight": 36
+  },
+  {
+    "name": "Nine Sols",
+    "popularity": 0.9806,
+    "weight": 36
+  },
+  {
+    "name": "HITMAN™",
+    "popularity": 0.9805,
+    "weight": 35
+  },
+  {
+    "name": "Resident Evil Revelations 2",
+    "popularity": 0.9805,
+    "weight": 35
+  },
+  {
+    "name": "Dwarf Fortress",
+    "popularity": 0.9804,
+    "weight": 34
+  },
+  {
+    "name": "PICO PARK",
+    "popularity": 0.9803,
+    "weight": 34
+  },
+  {
+    "name": "ORION: Prelude",
+    "popularity": 0.9803,
+    "weight": 34
+  },
+  {
+    "name": "Outward Definitive Edition",
+    "popularity": 0.9803,
+    "weight": 34
+  },
+  {
+    "name": "Dragon Age: Origins - Ultimate Edition",
+    "popularity": 0.9803,
+    "weight": 34
+  },
+  {
+    "name": "觅长生",
+    "popularity": 0.9803,
+    "weight": 34
+  },
+  {
+    "name": "Touhou Mystia's Izakaya",
+    "popularity": 0.9802,
+    "weight": 33
+  },
+  {
+    "name": "100% Orange Juice",
+    "popularity": 0.9802,
+    "weight": 33
+  },
+  {
+    "name": "Train Simulator Classic",
+    "popularity": 0.9802,
+    "weight": 33
+  },
+  {
+    "name": "Enlisted",
+    "popularity": 0.9801,
+    "weight": 32
+  },
+  {
+    "name": "Quantum Break",
+    "popularity": 0.9801,
+    "weight": 32
+  },
+  {
+    "name": "Deus Ex: Human Revolution - Director's Cut",
+    "popularity": 0.9801,
+    "weight": 32
+  },
+  {
+    "name": "MX Bikes",
+    "popularity": 0.9801,
+    "weight": 32
+  },
+  {
+    "name": "Trailmakers",
+    "popularity": 0.9801,
+    "weight": 32
+  },
+  {
+    "name": "Beyond: Two Souls",
+    "popularity": 0.9801,
+    "weight": 32
+  },
+  {
+    "name": "FINAL FANTASY VII",
+    "popularity": 0.9801,
+    "weight": 32
+  },
+  {
+    "name": "Tricolour Lovestory",
+    "popularity": 0.98,
+    "weight": 32
+  },
+  {
+    "name": "Risk of Rain Returns",
+    "popularity": 0.9799,
+    "weight": 31
+  },
+  {
+    "name": "Beholder",
+    "popularity": 0.9799,
+    "weight": 31
+  },
+  {
+    "name": "20 Minutes Till Dawn",
+    "popularity": 0.9799,
+    "weight": 31
+  },
+  {
+    "name": "Serious Sam 3: BFE",
+    "popularity": 0.9799,
+    "weight": 31
+  },
+  {
+    "name": "Transformice",
+    "popularity": 0.9798,
+    "weight": 30
+  },
+  {
+    "name": "Dead Space (2008)",
+    "popularity": 0.9798,
+    "weight": 30
+  },
+  {
+    "name": "Transport Fever 2",
+    "popularity": 0.9798,
+    "weight": 30
+  },
+  {
+    "name": "Dorfromantik",
+    "popularity": 0.9798,
+    "weight": 30
+  },
+  {
+    "name": "Doki Doki Literature Club Plus!",
+    "popularity": 0.9798,
+    "weight": 30
+  },
+  {
+    "name": "My Friend Pedro",
+    "popularity": 0.9798,
+    "weight": 30
+  },
+  {
+    "name": "Universe Sandbox",
+    "popularity": 0.9797,
+    "weight": 30
+  },
+  {
+    "name": "HuniePop",
+    "popularity": 0.9797,
+    "weight": 30
+  },
+  {
+    "name": "CARRION",
+    "popularity": 0.9796,
+    "weight": 29
+  },
+  {
+    "name": "Shadow Warrior 2",
+    "popularity": 0.9796,
+    "weight": 29
+  },
+  {
+    "name": "Crush Crush",
+    "popularity": 0.9795,
+    "weight": 29
+  },
+  {
+    "name": "Tropico 6",
+    "popularity": 0.9795,
+    "weight": 29
+  },
+  {
+    "name": "Far Cry® 6",
+    "popularity": 0.9795,
+    "weight": 29
+  },
+  {
+    "name": "Sniper Elite 3",
+    "popularity": 0.9795,
+    "weight": 29
+  },
+  {
+    "name": "ASTLIBRA Revision",
+    "popularity": 0.9794,
+    "weight": 28
+  },
+  {
+    "name": "Wobbly Life",
+    "popularity": 0.9794,
+    "weight": 28
+  },
+  {
+    "name": "ICEY",
+    "popularity": 0.9794,
+    "weight": 28
+  },
+  {
+    "name": "NEKOPARA Vol. 1",
+    "popularity": 0.9794,
+    "weight": 28
+  },
+  {
+    "name": "Crab Champions",
+    "popularity": 0.9793,
+    "weight": 27
+  },
+  {
+    "name": "Dead Frontier 2",
+    "popularity": 0.9793,
+    "weight": 27
+  },
+  {
+    "name": "Resident Evil",
+    "popularity": 0.9793,
+    "weight": 27
+  },
+  {
+    "name": "Awesomenauts",
+    "popularity": 0.9792,
+    "weight": 27
+  },
+  {
+    "name": "Soul Dossier",
+    "popularity": 0.9792,
+    "weight": 27
+  },
+  {
+    "name": "BioShock™ 2 Remastered",
+    "popularity": 0.9792,
+    "weight": 27
+  },
+  {
+    "name": "Layers of Fear (2016)",
+    "popularity": 0.9792,
+    "weight": 27
+  },
+  {
+    "name": "Danganronpa 2: Goodbye Despair",
+    "popularity": 0.9792,
+    "weight": 27
+  },
+  {
+    "name": "Surviving Mars",
+    "popularity": 0.9791,
+    "weight": 26
+  },
+  {
+    "name": "Counter-Strike: Condition Zero",
+    "popularity": 0.9791,
+    "weight": 26
+  },
+  {
+    "name": "The Elder Scrolls III: Morrowind® Game of the Year Edition",
+    "popularity": 0.979,
+    "weight": 25
+  },
+  {
+    "name": "My Time at Sandrock",
+    "popularity": 0.9789,
+    "weight": 25
+  },
+  {
+    "name": "LEGO® Marvel™ Super Heroes",
+    "popularity": 0.9789,
+    "weight": 25
+  },
+  {
+    "name": "SIGNALIS",
+    "popularity": 0.9789,
+    "weight": 25
+  },
+  {
+    "name": "Shadow Warrior",
+    "popularity": 0.9789,
+    "weight": 25
+  },
+  {
+    "name": "LIZARDS MUST DIE",
+    "popularity": 0.9788,
+    "weight": 24
+  },
+  {
+    "name": "Sonic Mania",
+    "popularity": 0.9788,
+    "weight": 24
+  },
+  {
+    "name": "ABZU",
+    "popularity": 0.9788,
+    "weight": 24
+  },
+  {
+    "name": "World War Z",
+    "popularity": 0.9788,
+    "weight": 24
+  },
+  {
+    "name": "The Outer Worlds",
+    "popularity": 0.9788,
+    "weight": 24
+  },
+  {
+    "name": "Valiant Hearts: The Great War™ / Soldats Inconnus : Mémoires de la Grande Guerre™",
+    "popularity": 0.9788,
+    "weight": 24
+  },
+  {
+    "name": "Dead Space™ 2",
+    "popularity": 0.9787,
+    "weight": 24
+  },
+  {
+    "name": "Blackwake",
+    "popularity": 0.9787,
+    "weight": 24
+  },
+  {
+    "name": "Chinese Parents",
+    "popularity": 0.9785,
+    "weight": 23
+  },
+  {
+    "name": "Microsoft Flight Simulator X: Steam Edition",
+    "popularity": 0.9785,
+    "weight": 23
+  },
+  {
+    "name": "Half-Life: Opposing Force",
+    "popularity": 0.9784,
+    "weight": 22
+  },
+  {
+    "name": "NieR Replicant™ ver.1.22474487139...",
+    "popularity": 0.9784,
+    "weight": 22
+  },
+  {
+    "name": "Dead Island Definitive Edition",
+    "popularity": 0.9784,
+    "weight": 22
+  },
+  {
+    "name": "Sonic Adventure 2",
+    "popularity": 0.9784,
+    "weight": 22
+  },
+  {
+    "name": "Total War: NAPOLEON – Definitive Edition",
+    "popularity": 0.9783,
+    "weight": 22
+  },
+  {
+    "name": "RuneScape ®",
+    "popularity": 0.9783,
+    "weight": 22
+  },
+  {
+    "name": "Leaf Blower Revolution - Idle Game",
+    "popularity": 0.9782,
+    "weight": 21
+  },
+  {
+    "name": "Sonic Generations Collection",
+    "popularity": 0.9782,
+    "weight": 21
+  },
+  {
+    "name": "Hydroneer",
+    "popularity": 0.9781,
+    "weight": 20
+  },
+  {
+    "name": "Crypt of the NecroDancer",
+    "popularity": 0.9781,
+    "weight": 20
+  },
+  {
+    "name": "Holdfast: Nations At War",
+    "popularity": 0.9781,
+    "weight": 20
+  },
+  {
+    "name": "Hacknet",
+    "popularity": 0.9781,
+    "weight": 20
+  },
+  {
+    "name": "Anno 1800",
+    "popularity": 0.9781,
+    "weight": 20
+  },
+  {
+    "name": "Call of Duty® 4: Modern Warfare® (2007)",
+    "popularity": 0.9781,
+    "weight": 20
+  },
+  {
+    "name": "Gas Station Simulator",
+    "popularity": 0.9781,
+    "weight": 20
+  },
+  {
+    "name": "Farming Simulator 17",
+    "popularity": 0.978,
+    "weight": 20
+  },
+  {
+    "name": "DOOM + DOOM II",
+    "popularity": 0.978,
+    "weight": 20
+  },
+  {
+    "name": "Lossless Scaling",
+    "popularity": 0.9779,
+    "weight": 19
+  },
+  {
+    "name": "The Last of Us™ Part II Remastered",
+    "popularity": 0.9779,
+    "weight": 19
+  },
+  {
+    "name": "Aliens: Fireteam Elite",
+    "popularity": 0.9778,
+    "weight": 19
+  },
+  {
+    "name": "Super Hexagon",
+    "popularity": 0.9778,
+    "weight": 19
+  },
+  {
+    "name": "Squad 44",
+    "popularity": 0.9778,
+    "weight": 19
+  },
+  {
+    "name": "Pillars of Eternity",
+    "popularity": 0.9778,
+    "weight": 19
+  },
+  {
+    "name": "Dinkum",
+    "popularity": 0.9777,
+    "weight": 18
+  },
+  {
+    "name": "Borderlands Game of the Year Enhanced",
+    "popularity": 0.9776,
+    "weight": 18
+  },
+  {
+    "name": "Sonic Frontiers",
+    "popularity": 0.9776,
+    "weight": 18
+  },
+  {
+    "name": "Battle Brothers",
+    "popularity": 0.9775,
+    "weight": 17
+  },
+  {
+    "name": "STAR WARS™ Knights of the Old Republic™ II - The Sith Lords™",
+    "popularity": 0.9775,
+    "weight": 17
+  },
+  {
+    "name": "Pro Soccer Online",
+    "popularity": 0.9774,
+    "weight": 17
+  },
+  {
+    "name": "Alice: Madness Returns",
+    "popularity": 0.9773,
+    "weight": 16
+  },
+  {
+    "name": "Drug Dealer Simulator",
+    "popularity": 0.9773,
+    "weight": 16
+  },
+  {
+    "name": "Phantasy Star Online 2 New Genesis",
+    "popularity": 0.9773,
+    "weight": 16
+  },
+  {
+    "name": "Slay the Princess — The Pristine Cut",
+    "popularity": 0.9772,
+    "weight": 16
+  },
+  {
+    "name": "Football Manager 2021",
+    "popularity": 0.9772,
+    "weight": 16
+  },
+  {
+    "name": "Rocksmith® 2014 Edition REMASTERED LEARN & PLAY",
+    "popularity": 0.9771,
+    "weight": 15
+  },
+  {
+    "name": "X4: Foundations",
+    "popularity": 0.9771,
+    "weight": 15
+  },
+  {
+    "name": "Magic Duels",
+    "popularity": 0.9771,
+    "weight": 15
+  },
+  {
+    "name": "Call to Arms - Gates of Hell: Ostfront",
+    "popularity": 0.9771,
+    "weight": 15
+  },
+  {
+    "name": "LEGO® Star Wars™ - The Complete Saga",
+    "popularity": 0.9771,
+    "weight": 15
+  },
+  {
+    "name": "Cell to Singularity - Evolution Never Ends",
+    "popularity": 0.977,
+    "weight": 15
+  },
+  {
+    "name": "Spiral Knights",
+    "popularity": 0.977,
+    "weight": 15
+  },
+  {
+    "name": "RaceRoom Racing Experience",
+    "popularity": 0.9769,
+    "weight": 15
+  },
+  {
+    "name": "TrackMania Nations Forever",
+    "popularity": 0.9769,
+    "weight": 15
+  },
+  {
+    "name": "Lost Castle / 失落城堡",
+    "popularity": 0.9769,
+    "weight": 15
+  },
+  {
+    "name": "UBOAT",
+    "popularity": 0.9768,
+    "weight": 14
+  },
+  {
+    "name": "DUSK",
+    "popularity": 0.9768,
+    "weight": 14
+  },
+  {
+    "name": "There Is No Game: Wrong Dimension",
+    "popularity": 0.9768,
+    "weight": 14
+  },
+  {
+    "name": "TerraTech",
+    "popularity": 0.9768,
+    "weight": 14
+  },
+  {
+    "name": "PlateUp!",
+    "popularity": 0.9768,
+    "weight": 14
+  },
+  {
+    "name": "Gears 5",
+    "popularity": 0.9767,
+    "weight": 14
+  },
+  {
+    "name": "Thief",
+    "popularity": 0.9766,
+    "weight": 13
+  },
+  {
+    "name": "Move or Die",
+    "popularity": 0.9766,
+    "weight": 13
+  },
+  {
+    "name": "Call to Arms",
+    "popularity": 0.9766,
+    "weight": 13
+  },
+  {
+    "name": "Neon Abyss",
+    "popularity": 0.9765,
+    "weight": 13
+  },
+  {
+    "name": "Assassin’s Creed® Brotherhood",
+    "popularity": 0.9765,
+    "weight": 13
+  },
+  {
+    "name": "The Plan",
+    "popularity": 0.9765,
+    "weight": 13
+  },
+  {
+    "name": "Football Manager 2024",
+    "popularity": 0.9765,
+    "weight": 13
+  },
+  {
+    "name": "FINAL FANTASY XVI",
+    "popularity": 0.9765,
+    "weight": 13
+  },
+  {
+    "name": "Amazing Cultivation Simulator",
+    "popularity": 0.9764,
+    "weight": 12
+  },
+  {
+    "name": "The Ascent",
+    "popularity": 0.9763,
+    "weight": 12
+  },
+  {
+    "name": "Heroes® of Might & Magic® III - HD Edition",
+    "popularity": 0.9762,
+    "weight": 12
+  },
+  {
+    "name": "Backrooms: Escape Together",
+    "popularity": 0.9762,
+    "weight": 12
+  },
+  {
+    "name": "Need for Speed™ Most Wanted",
+    "popularity": 0.9762,
+    "weight": 12
+  },
+  {
+    "name": "Horizon Forbidden West™ Complete Edition",
+    "popularity": 0.9762,
+    "weight": 12
+  },
+  {
+    "name": "XCOM®: Chimera Squad",
+    "popularity": 0.9762,
+    "weight": 12
+  },
+  {
+    "name": "RoboCop: Rogue City",
+    "popularity": 0.9762,
+    "weight": 12
+  },
+  {
+    "name": "Five Nights at Freddy's 2",
+    "popularity": 0.9762,
+    "weight": 12
+  },
+  {
+    "name": "Day of Defeat: Source",
+    "popularity": 0.9761,
+    "weight": 11
+  },
+  {
+    "name": "Alien Swarm: Reactive Drop",
+    "popularity": 0.9761,
+    "weight": 11
+  },
+  {
+    "name": "Sands of Salzaar",
+    "popularity": 0.9761,
+    "weight": 11
+  },
+  {
+    "name": "Sally Face - Episode One",
+    "popularity": 0.976,
+    "weight": 11
+  },
+  {
+    "name": "Tribes of Midgard",
+    "popularity": 0.976,
+    "weight": 11
+  },
+  {
+    "name": "Sun Haven",
+    "popularity": 0.9759,
+    "weight": 10
+  },
+  {
+    "name": "Chants of Sennaar",
+    "popularity": 0.9759,
+    "weight": 10
+  },
+  {
+    "name": "Injustice™ 2",
+    "popularity": 0.9759,
+    "weight": 10
+  },
+  {
+    "name": "Tom Clancy’s The Division® 2",
+    "popularity": 0.9759,
+    "weight": 10
+  },
+  {
+    "name": "We Were Here Expeditions: The FriendShip",
+    "popularity": 0.9758,
+    "weight": 10
+  },
+  {
+    "name": "Forts",
+    "popularity": 0.9758,
+    "weight": 10
+  },
+  {
+    "name": "FAR: Lone Sails",
+    "popularity": 0.9758,
+    "weight": 10
+  },
+  {
+    "name": "Viscera Cleanup Detail",
+    "popularity": 0.9758,
+    "weight": 10
+  },
+  {
+    "name": "Mindustry",
+    "popularity": 0.9758,
+    "weight": 10
+  },
+  {
+    "name": "S.T.A.L.K.E.R.: Clear Sky",
+    "popularity": 0.9758,
+    "weight": 10
+  },
+  {
+    "name": "Hero's Adventure: Road to Passion",
+    "popularity": 0.9757,
+    "weight": 10
+  },
+  {
+    "name": "Sniper Elite 5",
+    "popularity": 0.9757,
+    "weight": 10
+  },
+  {
+    "name": "Fallout: A Post Nuclear Role Playing Game",
+    "popularity": 0.9757,
+    "weight": 10
+  },
+  {
+    "name": "ENDLESS™ Space 2",
+    "popularity": 0.9757,
+    "weight": 10
+  },
+  {
+    "name": "Workers & Resources: Soviet Republic",
+    "popularity": 0.9757,
+    "weight": 10
+  },
+  {
+    "name": "Just Shapes & Beats",
+    "popularity": 0.9757,
+    "weight": 10
+  },
+  {
+    "name": "Hatred",
+    "popularity": 0.9756,
+    "weight": 9
+  },
+  {
+    "name": "Untitled Goose Game",
+    "popularity": 0.9756,
+    "weight": 9
+  },
+  {
+    "name": "Hot Dogs, Horseshoes & Hand Grenades",
+    "popularity": 0.9756,
+    "weight": 9
+  },
+  {
+    "name": "Arma 2: Operation Arrowhead",
+    "popularity": 0.9756,
+    "weight": 9
+  },
+  {
+    "name": "Kingdom: Classic",
+    "popularity": 0.9756,
+    "weight": 9
+  },
+  {
+    "name": "Vampyr",
+    "popularity": 0.9756,
+    "weight": 9
+  },
+  {
+    "name": "Day of Infamy",
+    "popularity": 0.9756,
+    "weight": 9
+  },
+  {
+    "name": "AI LIMIT",
+    "popularity": 0.9755,
+    "weight": 9
+  },
+  {
+    "name": "Crime Scene Cleaner",
+    "popularity": 0.9755,
+    "weight": 9
+  },
+  {
+    "name": "The Beginner's Guide",
+    "popularity": 0.9755,
+    "weight": 9
+  },
+  {
+    "name": "Tiny Tina's Wonderlands",
+    "popularity": 0.9755,
+    "weight": 9
+  },
+  {
+    "name": "Streets of Rogue",
+    "popularity": 0.9755,
+    "weight": 9
+  },
+  {
+    "name": "Baba Is You",
+    "popularity": 0.9754,
+    "weight": 9
+  },
+  {
+    "name": "Assassin's Creed™: Director's Cut Edition",
+    "popularity": 0.9754,
+    "weight": 9
+  },
+  {
+    "name": "Yakuza Kiwami (Legacy)",
+    "popularity": 0.9754,
+    "weight": 9
+  },
+  {
+    "name": "Marvel's Midnight Suns",
+    "popularity": 0.9754,
+    "weight": 9
+  },
+  {
+    "name": "Sultan's Game",
+    "popularity": 0.9754,
+    "weight": 9
+  },
+  {
+    "name": "Monster Train",
+    "popularity": 0.9754,
+    "weight": 9
+  },
+  {
+    "name": "War Selection",
+    "popularity": 0.9754,
+    "weight": 9
+  },
+  {
+    "name": "Soulstone Survivors",
+    "popularity": 0.9754,
+    "weight": 9
+  },
+  {
+    "name": "Dungeon Defenders II",
+    "popularity": 0.9753,
+    "weight": 8
+  },
+  {
+    "name": "Aseprite",
+    "popularity": 0.9753,
+    "weight": 8
+  },
+  {
+    "name": "Summer Memories",
+    "popularity": 0.9753,
+    "weight": 8
+  },
+  {
+    "name": "Demonologist",
+    "popularity": 0.9753,
+    "weight": 8
+  },
+  {
+    "name": "Farm Together",
+    "popularity": 0.9753,
+    "weight": 8
+  },
+  {
+    "name": "Coral Island",
+    "popularity": 0.9753,
+    "weight": 8
+  },
+  {
+    "name": "IdleOn",
+    "popularity": 0.9752,
+    "weight": 8
+  },
+  {
+    "name": "Roboquest",
+    "popularity": 0.9752,
+    "weight": 8
+  },
+  {
+    "name": "Portal Knights",
+    "popularity": 0.9752,
+    "weight": 8
+  },
+  {
+    "name": "GROUND BRANCH",
+    "popularity": 0.9752,
+    "weight": 8
+  },
+  {
+    "name": "DOOM: The Dark Ages",
+    "popularity": 0.9752,
+    "weight": 8
+  },
+  {
+    "name": "Frostpunk 2",
+    "popularity": 0.9752,
+    "weight": 8
+  },
+  {
+    "name": "Darkwood",
+    "popularity": 0.9751,
+    "weight": 8
+  },
+  {
+    "name": "Guild Wars 2",
+    "popularity": 0.9751,
+    "weight": 8
+  },
+  {
+    "name": "Darkest Dungeon® II",
+    "popularity": 0.9751,
+    "weight": 8
+  },
+  {
+    "name": "Football Manager 2022",
+    "popularity": 0.975,
+    "weight": 7
+  },
+  {
+    "name": "Mini Motorways",
+    "popularity": 0.975,
+    "weight": 7
+  },
+  {
+    "name": "Sunkenland",
+    "popularity": 0.975,
+    "weight": 7
+  },
+  {
+    "name": "Road 96 🛣️",
+    "popularity": 0.975,
+    "weight": 7
+  },
+  {
+    "name": "Alien Swarm",
+    "popularity": 0.9748,
+    "weight": 7
+  },
+  {
+    "name": "Dark Deception",
+    "popularity": 0.9748,
+    "weight": 7
+  },
+  {
+    "name": "Rhythm Doctor",
+    "popularity": 0.9747,
+    "weight": 6
+  },
+  {
+    "name": "Warhammer 40,000: Inquisitor - Martyr",
+    "popularity": 0.9747,
+    "weight": 6
+  },
+  {
+    "name": "Sifu",
+    "popularity": 0.9747,
+    "weight": 6
+  },
+  {
+    "name": "Warhammer: End Times - Vermintide",
+    "popularity": 0.9746,
+    "weight": 6
+  },
+  {
+    "name": "STEINS;GATE",
+    "popularity": 0.9746,
+    "weight": 6
+  },
+  {
+    "name": "Townscaper",
+    "popularity": 0.9746,
+    "weight": 6
+  },
+  {
+    "name": "DC Universe™ Online",
+    "popularity": 0.9745,
+    "weight": 6
+  },
+  {
+    "name": "Call of Duty®: Modern Warfare®",
+    "popularity": 0.9745,
+    "weight": 6
+  },
+  {
+    "name": "Children of Morta",
+    "popularity": 0.9745,
+    "weight": 6
+  },
+  {
+    "name": "Fallout 3",
+    "popularity": 0.9745,
+    "weight": 6
+  },
+  {
+    "name": "DRAGON BALL XENOVERSE",
+    "popularity": 0.9744,
+    "weight": 6
+  },
+  {
+    "name": "Wasteland 3",
+    "popularity": 0.9744,
+    "weight": 6
+  },
+  {
+    "name": "ATRI -My Dear Moments-",
+    "popularity": 0.9744,
+    "weight": 6
+  },
+  {
+    "name": "BIGFOOT",
+    "popularity": 0.9744,
+    "weight": 6
+  },
+  {
+    "name": "inZOI",
+    "popularity": 0.9744,
+    "weight": 6
+  },
+  {
+    "name": "Wolfenstein: The Old Blood",
+    "popularity": 0.9743,
+    "weight": 5
+  },
+  {
+    "name": "Disney Dreamlight Valley",
+    "popularity": 0.9743,
+    "weight": 5
+  },
+  {
+    "name": "Cruelty Squad",
+    "popularity": 0.9743,
+    "weight": 5
+  },
+  {
+    "name": "ANIMAL WELL",
+    "popularity": 0.9743,
+    "weight": 5
+  },
+  {
+    "name": "Notes of Soul",
+    "popularity": 0.9743,
+    "weight": 5
+  },
+  {
+    "name": "DYNASTY WARRIORS: ORIGINS",
+    "popularity": 0.9742,
+    "weight": 5
+  },
+  {
+    "name": "Marauders",
+    "popularity": 0.9742,
+    "weight": 5
+  },
+  {
+    "name": "Salt and Sanctuary",
+    "popularity": 0.9742,
+    "weight": 5
+  },
+  {
+    "name": "Tower Unite",
+    "popularity": 0.9741,
+    "weight": 5
+  },
+  {
+    "name": "A Plague Tale: Requiem",
+    "popularity": 0.9741,
+    "weight": 5
+  },
+  {
+    "name": "Thronefall",
+    "popularity": 0.9741,
+    "weight": 5
+  },
+  {
+    "name": "Wizard of Legend",
+    "popularity": 0.974,
+    "weight": 4
+  },
+  {
+    "name": "Spyro™ Reignited Trilogy",
+    "popularity": 0.974,
+    "weight": 4
+  },
+  {
+    "name": "Pacific Drive",
+    "popularity": 0.974,
+    "weight": 4
+  },
+  {
+    "name": "Spelunky 2",
+    "popularity": 0.974,
+    "weight": 4
+  },
+  {
+    "name": "Contraband Police",
+    "popularity": 0.974,
+    "weight": 4
+  },
+  {
+    "name": "Saints Row 2",
+    "popularity": 0.974,
+    "weight": 4
+  },
+  {
+    "name": "Hardspace: Shipbreaker",
+    "popularity": 0.9739,
+    "weight": 4
+  },
+  {
+    "name": "Solasta: Crown of the Magister",
+    "popularity": 0.9739,
+    "weight": 4
+  },
+  {
+    "name": "Craftopia",
+    "popularity": 0.9739,
+    "weight": 4
+  },
+  {
+    "name": "Death Must Die",
+    "popularity": 0.9738,
+    "weight": 4
+  },
+  {
+    "name": "Into the Breach",
+    "popularity": 0.9737,
+    "weight": 4
+  },
+  {
+    "name": "FINAL FANTASY VII REBIRTH",
+    "popularity": 0.9737,
+    "weight": 4
+  },
+  {
+    "name": "Star Trek Online",
+    "popularity": 0.9736,
+    "weight": 4
+  },
+  {
+    "name": "Foundation",
+    "popularity": 0.9736,
+    "weight": 4
+  },
+  {
+    "name": "GreedFall",
+    "popularity": 0.9736,
+    "weight": 4
+  },
+  {
+    "name": "FINAL FANTASY X/X-2 HD Remaster",
+    "popularity": 0.9735,
+    "weight": 3
+  },
+  {
+    "name": "ONE PIECE: PIRATE WARRIORS 4",
+    "popularity": 0.9734,
+    "weight": 3
+  },
+  {
+    "name": "Fields of Mistria",
+    "popularity": 0.9734,
+    "weight": 3
+  },
+  {
+    "name": "The Test",
+    "popularity": 0.9734,
+    "weight": 3
+  },
+  {
+    "name": "Aliens vs. Predator™",
+    "popularity": 0.9734,
+    "weight": 3
+  },
+  {
+    "name": "The Room Two",
+    "popularity": 0.9734,
+    "weight": 3
+  },
+  {
+    "name": "Mutant Year Zero: Road to Eden",
+    "popularity": 0.9734,
+    "weight": 3
+  },
+  {
+    "name": "Like a Dragon: Infinite Wealth",
+    "popularity": 0.9734,
+    "weight": 3
+  },
+  {
+    "name": "Moonlighter",
+    "popularity": 0.9734,
+    "weight": 3
+  },
+  {
+    "name": "Tom Clancy’s Splinter Cell Blacklist",
+    "popularity": 0.9734,
+    "weight": 3
+  },
+  {
+    "name": "Danganronpa V3: Killing Harmony",
+    "popularity": 0.9733,
+    "weight": 3
+  },
+  {
+    "name": "Tiny Glade",
+    "popularity": 0.9733,
+    "weight": 3
+  },
+  {
+    "name": "Stronghold Crusader HD (2012)",
+    "popularity": 0.9732,
+    "weight": 3
+  },
+  {
+    "name": "The Darkness II",
+    "popularity": 0.9732,
+    "weight": 3
+  },
+  {
+    "name": "Call of Duty®: Black Ops Cold War",
+    "popularity": 0.9731,
+    "weight": 3
+  },
+  {
+    "name": "Heavy Rain",
+    "popularity": 0.9731,
+    "weight": 3
+  },
+  {
+    "name": "Football Manager 2023",
+    "popularity": 0.9731,
+    "weight": 3
+  },
+  {
+    "name": "Hello Neighbor",
+    "popularity": 0.973,
+    "weight": 2
+  },
+  {
+    "name": "Tiny Bunny",
+    "popularity": 0.973,
+    "weight": 2
+  },
+  {
+    "name": "Dragon Age™ Inquisition",
+    "popularity": 0.973,
+    "weight": 2
+  },
+  {
+    "name": "Riders Republic",
+    "popularity": 0.9729,
+    "weight": 2
+  },
+  {
+    "name": "Farthest Frontier",
+    "popularity": 0.9729,
+    "weight": 2
+  },
+  {
+    "name": "Victoria II",
+    "popularity": 0.9729,
+    "weight": 2
+  },
+  {
+    "name": "Skater XL - The Ultimate Skateboarding Game",
+    "popularity": 0.9728,
+    "weight": 2
+  },
+  {
+    "name": "Police Simulator: Patrol Officers",
+    "popularity": 0.9728,
+    "weight": 2
+  },
+  {
+    "name": "VTOL VR",
+    "popularity": 0.9727,
+    "weight": 2
+  },
+  {
+    "name": "High On Life",
+    "popularity": 0.9727,
+    "weight": 2
+  },
+  {
+    "name": "Orcs Must Die! 2",
+    "popularity": 0.9726,
+    "weight": 2
+  },
+  {
+    "name": "The Walking Dead: The Final Season",
+    "popularity": 0.9726,
+    "weight": 2
+  },
+  {
+    "name": "Witch It",
+    "popularity": 0.9726,
+    "weight": 2
+  },
+  {
+    "name": "The Quarry",
+    "popularity": 0.9726,
+    "weight": 2
+  },
+  {
+    "name": "World of Guns: Gun Disassembly",
+    "popularity": 0.9726,
+    "weight": 2
+  },
+  {
+    "name": "Descenders",
+    "popularity": 0.9726,
+    "weight": 2
+  },
+  {
+    "name": "Project Wingman",
+    "popularity": 0.9725,
+    "weight": 2
+  },
+  {
+    "name": "Injustice: Gods Among Us Ultimate Edition",
+    "popularity": 0.9725,
+    "weight": 2
+  },
+  {
+    "name": "Wargame: Red Dragon",
+    "popularity": 0.9725,
+    "weight": 2
+  },
+  {
+    "name": "Sword Art Online: Fatal Bullet",
+    "popularity": 0.9725,
+    "weight": 2
+  },
+  {
+    "name": "Bopl Battle",
+    "popularity": 0.9724,
+    "weight": 1
+  },
+  {
+    "name": "Dead Rising 3 Apocalypse Edition",
+    "popularity": 0.9724,
+    "weight": 1
+  },
+  {
+    "name": "A Short Hike",
+    "popularity": 0.9724,
+    "weight": 1
+  },
+  {
+    "name": "The Forever Winter",
+    "popularity": 0.9723,
+    "weight": 1
+  },
+  {
+    "name": "Hatsune Miku: Project DIVA Mega Mix+",
+    "popularity": 0.9723,
+    "weight": 1
+  },
+  {
+    "name": "ELEX",
+    "popularity": 0.9723,
+    "weight": 1
+  },
+  {
+    "name": "Fran Bow",
+    "popularity": 0.9723,
+    "weight": 1
+  },
+  {
+    "name": "Marvel's Spider-Man 2",
+    "popularity": 0.9723,
+    "weight": 1
+  },
+  {
+    "name": "Demon Slayer -Kimetsu no Yaiba- The Hinokami Chronicles",
+    "popularity": 0.9723,
+    "weight": 1
+  },
+  {
+    "name": "Feed and Grow: Fish",
+    "popularity": 0.9722,
+    "weight": 1
+  },
+  {
+    "name": "Brutal Legend",
+    "popularity": 0.9722,
+    "weight": 1
+  },
+  {
+    "name": "港詭實錄ParanormalHK",
+    "popularity": 0.9722,
+    "weight": 1
+  },
+  {
+    "name": "The Witness",
+    "popularity": 0.9722,
+    "weight": 1
+  },
+  {
+    "name": "Pillars of Eternity II: Deadfire",
+    "popularity": 0.9722,
+    "weight": 1
+  },
+  {
+    "name": "X-Plane 11",
+    "popularity": 0.9722,
+    "weight": 1
+  },
+  {
+    "name": "Project Winter",
+    "popularity": 0.9722,
+    "weight": 1
+  },
+  {
+    "name": "Half-Life: Blue Shift",
+    "popularity": 0.972,
+    "weight": 1
+  },
+  {
+    "name": "Finding Paradise",
+    "popularity": 0.972,
+    "weight": 1
+  },
+  {
+    "name": "Night in the Woods",
+    "popularity": 0.972,
+    "weight": 1
+  },
+  {
+    "name": "Milk outside a bag of milk outside a bag of milk",
+    "popularity": 0.9719,
+    "weight": 1
+  },
+  {
+    "name": "Unrailed!",
+    "popularity": 0.9719,
+    "weight": 1
+  },
+  {
+    "name": "Death's Door",
+    "popularity": 0.9719,
+    "weight": 1
+  },
+  {
+    "name": "Ghostwire: Tokyo",
+    "popularity": 0.9719,
+    "weight": 1
+  },
+  {
+    "name": "FlatOut 2",
+    "popularity": 0.9719,
+    "weight": 1
+  },
+  {
+    "name": "Action Taimanin",
+    "popularity": 0.9718,
+    "weight": 1
+  },
+  {
+    "name": "Dust: An Elysian Tail",
+    "popularity": 0.9718,
+    "weight": 1
+  },
+  {
+    "name": "ENDLESS™ Legend",
+    "popularity": 0.9718,
+    "weight": 1
+  },
+  {
+    "name": "Cooking Simulator",
+    "popularity": 0.9718,
+    "weight": 1
+  },
+  {
+    "name": "Tales from the Borderlands",
+    "popularity": 0.9718,
+    "weight": 1
+  },
+  {
+    "name": "Going Medieval",
+    "popularity": 0.9717,
+    "weight": 1
+  },
+  {
+    "name": "Secret Neighbor: Hello Neighbor Multiplayer",
+    "popularity": 0.9716,
+    "weight": 0
+  },
+  {
+    "name": "Rogue Legacy",
+    "popularity": 0.9716,
+    "weight": 0
+  },
+  {
+    "name": "Car For Sale Simulator 2023",
+    "popularity": 0.9716,
+    "weight": 0
+  },
+  {
+    "name": "Operation: Harsh Doorstop",
+    "popularity": 0.9715,
+    "weight": 0
+  },
+  {
+    "name": "NIGHT-RUNNERS™ PROLOGUE",
+    "popularity": 0.9715,
+    "weight": 0
+  },
+  {
+    "name": "Tales of Berseria™",
+    "popularity": 0.9715,
+    "weight": 0
+  },
+  {
+    "name": "RuneScape: Dragonwilds",
+    "popularity": 0.9715,
+    "weight": 0
+  },
+  {
+    "name": "Devil May Cry 4 Special Edition",
+    "popularity": 0.9715,
+    "weight": 0
+  },
+  {
+    "name": "Darwin Project",
+    "popularity": 0.9715,
+    "weight": 0
+  },
+  {
+    "name": "Dungeons 3",
+    "popularity": 0.9715,
+    "weight": 0
+  },
+  {
+    "name": "Sword and Fairy 7",
+    "popularity": 0.9715,
+    "weight": 0
+  },
+  {
+    "name": "Old School RuneScape",
+    "popularity": 0.9714,
+    "weight": 0
+  },
+  {
+    "name": "Age of Wonders 4",
+    "popularity": 0.9713,
+    "weight": 0
+  },
+  {
+    "name": "Murders on the Yangtze River",
+    "popularity": 0.9712,
+    "weight": 0
+  },
+  {
+    "name": "The Expendabros",
+    "popularity": 0.9712,
+    "weight": 0
+  },
+  {
+    "name": "Darksiders II Deathinitive Edition",
+    "popularity": 0.9711,
+    "weight": 0
+  },
+  {
+    "name": "Assassin’s Creed® Rogue",
+    "popularity": 0.9711,
+    "weight": 0
+  },
+  {
+    "name": "Dungeon Defenders",
+    "popularity": 0.9711,
+    "weight": 0
+  },
+  {
+    "name": "Assassin's Creed® Revelations",
+    "popularity": 0.9711,
+    "weight": 0
+  },
+  {
+    "name": "Crash Bandicoot™ N. Sane Trilogy",
+    "popularity": 0.971,
+    "weight": 0
+  },
+  {
+    "name": "The Riftbreaker",
+    "popularity": 0.971,
+    "weight": 0
+  },
+  {
+    "name": "Nuclear Throne",
+    "popularity": 0.971,
+    "weight": 0
+  },
+  {
+    "name": "Gorogoa",
+    "popularity": 0.9709,
+    "weight": 0
+  },
+  {
+    "name": "FINAL FANTASY® XIII",
+    "popularity": 0.9709,
+    "weight": 0
+  },
+  {
+    "name": "Psychonauts",
+    "popularity": 0.9709,
+    "weight": 0
+  },
+  {
+    "name": "Sniper: Ghost Warrior 2",
+    "popularity": 0.9709,
+    "weight": 0
+  },
+  {
+    "name": "Streets of Rage 4",
+    "popularity": 0.9709,
+    "weight": 0
+  },
+  {
+    "name": "Gone Home",
+    "popularity": 0.9708,
+    "weight": 0
+  },
+  {
+    "name": "Shadow of the Tomb Raider: Definitive Edition",
+    "popularity": 0.9708,
+    "weight": 0
+  },
+  {
+    "name": "Hyper Light Drifter",
+    "popularity": 0.9708,
+    "weight": 0
+  },
+  {
+    "name": "Century: Age of Ashes",
+    "popularity": 0.9706,
+    "weight": 0
+  },
+  {
+    "name": "Far Cry 3 - Blood Dragon",
+    "popularity": 0.9706,
+    "weight": 0
+  },
+  {
+    "name": "Neon White",
+    "popularity": 0.9706,
+    "weight": 0
+  },
+  {
+    "name": "Placid Plastic Duck Simulator",
+    "popularity": 0.9706,
+    "weight": 0
+  },
+  {
+    "name": "Zombie Army Trilogy",
+    "popularity": 0.9705,
+    "weight": 0
+  },
+  {
+    "name": "Trine 2: Complete Story",
+    "popularity": 0.9705,
+    "weight": 0
+  },
+  {
+    "name": "Warhammer® 40,000: Dawn of War® - Soulstorm",
+    "popularity": 0.9704,
+    "weight": 0
+  }
+]
