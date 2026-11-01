@@ -10,7 +10,7 @@
     font-family: 'Segoe UI', Tahoma, sans-serif;
     background: radial-gradient(circle at 50% 20%, #2a1a4a, #0d0d1a 70%);
     color: #fff; min-height: 100vh; display: flex; flex-direction: column;
-    align-items: center; padding: 20px;
+    align-items: center; padding: 20px; overflow-x: hidden;
   }
   h1 {
     font-size: 2rem; margin-bottom: 6px; text-align: center;
@@ -19,6 +19,65 @@
     color: transparent; text-shadow: 0 0 20px rgba(255,215,0,.3);
   }
   .subtitle { color: #aaa; margin-bottom: 18px; text-align: center; font-size: .9rem; }
+
+  /* ===== ЭКРАНЫ ===== */
+  .screen { display: none; width: 100%; flex-direction: column; align-items: center; animation: fadeIn 0.4s ease-out; }
+  .screen.active { display: flex; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+  /* ===== ЭКРАН НАСТРОЙКИ (SETUP) ===== */
+  .setup-container {
+    display: flex; gap: 30px; width: 100%; max-width: 900px;
+    background: rgba(255,255,255,.03); border: 1px solid rgba(255,255,255,.1);
+    border-radius: 20px; padding: 30px; margin-top: 20px; flex-wrap: wrap;
+  }
+  .setup-left {
+    flex: 1; min-width: 250px; display: flex; flex-direction: column; gap: 15px;
+  }
+  .setup-left h2 { color: #ffd700; font-size: 1.2rem; margin-bottom: 10px; }
+  .size-options { display: flex; gap: 10px; }
+  .size-btn {
+    flex: 1; padding: 20px 0; font-size: 1.5rem; font-weight: bold;
+    background: rgba(255,255,255,.05); border: 2px solid rgba(255,255,255,.1);
+    border-radius: 12px; color: #aaa; cursor: pointer; transition: all .2s;
+  }
+  .size-btn:hover { background: rgba(255,255,255,.1); }
+  .size-btn.active { background: rgba(255, 215, 0, 0.15); border-color: #ffd700; color: #ffd700; box-shadow: 0 0 15px rgba(255,215,0,.2); }
+  
+  .setup-right {
+    flex: 2; min-width: 300px; display: flex; flex-direction: column;
+  }
+  .setup-right h2 { color: #ffd700; font-size: 1.2rem; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center;}
+  .setup-right h2 span { font-size: 0.8rem; color: #aaa; font-weight: normal; }
+  .setup-list {
+    flex: 1; height: 300px; overflow-y: auto; background: rgba(0,0,0,.3);
+    border-radius: 12px; padding: 15px; border: 1px solid rgba(255,255,255,.05);
+  }
+  .setup-list::-webkit-scrollbar { width: 6px; }
+  .setup-list::-webkit-scrollbar-thumb { background: rgba(255,255,255,.2); border-radius: 3px; }
+  .setup-list-item {
+    padding: 8px 12px; margin-bottom: 6px; background: rgba(255,255,255,.05);
+    border-radius: 6px; font-size: 0.9rem; display: flex; justify-content: space-between;
+  }
+  .setup-list-item .hidden-votes { color: #ff6b6b; font-weight: bold; letter-spacing: 2px;}
+  
+  .action-buttons { display: flex; gap: 16px; margin-top: 20px; width: 100%; max-width: 900px; flex-wrap: wrap; }
+  .btn {
+    padding: 16px 42px; font-size: 1.15rem; font-weight: bold;
+    border: none; border-radius: 50px; cursor: pointer; transition: transform .15s, box-shadow .15s;
+  }
+  .btn:hover:not(:disabled) { transform: scale(1.05); }
+  .btn:disabled { opacity: .5; cursor: not-allowed; }
+  .btn-shuffle-setup {
+    flex: 1; background: linear-gradient(135deg, #4d96ff, #6bcB77); color: #fff;
+    box-shadow: 0 6px 25px rgba(77,150,255,.4);
+  }
+  .btn-play {
+    flex: 2; background: linear-gradient(135deg, #ffd700, #ff8c00); color: #1a1a2e;
+    box-shadow: 0 6px 25px rgba(255,215,0,.4); font-size: 1.4rem;
+  }
+
+  /* ===== ЭКРАН ИГРЫ (GAME) ===== */
   .wheel-wrap {
     position: relative; width: 720px; height: 720px;
     max-width: 94vw; max-height: 94vw; margin-bottom: 22px;
@@ -27,96 +86,54 @@
     filter: drop-shadow(0 0 40px rgba(255,215,0,.25)); }
   .pointer {
     position: absolute; top: -4px; left: 50%; transform: translateX(-50%);
-    width: 0; height: 0;
-    border-left: 24px solid transparent; border-right: 24px solid transparent;
-    border-top: 46px solid #ffd700;
-    filter: drop-shadow(0 0 10px #ffd700); z-index: 10; pointer-events: none;
+    width: 0; height: 0; border-left: 24px solid transparent; border-right: 24px solid transparent;
+    border-top: 46px solid #ffd700; filter: drop-shadow(0 0 10px #ffd700); z-index: 10; pointer-events: none;
   }
-  .controls { display: flex; gap: 16px; flex-wrap: wrap;
-    justify-content: center; margin-bottom: 18px; }
-  .btn { padding: 16px 42px; font-size: 1.15rem; font-weight: bold;
-    border: none; border-radius: 50px; cursor: pointer;
-    transition: transform .15s, box-shadow .15s; }
-  .btn:hover:not(:disabled) { transform: scale(1.05); }
-  .btn:disabled { opacity: .5; cursor: not-allowed; }
-  .btn-spin {
-    background: linear-gradient(135deg, #ffd700, #ff8c00);
-    color: #1a1a2e; box-shadow: 0 6px 25px rgba(255,215,0,.4);
-  }
-  .btn-spin:hover:not(:disabled) { box-shadow: 0 8px 35px rgba(255,215,0,.6); }
-  .btn-shuffle {
-    background: linear-gradient(135deg, #4d96ff, #6bcB77);
-    color: #fff; box-shadow: 0 6px 25px rgba(77,150,255,.4);
-  }
-  .btn-shuffle:hover:not(:disabled) { box-shadow: 0 8px 35px rgba(77,150,255,.6); }
+  .controls { display: flex; gap: 16px; flex-wrap: wrap; justify-content: center; margin-bottom: 18px; }
+  .btn-spin { background: linear-gradient(135deg, #ffd700, #ff8c00); color: #1a1a2e; }
   .btn-reset {
-    padding: 10px 24px; font-size: .9rem;
-    border: 1px solid rgba(255,255,255,.2); border-radius: 30px;
-    background: transparent; color: #aaa; cursor: pointer; transition: all .15s;
+    padding: 10px 24px; font-size: .9rem; border: 1px solid rgba(255,255,255,.2);
+    border-radius: 30px; background: transparent; color: #aaa; cursor: pointer; transition: all .15s;
   }
   .btn-reset:hover { background: rgba(255,255,255,.1); color: #fff; }
-  .result {
-    text-align: center; font-size: 1.3rem; min-height: 2em;
-    margin-bottom: 14px; font-weight: bold;
-  }
-  .result.winner { color: #ffd700; text-shadow: 0 0 20px rgba(255,215,0,.6);
-    animation: pulse 1s infinite; }
+  
+  .result { text-align: center; font-size: 1.3rem; min-height: 2em; margin-bottom: 14px; font-weight: bold; }
+  .result.winner { color: #ffd700; text-shadow: 0 0 20px rgba(255,215,0,.6); animation: pulse 1s infinite; }
   .result.out { color: #ff6b6b; }
-  .result.error { color: #ff6b6b; }
   @keyframes pulse { 0%,100% { transform: scale(1); } 50% { transform: scale(1.06); } }
-  .panels { display: flex; gap: 16px; width: 100%; max-width: 960px;
-    flex-wrap: wrap; justify-content: center; }
-  .panel {
-    flex: 1; min-width: 280px;
-    background: rgba(255,255,255,.05); border-radius: 16px; padding: 16px;
-    border: 1px solid rgba(255,255,255,.1);
-  }
-  .panel h2 { font-size: 1rem; margin-bottom: 12px;
-    color: #ffd700; text-align: center; }
-  .vote-list, .history-list {
-    max-height: 340px; overflow-y: auto; padding-right: 6px;
-  }
+
+  .panels { display: flex; gap: 16px; width: 100%; max-width: 960px; flex-wrap: wrap; justify-content: center; }
+  .panel { flex: 1; min-width: 280px; background: rgba(255,255,255,.05); border-radius: 16px; padding: 16px; border: 1px solid rgba(255,255,255,.1); }
+  .panel h2 { font-size: 1rem; margin-bottom: 12px; color: #ffd700; text-align: center; }
+  .vote-list, .history-list { max-height: 340px; overflow-y: auto; padding-right: 6px; }
   .vote-list::-webkit-scrollbar, .history-list::-webkit-scrollbar { width: 6px; }
-  .vote-list::-webkit-scrollbar-thumb, .history-list::-webkit-scrollbar-thumb {
-    background: rgba(255,255,255,.2); border-radius: 3px;
-  }
-  .vote-row { display: flex; align-items: center; gap: 8px;
-    margin-bottom: 6px; font-size: .8rem; }
-  .vote-name { width: 140px; flex-shrink: 0; white-space: nowrap;
-    overflow: hidden; text-overflow: ellipsis; }
-  .vote-bar-bg { flex: 1; height: 14px; background: rgba(255,255,255,.08);
-    border-radius: 7px; overflow: hidden; }
+  .vote-list::-webkit-scrollbar-thumb, .history-list::-webkit-scrollbar-thumb { background: rgba(255,255,255,.2); border-radius: 3px; }
+
+  .vote-row { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; font-size: .8rem; }
+  .vote-name { width: 140px; flex-shrink: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .vote-bar-bg { flex: 1; height: 14px; background: rgba(255,255,255,.08); border-radius: 7px; overflow: hidden; }
   .vote-bar { height: 100%; border-radius: 7px; transition: width .5s ease; }
-  .vote-count { width: 36px; text-align: right; font-weight: bold;
-    color: #ffd700; font-size: .75rem; }
+  .vote-count { width: 36px; text-align: right; font-weight: bold; color: #ffd700; font-size: .75rem; }
   .chance { width: 52px; text-align: right; font-size: .7rem; color: #6bcB77; }
   .history-list ol { padding-left: 24px; font-size: .85rem; }
   .history-list li { margin-bottom: 4px; }
   .history-list li:last-child { color: #ffd700; font-weight: bold; }
+
+  /* ===== ОКНО ПОБЕДИТЕЛЯ ===== */
   .winner-overlay {
-    position: fixed; inset: 0;
-    background: radial-gradient(circle at 50% 40%, #2a1a4a, #0d0d1a 80%);
-    display: flex; flex-direction: column; align-items: center;
-    justify-content: center; z-index: 1000; opacity: 0;
-    pointer-events: none; transition: opacity .8s ease;
+    position: fixed; inset: 0; background: radial-gradient(circle at 50% 40%, #2a1a4a, #0d0d1a 80%);
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    z-index: 1000; opacity: 0; pointer-events: none; transition: opacity .8s ease;
   }
   .winner-overlay.show { opacity: 1; pointer-events: auto; }
-  .winner-overlay h2 {
-    font-size: 3.5rem; color: #ffd700;
-    text-shadow: 0 0 40px rgba(255,215,0,.8); margin-bottom: 20px;
-    text-align: center;
-  }
+  .winner-overlay h2 { font-size: 3.5rem; color: #ffd700; text-shadow: 0 0 40px rgba(255,215,0,.8); margin-bottom: 20px; text-align: center; }
   .winner-overlay .winner-name {
-    font-size: 4.5rem; font-weight: bold;
-    background: linear-gradient(90deg, #ffd700, #ff6b6b, #ffd700);
-    -webkit-background-clip: text; background-clip: text; color: transparent;
-    text-align: center; padding: 0 40px; word-break: break-word;
+    font-size: 4.5rem; font-weight: bold; background: linear-gradient(90deg, #ffd700, #ff6b6b, #ffd700);
+    -webkit-background-clip: text; background-clip: text; color: transparent; text-align: center; padding: 0 40px; word-break: break-word;
   }
   .winner-overlay .close-btn {
-    margin-top: 60px; padding: 14px 50px; font-size: 1.2rem;
-    font-weight: bold; border: none; border-radius: 50px;
-    background: linear-gradient(135deg, #ffd700, #ff8c00);
-    color: #1a1a2e; cursor: pointer; transition: transform .15s;
+    margin-top: 60px; padding: 14px 50px; font-size: 1.2rem; font-weight: bold;
+    border: none; border-radius: 50px; background: linear-gradient(135deg, #ffd700, #ff8c00); color: #1a1a2e; cursor: pointer; transition: transform .15s;
   }
   .winner-overlay .close-btn:hover { transform: scale(1.05); }
 </style>
@@ -124,40 +141,71 @@
 <body>
 
 <h1>🎡 Колесо Фортуны Папича</h1>
-<p class="subtitle">Больше отзывов в Steam → уже сектор → меньше шанс вылета.</p>
+<p class="subtitle">Больше отзывов в Steam → больше шансов получить высокий вес.</p>
 
-<div class="wheel-wrap">
-  <div class="pointer"></div>
-  <canvas id="wheel"></canvas>
-</div>
-
-<div class="controls">
-  <button class="btn btn-spin" id="spinBtn" disabled>Крутить! 🎲</button>
-  <button class="btn btn-shuffle" id="shuffleBtn" disabled>Перераспределить голоса 🔀</button>
-</div>
-
-<div class="result" id="result">⏳ Загрузка games.json...</div>
-
-<div class="panels">
-  <div class="panel">
-    <h2>📊 Игры и шанс вылета</h2>
-    <div class="vote-list" id="voteList"></div>
+<!-- ЭКРАН 1: НАСТРОЙКА -->
+<div id="setup-screen" class="screen active">
+  <div class="setup-container">
+    <div class="setup-left">
+      <h2>Сколько игр в крутке?</h2>
+      <div class="size-options">
+        <button class="size-btn" data-size="10">10</button>
+        <button class="size-btn" data-size="25">25</button>
+        <button class="size-btn active" data-size="50">50</button>
+      </div>
+      <p style="color: #aaa; font-size: 0.8rem; margin-top: 10px;">
+        Игры будут выбраны случайно из базы. Нажми «Перераспределить», чтобы заново раздать скрытые голоса.
+      </p>
+    </div>
+    
+    <div class="setup-right">
+      <h2>Игры в крутке <span>Голоса скрыты (сюрприз!)</span></h2>
+      <div class="setup-list" id="setup-list">
+        <!-- Сюда падают игры -->
+      </div>
+    </div>
   </div>
-  <div class="panel">
-    <h2>🏆 История выбывания</h2>
-    <div class="history-list"><ol id="historyList"></ol></div>
-    <div style="text-align:center;margin-top:14px;">
-      <button class="btn-reset" id="resetBtn">🔄 Начать заново</button>
+
+  <div class="action-buttons">
+    <button class="btn btn-shuffle-setup" id="setup-shuffle-btn">🔀 Перераспределить голоса</button>
+    <button class="btn btn-play" id="play-btn">ИГРАТЬ! 🎲</button>
+  </div>
+</div>
+
+<!-- ЭКРАН 2: САМА ИГРА -->
+<div id="game-screen" class="screen">
+  <div class="wheel-wrap">
+    <div class="pointer"></div>
+    <canvas id="wheel"></canvas>
+  </div>
+
+  <div class="controls">
+    <button class="btn btn-spin" id="spinBtn">Крутить! 🎲</button>
+    <button class="btn-reset" id="resetBtn">🔄 В настройки</button>
+  </div>
+
+  <div class="result" id="result"></div>
+
+  <div class="panels">
+    <div class="panel">
+      <h2>📊 Голоса и шанс вылета</h2>
+      <div class="vote-list" id="voteList"></div>
+    </div>
+    <div class="panel">
+      <h2>🏆 История выбывания</h2>
+      <div class="history-list"><ol id="historyList"></ol></div>
     </div>
   </div>
 </div>
 
+<!-- ОКНО ПОБЕДИТЕЛЯ -->
 <div class="winner-overlay" id="winnerOverlay">
   <h2>🏆 Победитель</h2>
   <div class="winner-name" id="winnerName"></div>
   <button class="close-btn" id="closeWinnerBtn">Закрыть</button>
 </div>
 
+<!-- АУДИО -->
 <audio id="bgMusic" loop preload="auto">
   <source src="pole-chudes.mp3" type="audio/mpeg">
 </audio>
@@ -170,29 +218,34 @@
   'use strict';
 
   const COLORS = [
-    "#ff6b6b","#ffd93d","#6bcB77","#4d96ff","#c77dff",
-    "#ff9f1c","#2ec4b6","#e71d36","#9d4edd","#06d6a0",
-    "#f72585","#7209b7","#f4a261","#e76f51","#264653",
-    "#e9c46a","#a8dadc","#457b9d","#1d3557","#ffb703",
-    "#fb8500","#8ecae6","#219ebc","#023047","#bde0fe",
-    "#a2d2ff","#cdb4db","#ffc8dd","#ffafcc","#bde0fe",
-    "#ff006e","#8338ec","#3a86ff","#ffbe0b","#fb5607",
-    "#06d6a0","#118ab2","#073b4c","#ef476f","#ffd166"
+    "#ff6b6b","#ffd93d","#6bcB77","#4d96ff","#c77dff","#ff9f1c","#2ec4b6","#e71d36","#9d4edd","#06d6a0",
+    "#f72585","#7209b7","#f4a261","#e76f51","#264653","#e9c46a","#a8dadc","#457b9d","#1d3557","#ffb703",
+    "#fb8500","#8ecae6","#219ebc","#023047","#bde0fe","#a2d2ff","#cdb4db","#ffc8dd","#ffafcc","#bde0fe",
+    "#ff006e","#8338ec","#3a86ff","#ffbe0b","#fb5607","#06d6a0","#118ab2","#073b4c","#ef476f","#ffd166"
   ];
 
   const TAU = Math.PI * 2;
-  const MAX_ON_WHEEL = 50;
   const SIZE = 1000, CX = 500, CY = 500, R = 490;
   const POINTER_ANGLE = -Math.PI / 2;
   const SPIN_DURATION = 5000, SPIN_TURNS = 6;
 
+  // ===== СОСТОЯНИЕ =====
   let ALL_GAMES = [];
-  let games = [];
+  let games = [];          // объекты {name, baseWeight, weight, colorIdx}
   let history = [];
   let spinning = false;
   let rotation = 0;
   let loaded = false;
   let cachedSegs = null;
+  let currentSize = 50;    // по умолчанию
+
+  // ===== DOM =====
+  const setupScreen = document.getElementById('setup-screen');
+  const gameScreen = document.getElementById('game-screen');
+  const setupListEl = document.getElementById('setup-list');
+  const setupShuffleBtn = document.getElementById('setup-shuffle-btn');
+  const playBtn = document.getElementById('play-btn');
+  const sizeBtns = document.querySelectorAll('.size-btn');
 
   const canvas = document.getElementById('wheel');
   const ctx = canvas.getContext('2d', { alpha: true });
@@ -200,17 +253,18 @@
   const offCtx = off.getContext('2d');
 
   const spinBtn = document.getElementById('spinBtn');
-  const shuffleBtn = document.getElementById('shuffleBtn');
   const resetBtn = document.getElementById('resetBtn');
   const resultEl = document.getElementById('result');
   const voteListEl = document.getElementById('voteList');
   const historyListEl = document.getElementById('historyList');
+  
   const bgMusic = document.getElementById('bgMusic');
   const anthem = document.getElementById('anthem');
   const winnerOverlay = document.getElementById('winnerOverlay');
   const winnerName = document.getElementById('winnerName');
   const closeWinnerBtn = document.getElementById('closeWinnerBtn');
 
+  // ===== УТИЛИТЫ =====
   function norm(a) { return ((a % TAU) + TAU) % TAU; }
   function esc(s) {
     return String(s).replace(/[&<>"']/g, c => ({
@@ -227,7 +281,6 @@
     offCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
   }
 
-  // чем больше weight → тем МЕНЬШЕ inverseWeight → уже сектор
   function inverseWeight(g) { return 1 / (g.weight + 1); }
 
   function computeSegments() {
@@ -245,37 +298,89 @@
   }
   function invalidate() { cachedSegs = null; }
 
-  // выбрать до 50 игр для колеса
-  function pickForWheel(pool) {
-    const copy = pool.slice();
+  // ===== ЛОГИКА ГОЛОСОВ =====
+  // Популярность (baseWeight) дает буст, но всегда есть шанс на рандом
+  function rollWeights() {
+    const maxBase = Math.max(...games.map(g => g.baseWeight || 0), 1);
+    games.forEach(g => {
+      const pop = (g.baseWeight || 0) / maxBase;  // 0..1
+      
+      // База: от 1 до 100
+      let w = Math.floor(Math.random() * 100) + 1;
+      
+      // Бонус от популярности: до +150, умноженный на случайность (чтобы не было гарантии)
+      w += Math.floor(pop * 150 * Math.random());
+      
+      // 15% шанс на "джекпот" для любой игры (чтобы ноунеймы могли выстрелить)
+      if (Math.random() < 0.15) w += Math.floor(Math.random() * 100);
+      
+      g.weight = w;
+    });
+    invalidate();
+  }
+
+  // Выбрать случайные игры из базы
+  function pickGames(size) {
+    const copy = ALL_GAMES.slice();
     for (let i = copy.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
       [copy[i], copy[j]] = [copy[j], copy[i]];
     }
-    const count = Math.min(MAX_ON_WHEEL, copy.length);
+    const count = Math.min(size, copy.length);
     return copy.slice(0, count).map((g, i) => ({
-      name: g.name, weight: g.weight, colorIdx: i
+      name: g.name,
+      baseWeight: g.weight || 0, // сохраняем исходную популярность из JSON
+      weight: 0,
+      colorIdx: i
     }));
   }
 
-  function distributeVotes() {
-    // веса уже пришли с сервера — просто пересчитать панель
-    invalidate();
+  // ===== ЭКРАН НАСТРОЙКИ =====
+  function initSetup() {
+    games = pickGames(currentSize);
+    rollWeights();
+    renderSetupList();
+  }
+
+  function renderSetupList() {
+    setupListEl.innerHTML = games.map(g => `
+      <div class="setup-list-item">
+        <span>${esc(g.name)}</span>
+        <span class="hidden-votes">???</span>
+      </div>
+    `).join('');
+  }
+
+  // ===== ПЕРЕХОД В ИГРУ =====
+  function startGame() {
+    setupScreen.classList.remove('active');
+    gameScreen.classList.add('active');
+    
+    history = [];
+    rotation = 0;
+    spinning = false;
+    spinBtn.disabled = false;
+    resultEl.textContent = '';
+    resultEl.className = 'result';
+    historyListEl.innerHTML = '';
+    
+    // Обновляем колесо и списки с уже сгенерированными весами
     renderVotes();
     renderStaticWheel();
     drawWheel();
+    hideWinnerOverlay();
+    stopAllAudio();
   }
 
-  function weightedPick(items) {
-    const total = items.reduce((s, i) => s + inverseWeight(i), 0);
-    let r = Math.random() * total;
-    for (const item of items) {
-      r -= inverseWeight(item);
-      if (r <= 0) return item;
-    }
-    return items[items.length - 1];
+  function backToSetup() {
+    if (spinning) return;
+    gameScreen.classList.remove('active');
+    setupScreen.classList.add('active');
+    stopAllAudio();
+    initSetup(); // Сразу готовим новый пул игр
   }
 
+  // ===== ОТРИСОВКА КОЛЕСА =====
   function renderStaticWheel() {
     offCtx.clearRect(0, 0, SIZE, SIZE);
     const segs = computeSegments();
@@ -368,44 +473,23 @@
     return null;
   }
 
-  function initGame() {
-    if (!loaded) return;
-    games = pickForWheel(ALL_GAMES);
-    history = []; rotation = 0; spinning = false;
-    spinBtn.disabled = false; shuffleBtn.disabled = false;
-    resultEl.textContent = ''; resultEl.className = 'result';
-    historyListEl.innerHTML = '';
-    distributeVotes();
-    hideWinnerOverlay();
-    stopAllAudio();
-  }
-
-  async function loadGames() {
-    try {
-      const resp = await fetch('games.json', { cache: 'no-store' });
-      if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
-      const data = await resp.json();
-      if (!Array.isArray(data) || !data.length) throw new Error('Пустой или невалидный games.json');
-      ALL_GAMES = data.filter(g => g && typeof g.name === 'string' && typeof g.weight === 'number');
-      if (!ALL_GAMES.length) throw new Error('Нет валидных записей');
-      loaded = true;
-      initGame();
-      resultEl.textContent = `✅ Загружено игр: ${ALL_GAMES.length}. На колесе ${Math.min(MAX_ON_WHEEL, ALL_GAMES.length)}. Крутите!`;
-      resultEl.className = 'result';
-    } catch (e) {
-      console.error(e);
-      resultEl.textContent = `❌ Не удалось загрузить games.json (${e.message}). Файл должен лежать рядом с HTML.`;
-      resultEl.className = 'result error';
-      spinBtn.disabled = true; shuffleBtn.disabled = true;
+  function weightedPick(items) {
+    const total = items.reduce((s, i) => s + inverseWeight(i), 0);
+    let r = Math.random() * total;
+    for (const item of items) {
+      r -= inverseWeight(item);
+      if (r <= 0) return item;
     }
+    return items[items.length - 1];
   }
 
+  // ===== ИГРОВОЙ ПРОЦЕСС =====
   function spin() {
     if (spinning || !games.length) return;
     startBgMusic();
     if (games.length === 1) { finishGame(games[0]); return; }
 
-    spinning = true; spinBtn.disabled = true; shuffleBtn.disabled = true;
+    spinning = true; spinBtn.disabled = true;
     resultEl.textContent = '🎲 Крутим...'; resultEl.className = 'result';
 
     const winner = weightedPick(games);
@@ -462,7 +546,7 @@
       resultEl.textContent = `🏆 Победитель: ${champ.name}`;
       resultEl.className = 'result winner';
       games = []; invalidate();
-      spinBtn.disabled = true; shuffleBtn.disabled = true;
+      spinBtn.disabled = true;
       renderVotes(); renderStaticWheel(); drawWheel();
       showWinner(champ.name);
       return;
@@ -470,7 +554,7 @@
     renderHistory(false);
     resultEl.textContent = `❌ Выбывает: ${winner.name}`;
     resultEl.className = 'result out';
-    spinBtn.disabled = false; shuffleBtn.disabled = false;
+    spinBtn.disabled = false;
     rotation = norm(rotation);
     renderVotes(); renderStaticWheel(); drawWheel();
   }
@@ -480,7 +564,7 @@
     renderHistory(true);
     resultEl.textContent = `🏆 Победитель: ${champ.name}`;
     resultEl.className = 'result winner';
-    spinBtn.disabled = true; shuffleBtn.disabled = true;
+    spinBtn.disabled = true;
     renderVotes(); renderStaticWheel(); drawWheel();
     startAnthem();
     showWinner(champ.name);
@@ -520,24 +604,65 @@
     winnerOverlay.classList.remove('show');
   }
 
+  // ===== ЗАГРУЗКА ДАННЫХ =====
+  async function loadGames() {
+    try {
+      const resp = await fetch('games.json', { cache: 'no-store' });
+      if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+      const data = await resp.json();
+      if (!Array.isArray(data) || !data.length) throw new Error('Пустой или невалидный games.json');
+      ALL_GAMES = data.filter(g => g && typeof g.name === 'string' && typeof g.weight === 'number');
+      if (!ALL_GAMES.length) throw new Error('Нет валидных записей');
+      loaded = true;
+      
+      initSetup();
+    } catch (e) {
+      console.error(e);
+      setupListEl.innerHTML = `<div style="color:#ff6b6b; text-align:center; padding:20px;">❌ Не удалось загрузить games.json (${e.message})<br>Файл должен лежать рядом с HTML.</div>`;
+      playBtn.disabled = true;
+      setupShuffleBtn.disabled = true;
+    }
+  }
+
+  // ===== ОБРАБОТЧИКИ =====
+  sizeBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      sizeBtns.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      currentSize = parseInt(btn.dataset.size);
+      initSetup();
+    });
+  });
+
+  setupShuffleBtn.addEventListener('click', () => {
+    if (!loaded) return;
+    rollWeights(); // пересчитываем только веса (игры остаются те же)
+    renderSetupList(); // хотя список не изменился визуально (голоса скрыты)
+    // Можно добавить анимацию кнопки, чтобы было понятно что что-то произошло
+    setupShuffleBtn.textContent = '✅ Голоса перераспределены!';
+    setTimeout(() => setupShuffleBtn.textContent = '🔀 Перераспределить голоса', 1500);
+  });
+
+  playBtn.addEventListener('click', () => {
+    if (!loaded || !games.length) return;
+    startGame();
+  });
+
+  resetBtn.addEventListener('click', backToSetup);
+  
   spinBtn.addEventListener('click', spin);
-  shuffleBtn.addEventListener('click', () => {
-    if (spinning || !loaded) return;
-    initGame();
-    resultEl.textContent = '🔀 Голоса перераспределены!';
-    resultEl.className = 'result';
-  });
-  resetBtn.addEventListener('click', () => {
-    if (spinning || !loaded) return;
-    initGame();
-  });
+
   closeWinnerBtn.addEventListener('click', () => {
     hideWinnerOverlay(); stopAllAudio();
   });
+
   window.addEventListener('resize', () => {
-    setupCanvas(); renderStaticWheel(); drawWheel();
+    if (gameScreen.classList.contains('active')) {
+      setupCanvas(); renderStaticWheel(); drawWheel();
+    }
   });
 
+  // ===== СТАРТ =====
   setupCanvas();
   loadGames();
 })();
