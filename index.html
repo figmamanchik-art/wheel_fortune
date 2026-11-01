@@ -725,14 +725,6 @@
     } catch (e) {}
   }
 
-  function hashCode(str) {
-    let h = 0;
-    for (let i = 0; i < str.length; i++) {
-      h = ((h << 5) - h + str.charCodeAt(i)) | 0;
-    }
-    return Math.abs(h);
-  }
-
   // Умная очередь запросов
   async function getSteamCover(gameName) {
     if (steamCache.has(gameName)) return steamCache.get(gameName);
@@ -762,8 +754,11 @@
       const task = steamQueue.shift();
       
       try {
-        const url = `https://store.steampowered.com/api/storesearch/?term=${encodeURIComponent(task.gameName)}&cc=us&l=en`;
-        const res = await fetch(url);
+        // Используем CORS-прокси corsproxy.io, так как сайт хостится на GitHub Pages
+        const targetUrl = `https://store.steampowered.com/api/storesearch/?term=${encodeURIComponent(task.gameName)}&cc=us&l=en`;
+        const proxyUrl = `https://corsproxy.io/?${encodeURIComponent(targetUrl)}`;
+        
+        const res = await fetch(proxyUrl);
         
         if (res.status === 429) {
           steamFailures += 5; // Жёстко триггерим предохранитель
@@ -777,6 +772,7 @@
         const item = (data.items && data.items[0]) || null;
         
         if (item && item.id) {
+          // CDN Steam отдаёт картинки без CORS-проблем
           const coverUrl = `https://cdn.cloudflare.steamstatic.com/steam/apps/${item.id}/header.jpg`;
           steamCache.set(task.gameName, coverUrl);
           task.resolve(coverUrl);
@@ -790,6 +786,7 @@
         
       } catch (e) {
         console.warn('Ошибка поиска Steam для:', task.gameName, e);
+        steamFailures++; 
         task.resolve(null); // Возвращаем null, чтобы сработал фолбэк
       }
 
@@ -818,9 +815,8 @@
     
     img.onload = markLoaded;
     img.onerror = () => {
-      // Если обложка не загрузилась, ставим заглушку
-      img.src = `https://placehold.co/400x200/1a1a2e/FFFFFF?text=${encodeURIComponent(gameName)}`;
-      img.onerror = null;
+      // Если обложка не загрузилась, просто удаляем её. Останется градиент.
+      img.remove();
     };
 
     // Ждём ответа от безопасной очереди Steam
@@ -832,7 +828,8 @@
     if (steamUrl) {
       img.src = steamUrl;
     } else {
-      img.src = `https://placehold.co/400x200/1a1a2e/FFFFFF?text=${encodeURIComponent(gameName)}`;
+      // Если Steam не нашёл игру, удаляем img. Останется градиент и текст.
+      img.remove();
     }
     
     if (img.complete && img.naturalWidth > 0) markLoaded();
