@@ -62,7 +62,6 @@
     .vol-row .name { display: none; }
   }
 
-  /* ===== ЭКРАНЫ ===== */
   .screen { display: none; width: 100%; flex-direction: column; align-items: center; animation: fadeIn 0.4s ease-out; }
   .screen.active { display: flex; }
   @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
@@ -262,6 +261,50 @@
   }
   .role-btn:hover { background: rgba(255,215,0,.15); border-color: #ffd700; color: #ffd700; }
   .role-btn .role-icon { font-size: 1.5rem; margin-right: 10px; }
+
+  /* ===== АУКЦИОН: длительность ===== */
+  #auction-duration-screen {
+    position: fixed; inset: 0; z-index: 50;
+    display: none; flex-direction: column;
+    background: radial-gradient(circle at 50% 40%, #2a1a4a, #0d0d1a 80%);
+    padding: 30px 20px; align-items: center; justify-content: center;
+    overflow-y: auto;
+  }
+  #auction-duration-screen.active { display: flex; }
+  #auction-duration-screen h2 {
+    font-size: 1.8rem; color: #ffd700; margin-bottom: 8px; text-align: center;
+    text-shadow: 0 0 20px rgba(255,215,0,.4);
+  }
+  #auction-duration-screen .hint {
+    color: #aaa; margin-bottom: 20px; text-align: center; font-size: .9rem;
+    max-width: 600px;
+  }
+  .duration-slider-wrap {
+    width: 100%; max-width: 500px;
+    display: flex; flex-direction: column; gap: 12px;
+    margin: 10px 0 10px;
+  }
+  #durationSlider {
+    width: 100%; height: 20px;
+    accent-color: #ffd700; cursor: pointer;
+  }
+  .duration-display {
+    text-align: center; font-size: 2.2rem; font-weight: bold;
+    color: #ffd700; text-shadow: 0 0 20px rgba(255,215,0,.4);
+    font-family: 'Courier New', monospace;
+  }
+  .duration-presets {
+    display: flex; gap: 8px; flex-wrap: wrap; justify-content: center;
+    margin-top: 15px;
+  }
+  .dur-preset {
+    padding: 10px 20px; border: 1px solid rgba(255,255,255,.2);
+    background: transparent; color: #ccc; border-radius: 20px;
+    cursor: pointer; font-weight: bold; transition: all .15s; font-size: .9rem;
+  }
+  .dur-preset:hover, .dur-preset.active {
+    background: rgba(255,215,0,.15); border-color: #ffd700; color: #ffd700;
+  }
 
   /* ===== АУКЦИОН: зритель ===== */
   #auction-viewer-screen {
@@ -466,7 +509,7 @@
   <div class="mode-content" id="auction-mode-content">
     <div class="auction-role-select">
       <h2>🔨 Аукцион</h2>
-      <p>Выберите роль. Зритель голосует за игры 5 минут, участник запускает крутку по полученным голосам.</p>
+      <p>Выберите роль. Зритель голосует за игры, участник запускает крутку по полученным голосам.</p>
       <button class="role-btn" id="role-viewer"><span class="role-icon">👁</span>Зритель</button>
       <button class="role-btn" id="role-participant"><span class="role-icon">🎮</span>Участник</button>
     </div>
@@ -504,6 +547,28 @@
   <button class="close-btn" id="closeWinnerBtn">Закрыть</button>
 </div>
 
+<!-- ================== АУКЦИОН: ДЛИТЕЛЬНОСТЬ ================== -->
+<div id="auction-duration-screen">
+  <h2>⏱ Длительность голосования</h2>
+  <p class="hint">Выберите, сколько времени будет идти голосование (от 10 секунд до 10 минут)</p>
+  <div class="duration-slider-wrap">
+    <input type="range" id="durationSlider" min="10" max="600" step="10" value="300">
+    <div class="duration-display" id="durationDisplay">5 мин</div>
+  </div>
+  <div class="duration-presets">
+    <button class="dur-preset" data-sec="10">10 сек</button>
+    <button class="dur-preset" data-sec="30">30 сек</button>
+    <button class="dur-preset" data-sec="60">1 мин</button>
+    <button class="dur-preset" data-sec="180">3 мин</button>
+    <button class="dur-preset" data-sec="300">5 мин</button>
+    <button class="dur-preset" data-sec="600">10 мин</button>
+  </div>
+  <div style="display:flex; gap:15px; margin-top:25px; flex-wrap:wrap; justify-content:center;">
+    <button class="btn-play-sm" id="durationStartBtn">▶ Начать голосование</button>
+    <button class="btn btn-reset" id="durationBackBtn">← Назад</button>
+  </div>
+</div>
+
 <!-- ================== АУКЦИОН: ЗРИТЕЛЬ ================== -->
 <div id="auction-viewer-screen">
   <div class="auction-timer" id="auctionTimer">5:00</div>
@@ -518,10 +583,10 @@
 <!-- ================== АУКЦИОН: РЕЗУЛЬТАТЫ ================== -->
 <div id="auction-results-screen">
   <h2>✅ Голосование завершено</h2>
-  <p class="subtitle2">Скопируйте результат и передайте участнику</p>
+  <p class="subtitle2">Скопируйте зашифрованный код и передайте участнику — он расшифруется автоматически</p>
   <div class="auction-results-list" id="auctionResultsList"></div>
   <div class="auction-results-actions">
-    <button class="btn-play-sm" id="auctionCopyBtn">📋 Скопировать</button>
+    <button class="btn-play-sm" id="auctionCopyBtn">📋 Скопировать зашифрованное</button>
     <button class="btn btn-reset" id="auctionResultsBack">← Назад</button>
   </div>
 </div>
@@ -529,9 +594,9 @@
 <!-- ================== АУКЦИОН: УЧАСТНИК ================== -->
 <div id="auction-participant-screen">
   <h2>🔨 Вставьте результаты голосования</h2>
-  <p class="hint">Формат: «Игра, 3, Игра, 5» или «Игра: 3, Игра: 5». Можно использовать до 4 полей (остальные оставьте пустыми).</p>
+  <p class="hint">Вставьте зашифрованный код от зрителя — он расшифруется автоматически. Также поддерживается обычный текст в формате «Игра, 3» или «Игра: 3». До 4 полей.</p>
 
-  <textarea class="auction-paste" placeholder="Вставьте сюда результат от первого зрителя"></textarea>
+  <textarea class="auction-paste" placeholder="Вставьте зашифрованный код от первого зрителя"></textarea>
   <textarea class="auction-paste" placeholder="Второе поле (опционально)"></textarea>
   <textarea class="auction-paste" placeholder="Третье поле (опционально)"></textarea>
   <textarea class="auction-paste" placeholder="Четвёртое поле (опционально)"></textarea>
@@ -570,7 +635,36 @@
   const FINALE_MAX_END = 0.45;
   const FINALE_TURNS = 100;
 
-  const AUCTION_DURATION_SEC = 300;
+  const AUCTION_MIN_SEC = 10;
+  const AUCTION_MAX_SEC = 600;
+  const AUCTION_DEFAULT_SEC = 300;
+
+  // ===== ШИФРОВАНИЕ =====
+  const ENC_KEY = 'papa-wheel-secret-key-v1';
+
+  function encryptData(str) {
+    const bytes = new TextEncoder().encode(str);
+    const keyBytes = new TextEncoder().encode(ENC_KEY);
+    const out = new Uint8Array(bytes.length);
+    for (let i = 0; i < bytes.length; i++) out[i] = bytes[i] ^ keyBytes[i % keyBytes.length];
+    let bin = '';
+    for (let i = 0; i < out.length; i++) bin += String.fromCharCode(out[i]);
+    return btoa(bin);
+  }
+
+  function decryptData(str) {
+    try {
+      const bin = atob(str.trim());
+      const bytes = new Uint8Array(bin.length);
+      for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+      const keyBytes = new TextEncoder().encode(ENC_KEY);
+      const out = new Uint8Array(bytes.length);
+      for (let i = 0; i < bytes.length; i++) out[i] = bytes[i] ^ keyBytes[i % keyBytes.length];
+      return new TextDecoder('utf-8', { fatal: true }).decode(out);
+    } catch (e) {
+      return null;
+    }
+  }
 
   let ALL_GAMES = [];
   let games = [];
@@ -582,6 +676,7 @@
   let currentSize = 50;
   let activeMode = 'wheel';
   let lastStartMode = 'wheel';
+  let pendingDurationSec = AUCTION_DEFAULT_SEC;
 
   // DOM
   const setupScreen = document.getElementById('setup-screen');
@@ -617,6 +712,14 @@
   const auctionRoleViewer = document.getElementById('role-viewer');
   const auctionRoleParticipant = document.getElementById('role-participant');
 
+  // Длительность
+  const auctionDurationScreen = document.getElementById('auction-duration-screen');
+  const durationSlider = document.getElementById('durationSlider');
+  const durationDisplay = document.getElementById('durationDisplay');
+  const durationStartBtn = document.getElementById('durationStartBtn');
+  const durationBackBtn = document.getElementById('durationBackBtn');
+  const durationPresets = document.querySelectorAll('.dur-preset');
+
   const auctionViewerScreen = document.getElementById('auction-viewer-screen');
   const auctionTimerEl = document.getElementById('auctionTimer');
   const auctionGridEl = document.getElementById('auctionGrid');
@@ -635,15 +738,14 @@
   const auctionStartWheelBtn = document.getElementById('auctionStartWheel');
   const auctionParticipantBack = document.getElementById('auctionParticipantBack');
 
-  // ===== МИКШЕР ГРОМКОСТИ =====
+  // ===== МИКШЕР =====
   const mixerMuteBtn = document.getElementById('mixerMute');
   const mixerState = {
     muted: false,
     channels: {
       bg:     { base: 0.35, audio: bgMusic },
-      vote:   { base: 0.50, audio: voteMusic },
+      vote:   { base: 0.50 / 1.5, audio: voteMusic },   // на 1.5 тише
       anthem: { base: 0.60, audio: anthem },
-      // slider элементы добавим ниже
     },
   };
   document.querySelectorAll('.vol-row input[type="range"]').forEach(inp => {
@@ -671,7 +773,8 @@
   // ===== АУКЦИОН: СОСТОЯНИЕ =====
   const auctionState = {
     startPerf: 0,
-    timeLeft: AUCTION_DURATION_SEC,
+    totalDurationSec: AUCTION_DEFAULT_SEC,
+    timeLeft: AUCTION_DEFAULT_SEC,
     timerId: null,
     currentGames: [],
     votesLeft: 0,
@@ -693,6 +796,12 @@
     const m = Math.floor(sec / 60);
     const s = Math.floor(sec % 60);
     return m + ':' + String(s).padStart(2, '0');
+  }
+  function fmtDuration(sec) {
+    if (sec < 60) return sec + ' сек';
+    const m = Math.floor(sec / 60);
+    const s = sec % 60;
+    return s > 0 ? `${m} мин ${s} сек` : `${m} мин`;
   }
 
   // ===== CANVAS =====
@@ -975,18 +1084,12 @@
           requestAnimationFrame(fade);
         }).catch(err => {
           console.error('❌ Гимн не запустился:', err);
-          if (err.name === 'NotSupportedError') {
-            showAudioToast('⚠️ Файл papa-anthem.mp3 не найден или битый.');
-          } else if (err.name === 'NotAllowedError') {
-            showAudioToast('⚠️ Браузер заблокировал звук. Кликни и нажми «Крутить» ещё раз.');
-          } else {
-            showAudioToast('⚠️ Ошибка гимна: ' + err.name);
-          }
+          if (err.name === 'NotSupportedError') showAudioToast('⚠️ Файл papa-anthem.mp3 не найден или битый.');
+          else if (err.name === 'NotAllowedError') showAudioToast('⚠️ Браузер заблокировал звук. Кликни и нажми «Крутить» ещё раз.');
+          else showAudioToast('⚠️ Ошибка гимна: ' + err.name);
         });
       }
-    } catch (e) {
-      console.error('❌ Ошибка запуска гимна:', e);
-    }
+    } catch (e) { console.error(e); }
   }
 
   function spinFinale(winner) {
@@ -1020,9 +1123,7 @@
     function animateFinale(now) {
       const t = Math.min((now - startTime) / FINALE_DURATION, 1);
       rotation = startRot + finaleRotation(t, totalAngle);
-      if (now - lastFrame >= frameInterval || t >= 1) {
-        drawWheel(); lastFrame = now;
-      }
+      if (now - lastFrame >= frameInterval || t >= 1) { drawWheel(); lastFrame = now; }
       if (t < 1) { requestAnimationFrame(animateFinale); return; }
       rotation = startRot + totalAngle;
       if (gameUnderPointer(rotation) !== winner) {
@@ -1073,9 +1174,7 @@
       const t = Math.min((now - startTime) / SPIN_DURATION, 1);
       const eased = 1 - Math.pow(1 - t, 3);
       rotation = startRot + totalRotation * eased;
-      if (now - lastFrame >= frameInterval || t >= 1) {
-        drawWheel(); lastFrame = now;
-      }
+      if (now - lastFrame >= frameInterval || t >= 1) { drawWheel(); lastFrame = now; }
       if (t < 1) { requestAnimationFrame(animate); return; }
       rotation = startRot + totalRotation;
       if (gameUnderPointer(rotation) !== winner) {
@@ -1131,9 +1230,7 @@
   function renderHistory(finalW) {
     historyListEl.innerHTML = history.map((g, i) => {
       const isLast = i === history.length - 1;
-      const suffix = finalW
-        ? (isLast ? ' 🏆' : ' ← выбыла')
-        : (isLast ? ' ← выбыла' : '');
+      const suffix = finalW ? (isLast ? ' 🏆' : ' ← выбыла') : (isLast ? ' ← выбыла' : '');
       return `<li>${esc(g.name)}${suffix}</li>`;
     }).join('');
   }
@@ -1141,7 +1238,7 @@
   function startBgMusic() {
     if (bgMusic.paused) {
       applyChannelVolume('bg');
-      bgMusic.play().catch(err => console.error('❌ pole-chudes.mp3:', err));
+      bgMusic.play().catch(err => console.error('pole-chudes.mp3:', err));
     }
   }
 
@@ -1254,11 +1351,55 @@
     }
   });
 
+  // ============ АУКЦИОН: ДЛИТЕЛЬНОСТЬ ============
+
+  function updateDurationDisplay() {
+    durationDisplay.textContent = fmtDuration(pendingDurationSec);
+    durationPresets.forEach(b => {
+      b.classList.toggle('active', parseInt(b.dataset.sec, 10) === pendingDurationSec);
+    });
+  }
+
+  durationSlider.addEventListener('input', () => {
+    pendingDurationSec = parseInt(durationSlider.value, 10);
+    updateDurationDisplay();
+  });
+
+  durationPresets.forEach(b => {
+    b.addEventListener('click', () => {
+      pendingDurationSec = parseInt(b.dataset.sec, 10);
+      durationSlider.value = pendingDurationSec;
+      updateDurationDisplay();
+    });
+  });
+
+  durationBackBtn.addEventListener('click', () => {
+    auctionDurationScreen.classList.remove('active');
+  });
+
+  durationStartBtn.addEventListener('click', () => {
+    auctionDurationScreen.classList.remove('active');
+    startAuctionVoting(pendingDurationSec);
+  });
+
   // ============ АУКЦИОН: ЗРИТЕЛЬ ============
 
-  function startAuctionVoting() {
+  function pickVoteCount() {
+    // 1 — чаще всего, 10 — реже всего. Веса: [10,9,8,...,1], сумма 55.
+    const weights = [10, 9, 8, 7, 6, 5, 4, 3, 2, 1];
+    const total = 55;
+    let r = Math.random() * total;
+    for (let i = 0; i < weights.length; i++) {
+      r -= weights[i];
+      if (r <= 0) return i + 1;
+    }
+    return 1;
+  }
+
+  function startAuctionVoting(durationSec) {
     auctionState.startPerf = performance.now();
-    auctionState.timeLeft = AUCTION_DURATION_SEC;
+    auctionState.totalDurationSec = durationSec;
+    auctionState.timeLeft = durationSec;
     auctionState.tally = new Map();
     auctionState.active = true;
     auctionState.locked = false;
@@ -1267,6 +1408,7 @@
     auctionViewerScreen.classList.add('active');
     auctionResultsScreen.classList.remove('active');
     auctionParticipantScreen.classList.remove('active');
+    auctionDurationScreen.classList.remove('active');
 
     startAuctionRound();
     startVoteMusic();
@@ -1278,7 +1420,7 @@
   function tickAuctionTimer() {
     if (!auctionState.active) return;
     const elapsed = (performance.now() - auctionState.startPerf) / 1000;
-    const left = AUCTION_DURATION_SEC - elapsed;
+    const left = auctionState.totalDurationSec - elapsed;
     auctionState.timeLeft = Math.max(0, left);
     updateAuctionTimer();
     if (left <= 0) endAuctionVoting();
@@ -1286,7 +1428,8 @@
 
   function updateAuctionTimer() {
     auctionTimerEl.textContent = fmtTime(Math.ceil(auctionState.timeLeft));
-    auctionTimerEl.classList.toggle('warning', auctionState.timeLeft <= 30);
+    const warnThreshold = Math.min(30, Math.max(3, auctionState.totalDurationSec * 0.1));
+    auctionTimerEl.classList.toggle('warning', auctionState.timeLeft <= warnThreshold);
   }
 
   function startVoteMusic() {
@@ -1299,11 +1442,11 @@
 
   function startAuctionRound() {
     if (!auctionState.active || auctionState.locked) return;
-    const count = 2 + Math.floor(Math.random() * 3); // 2, 3 или 4
+    const count = 2 + Math.floor(Math.random() * 3);
     const shuffled = ALL_GAMES.slice().sort(() => Math.random() - 0.5);
     const picked = shuffled.slice(0, Math.min(count, ALL_GAMES.length));
     auctionState.currentGames = picked;
-    auctionState.votesLeft = 1 + Math.floor(Math.random() * 10);
+    auctionState.votesLeft = pickVoteCount();
     auctionState.roundVotes = {};
     renderAuctionGrid();
     updateAuctionVotesDisplay();
@@ -1353,7 +1496,6 @@
 
   auctionSkipBtn.addEventListener('click', () => {
     if (!auctionState.active || auctionState.locked) return;
-    // откатываем голоса текущего раунда
     Object.entries(auctionState.roundVotes).forEach(([name, v]) => {
       const cur = auctionState.tally.get(name) || 0;
       if (cur - v > 0) auctionState.tally.set(name, cur - v);
@@ -1384,7 +1526,6 @@
   }
 
   function showAuctionResults() {
-    // сортировка по индексу в ALL_GAMES
     const indexOf = (name) => {
       const i = ALL_GAMES.findIndex(g => g.name === name);
       return i === -1 ? 99999 : i;
@@ -1397,20 +1538,31 @@
       ? entries.map(e => `<div class="auction-result-row"><span class="name">${esc(e.name)}</span><span class="votes">${e.votes} гол.</span></div>`).join('')
       : '<div style="text-align:center;color:#aaa;padding:20px;">Вы не проголосовали ни за одну игру</div>';
 
-    // формат для копирования: "Игра, 3, Игра, 5, ..."
-    auctionState.copyText = entries.map(e => `${e.name}, ${e.votes}`).join(', ');
-
     auctionResultsScreen.classList.add('active');
   }
 
   auctionCopyBtn.addEventListener('click', async () => {
-    if (!auctionState.copyText) return;
+    const indexOf = (name) => {
+      const i = ALL_GAMES.findIndex(g => g.name === name);
+      return i === -1 ? 99999 : i;
+    };
+    const entries = Array.from(auctionState.tally.entries())
+      .map(([name, votes]) => ({ name, votes }))
+      .sort((a, b) => indexOf(a.name) - indexOf(b.name));
+    if (!entries.length) {
+      showAudioToast('⚠️ Нет голосов для копирования');
+      return;
+    }
+    const json = JSON.stringify(entries);
+    const encrypted = encryptData(json);
+    auctionState.copyText = encrypted;
+
     const prev = auctionCopyBtn.textContent;
     try {
-      await navigator.clipboard.writeText(auctionState.copyText);
+      await navigator.clipboard.writeText(encrypted);
     } catch (e) {
       const ta = document.createElement('textarea');
-      ta.value = auctionState.copyText;
+      ta.value = encrypted;
       ta.style.position = 'fixed'; ta.style.left = '-9999px';
       document.body.appendChild(ta);
       ta.select();
@@ -1429,7 +1581,8 @@
 
   auctionRoleViewer.addEventListener('click', () => {
     if (!loaded) { showAudioToast('⚠️ Сначала дождитесь загрузки games.json'); return; }
-    startAuctionVoting();
+    updateDurationDisplay();
+    auctionDurationScreen.classList.add('active');
   });
 
   auctionRoleParticipant.addEventListener('click', () => {
@@ -1442,41 +1595,54 @@
     auctionParticipantScreen.classList.remove('active');
   });
 
-  auctionPastes.forEach(ta => {
-    ta.addEventListener('input', updateParticipantPreview);
-  });
+  auctionPastes.forEach(ta => ta.addEventListener('input', updateParticipantPreview));
 
+  // Парсинг плейнтекста: "Имя, 3, Имя2, 5" или "Имя: 3, Имя2: 5"
   function parseGameVotes(text) {
     if (!text || !text.trim()) return [];
     const chunks = text.split(',').map(s => s.trim()).filter(Boolean);
-    const hasColons = chunks.some(c => /:\s*\d+$/.test(c));
     const result = [];
-    if (hasColons) {
-      chunks.forEach(c => {
-        const m = c.match(/^(.+?):\s*(\d+)$/);
-        if (m) {
-          const v = parseInt(m[2], 10);
-          if (!isNaN(v) && v > 0) result.push({ name: m[1].trim(), votes: v });
+    let pendingName = null;
+    for (const chunk of chunks) {
+      const colonMatch = chunk.match(/^(.+?):\s*(\d+)$/);
+      if (colonMatch) {
+        result.push({ name: colonMatch[1].trim(), votes: parseInt(colonMatch[2], 10) });
+        pendingName = null;
+      } else if (/^\d+$/.test(chunk)) {
+        if (pendingName) {
+          result.push({ name: pendingName, votes: parseInt(chunk, 10) });
+          pendingName = null;
         }
-      });
-    } else {
-      for (let i = 0; i < chunks.length; i += 2) {
-        if (i + 1 >= chunks.length) break;
-        const v = parseInt(chunks[i + 1], 10);
-        if (!isNaN(v) && v > 0 && chunks[i]) {
-          result.push({ name: chunks[i], votes: v });
-        }
+      } else {
+        pendingName = chunk;
       }
     }
-    return result;
+    return result.filter(r => r.votes > 0 && r.name);
+  }
+
+  // Парсинг ввода: сначала пробуем расшифровать, потом fallback на plaintext
+  function parseParticipantInput(text) {
+    if (!text || !text.trim()) return [];
+    const trimmed = text.trim();
+    const decrypted = decryptData(trimmed);
+    if (decrypted) {
+      try {
+        const arr = JSON.parse(decrypted);
+        if (Array.isArray(arr)) {
+          return arr
+            .filter(x => x && typeof x.name === 'string' && typeof x.votes === 'number' && x.votes > 0)
+            .map(x => ({ name: x.name, votes: x.votes }));
+        }
+      } catch (e) { /* fall through */ }
+    }
+    return parseGameVotes(trimmed);
   }
 
   function collectParticipantGames() {
     const all = [];
     auctionPastes.forEach(ta => {
-      all.push(...parseGameVotes(ta.value));
+      all.push(...parseParticipantInput(ta.value));
     });
-    // объединяем одинаковые игры
     const map = new Map();
     all.forEach(g => {
       const key = g.name.toLowerCase();
@@ -1503,7 +1669,6 @@
   auctionStartWheelBtn.addEventListener('click', () => {
     const gamesList = collectParticipantGames();
     if (!gamesList.length) return;
-    // находим каноничные имена в ALL_GAMES
     games = gamesList.map((g, i) => {
       const canonical = ALL_GAMES.find(x => x.name.toLowerCase() === g.name.toLowerCase());
       return {
