@@ -141,7 +141,7 @@
 <body>
 
 <h1>🎡 Колесо Фортуны Папича</h1>
-<p class="subtitle">Больше отзывов в Steam → больше шансов получить высокий вес.</p>
+<p class="subtitle">Больше отзывов в Steam → больше шансов получить высокий вес и попасть в крутку.</p>
 
 <!-- ЭКРАН 1: НАСТРОЙКА -->
 <div id="setup-screen" class="screen active">
@@ -154,7 +154,7 @@
         <button class="size-btn active" data-size="50">50</button>
       </div>
       <p style="color: #aaa; font-size: 0.8rem; margin-top: 10px;">
-        Игры будут выбраны случайно из базы. Нажми «Перераспределить», чтобы заново раздать скрытые голоса.
+        Игры выбираются случайно, но популярные попадаются чаще. Нажми «Перераспределить», чтобы заново раздать скрытые голоса.
       </p>
     </div>
     
@@ -299,37 +299,39 @@
   function invalidate() { cachedSegs = null; }
 
   // ===== ЛОГИКА ГОЛОСОВ =====
-  // Популярность (baseWeight) дает буст, но всегда есть шанс на рандом
   function rollWeights() {
     const maxBase = Math.max(...games.map(g => g.baseWeight || 0), 1);
     games.forEach(g => {
-      const pop = (g.baseWeight || 0) / maxBase;  // 0..1
-      
-      // База: от 1 до 100
+      const pop = (g.baseWeight || 0) / maxBase;
       let w = Math.floor(Math.random() * 100) + 1;
-      
-      // Бонус от популярности: до +150, умноженный на случайность (чтобы не было гарантии)
       w += Math.floor(pop * 150 * Math.random());
-      
-      // 15% шанс на "джекпот" для любой игры (чтобы ноунеймы могли выстрелить)
       if (Math.random() < 0.15) w += Math.floor(Math.random() * 100);
-      
       g.weight = w;
     });
     invalidate();
   }
 
-  // Выбрать случайные игры из базы
+  // Взвешенная выборка (популярные игры чаще попадают в пул)
   function pickGames(size) {
-    const copy = ALL_GAMES.slice();
-    for (let i = copy.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [copy[i], copy[j]] = [copy[j], copy[i]];
+    const pool = ALL_GAMES.slice();
+    const picked = [];
+    const count = Math.min(size, pool.length);
+    
+    for (let i = 0; i < count; i++) {
+      const totalW = pool.reduce((s, g) => s + (g.weight || 0) + 1, 0);
+      let r = Math.random() * totalW;
+      let idx = 0;
+      for (let j = 0; j < pool.length; j++) {
+        r -= (pool[j].weight || 0) + 1;
+        if (r <= 0) { idx = j; break; }
+      }
+      picked.push(pool[idx]);
+      pool.splice(idx, 1);
     }
-    const count = Math.min(size, copy.length);
-    return copy.slice(0, count).map((g, i) => ({
+    
+    return picked.map((g, i) => ({
       name: g.name,
-      baseWeight: g.weight || 0, // сохраняем исходную популярность из JSON
+      baseWeight: g.weight || 0,
       weight: 0,
       colorIdx: i
     }));
@@ -364,7 +366,6 @@
     resultEl.className = 'result';
     historyListEl.innerHTML = '';
     
-    // Обновляем колесо и списки с уже сгенерированными весами
     renderVotes();
     renderStaticWheel();
     drawWheel();
@@ -377,7 +378,7 @@
     gameScreen.classList.remove('active');
     setupScreen.classList.add('active');
     stopAllAudio();
-    initSetup(); // Сразу готовим новый пул игр
+    initSetup();
   }
 
   // ===== ОТРИСОВКА КОЛЕСА =====
@@ -636,9 +637,8 @@
 
   setupShuffleBtn.addEventListener('click', () => {
     if (!loaded) return;
-    rollWeights(); // пересчитываем только веса (игры остаются те же)
-    renderSetupList(); // хотя список не изменился визуально (голоса скрыты)
-    // Можно добавить анимацию кнопки, чтобы было понятно что что-то произошло
+    rollWeights();
+    renderSetupList();
     setupShuffleBtn.textContent = '✅ Голоса перераспределены!';
     setTimeout(() => setupShuffleBtn.textContent = '🔀 Перераспределить голоса', 1500);
   });
