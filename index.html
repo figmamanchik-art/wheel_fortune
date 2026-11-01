@@ -17,8 +17,9 @@
     background: linear-gradient(90deg, #ffd700, #ff6b6b, #ffd700);
     -webkit-background-clip: text; background-clip: text;
     color: transparent; text-shadow: 0 0 20px rgba(255,215,0,.3);
+    position: relative; z-index: 7;
   }
-  .subtitle { color: #aaa; margin-bottom: 18px; text-align: center; font-size: .9rem; }
+  .subtitle { color: #aaa; margin-bottom: 18px; text-align: center; font-size: .9rem; position: relative; z-index: 7; }
 
   /* ===== ЭКРАНЫ ===== */
   .screen { display: none; width: 100%; flex-direction: column; align-items: center; animation: fadeIn 0.4s ease-out; }
@@ -31,9 +32,7 @@
     background: rgba(255,255,255,.03); border: 1px solid rgba(255,255,255,.1);
     border-radius: 20px; padding: 30px; margin-top: 20px; flex-wrap: wrap;
   }
-  .setup-left {
-    flex: 1; min-width: 250px; display: flex; flex-direction: column; gap: 15px;
-  }
+  .setup-left { flex: 1; min-width: 250px; display: flex; flex-direction: column; gap: 15px; }
   .setup-left h2 { color: #ffd700; font-size: 1.2rem; margin-bottom: 10px; }
   .size-options { display: flex; gap: 10px; }
   .size-btn {
@@ -43,10 +42,7 @@
   }
   .size-btn:hover { background: rgba(255,255,255,.1); }
   .size-btn.active { background: rgba(255, 215, 0, 0.15); border-color: #ffd700; color: #ffd700; box-shadow: 0 0 15px rgba(255,215,0,.2); }
-  
-  .setup-right {
-    flex: 2; min-width: 300px; display: flex; flex-direction: column;
-  }
+  .setup-right { flex: 2; min-width: 300px; display: flex; flex-direction: column; }
   .setup-right h2 { color: #ffd700; font-size: 1.2rem; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center;}
   .setup-right h2 span { font-size: 0.8rem; color: #aaa; font-weight: normal; }
   .setup-list {
@@ -81,23 +77,75 @@
   .wheel-wrap {
     position: relative; width: 720px; height: 720px;
     max-width: 94vw; max-height: 94vw; margin-bottom: 22px;
+    will-change: transform;
+    transition: transform 1.5s cubic-bezier(0.25, 1, 0.5, 1);
   }
   canvas { width: 100%; height: 100%; display: block;
-    filter: drop-shadow(0 0 40px rgba(255,215,0,.25)); transition: filter .5s; }
+    filter: drop-shadow(0 0 40px rgba(255,215,0,.25));
+    transition: filter 1s ease; }
   .pointer {
     position: absolute; top: -4px; left: 50%; transform: translateX(-50%);
     width: 0; height: 0; border-left: 24px solid transparent; border-right: 24px solid transparent;
     border-top: 46px solid #ffd700; filter: drop-shadow(0 0 10px #ffd700); z-index: 10; pointer-events: none;
     transition: filter .5s;
   }
-  /* Свечение указателя во время финала */
+
+  /* ===== ФИНАЛЬНЫЕ ЭФФЕКТЫ ===== */
+  .wheel-wrap.finale-active {
+    z-index: 6;
+    transform: scale(1.08);
+  }
+  .wheel-wrap.finale-active canvas {
+    filter: brightness(1.4) saturate(1.3) drop-shadow(0 0 90px rgba(255,215,0,.95));
+  }
   .wheel-wrap.finale-active .pointer {
-    animation: pointerPulse .6s ease-in-out infinite alternate;
+    animation: pointerPulse .5s ease-in-out infinite alternate;
   }
   @keyframes pointerPulse {
     from { filter: drop-shadow(0 0 10px #ffd700) drop-shadow(0 0 20px #ffd700); }
-    to { filter: drop-shadow(0 0 30px #ffd700) drop-shadow(0 0 60px #ff6b6b); }
+    to   { filter: drop-shadow(0 0 30px #ffd700) drop-shadow(0 0 80px #ff6b6b); }
   }
+
+  /* Прожекторы вокруг колеса */
+  .wheel-wrap.finale-active::before {
+    content: '';
+    position: absolute;
+    inset: -50px;
+    border-radius: 50%;
+    background: repeating-conic-gradient(
+      from 0deg,
+      rgba(255,215,0,0) 0deg,
+      rgba(255,215,0,0.9) 4deg,
+      rgba(255,215,0,0) 8deg,
+      rgba(255,215,0,0) 14deg
+    );
+    -webkit-mask: radial-gradient(circle, transparent 82%, black 90%, black 100%);
+    mask: radial-gradient(circle, transparent 82%, black 90%, black 100%);
+    animation: stageRotate 2.5s linear infinite;
+    pointer-events: none;
+    z-index: 1;
+    filter: blur(1.5px);
+  }
+  .wheel-wrap.finale-active::after {
+    content: '';
+    position: absolute;
+    inset: -90px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(255,215,0,.25) 0%, transparent 70%);
+    animation: haloPulse 1.2s ease-in-out infinite alternate;
+    pointer-events: none;
+    z-index: -1;
+    filter: blur(25px);
+  }
+  @keyframes stageRotate {
+    from { transform: rotate(0deg); }
+    to   { transform: rotate(360deg); }
+  }
+  @keyframes haloPulse {
+    from { opacity: 0.5; }
+    to   { opacity: 1; }
+  }
+
   .controls { display: flex; gap: 16px; flex-wrap: wrap; justify-content: center; margin-bottom: 18px; }
   .btn-spin { background: linear-gradient(135deg, #ffd700, #ff8c00); color: #1a1a2e; }
   .btn-reset {
@@ -117,7 +165,6 @@
   .vote-list, .history-list { max-height: 340px; overflow-y: auto; padding-right: 6px; }
   .vote-list::-webkit-scrollbar, .history-list::-webkit-scrollbar { width: 6px; }
   .vote-list::-webkit-scrollbar-thumb, .history-list::-webkit-scrollbar-thumb { background: rgba(255,255,255,.2); border-radius: 3px; }
-
   .vote-row { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; font-size: .8rem; }
   .vote-name { width: 140px; flex-shrink: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .vote-bar-bg { flex: 1; height: 14px; background: rgba(255,255,255,.08); border-radius: 7px; overflow: hidden; }
@@ -131,7 +178,7 @@
   /* ===== ЗАТЕМНЕНИЕ ФИНАЛА ===== */
   .finale-overlay {
     position: fixed; inset: 0;
-    background: radial-gradient(circle at 50% 40%, rgba(20,5,40,.5) 0%, rgba(0,0,0,.9) 80%);
+    background: radial-gradient(circle at 50% 40%, rgba(10,0,30,.85) 0%, rgba(0,0,0,.97) 90%);
     opacity: 0; pointer-events: none; z-index: 5;
     transition: opacity 1.2s ease;
   }
@@ -175,13 +222,11 @@
         Игры выбираются случайно, но популярные попадаются чаще. Нажми «Перераспределить», чтобы заново раздать скрытые голоса.
       </p>
     </div>
-    
     <div class="setup-right">
       <h2>Игры в крутке <span>Голоса скрыты (сюрприз!)</span></h2>
       <div class="setup-list" id="setup-list"></div>
     </div>
   </div>
-
   <div class="action-buttons">
     <button class="btn btn-shuffle-setup" id="setup-shuffle-btn">🔀 Перераспределить голоса</button>
     <button class="btn btn-play" id="play-btn">ИГРАТЬ! 🎲</button>
@@ -194,14 +239,11 @@
     <div class="pointer"></div>
     <canvas id="wheel"></canvas>
   </div>
-
   <div class="controls">
     <button class="btn btn-spin" id="spinBtn">Крутить! 🎲</button>
     <button class="btn-reset" id="resetBtn">🔄 В настройки</button>
   </div>
-
   <div class="result" id="result"></div>
-
   <div class="panels">
     <div class="panel">
       <h2>📊 Голоса и шанс вылета</h2>
@@ -224,7 +266,6 @@
   <button class="close-btn" id="closeWinnerBtn">Закрыть</button>
 </div>
 
-<!-- АУДИО -->
 <audio id="bgMusic" loop preload="auto">
   <source src="pole-chudes.mp3" type="audio/mpeg">
 </audio>
@@ -248,15 +289,12 @@
   const POINTER_ANGLE = -Math.PI / 2;
   const SPIN_DURATION = 5000, SPIN_TURNS = 6;
 
-  // ===== ПАРАМЕТРЫ ФИНАЛА =====
-  const FINALE_DURATION = 20000;   // 20 секунд
-  const FINALE_TREMBLE_END = 0.10; // 0-10% = 2с дрожь
-  const FINALE_ACCEL_END = 0.20;   // 10-20% = 2с разгон
-  const FINALE_MAX_END = 0.45;     // 20-45% = 5с макс скорость
-                                    // 45-100% = 11с замедление
-  const FINALE_TURNS = 100;        // 100 полных оборотов за финал
+  const FINALE_DURATION = 20000;
+  const FINALE_TREMBLE_END = 0.10;
+  const FINALE_ACCEL_END = 0.20;
+  const FINALE_MAX_END = 0.45;
+  const FINALE_TURNS = 100;
 
-  // ===== СОСТОЯНИЕ =====
   let ALL_GAMES = [];
   let games = [];
   let history = [];
@@ -266,7 +304,6 @@
   let cachedSegs = null;
   let currentSize = 50;
 
-  // ===== DOM =====
   const setupScreen = document.getElementById('setup-screen');
   const gameScreen = document.getElementById('game-screen');
   const setupListEl = document.getElementById('setup-list');
@@ -293,7 +330,6 @@
   const winnerName = document.getElementById('winnerName');
   const closeWinnerBtn = document.getElementById('closeWinnerBtn');
 
-  // ===== УТИЛИТЫ =====
   function norm(a) { return ((a % TAU) + TAU) % TAU; }
   function esc(s) {
     return String(s).replace(/[&<>"']/g, c => ({
@@ -327,7 +363,6 @@
   }
   function invalidate() { cachedSegs = null; }
 
-  // ===== ЛОГИКА ГОЛОСОВ =====
   function rollWeights() {
     const maxBase = Math.max(...games.map(g => g.baseWeight || 0), 1);
     games.forEach(g => {
@@ -340,7 +375,6 @@
     invalidate();
   }
 
-  // Взвешенная выборка (популярные чаще попадают в пул)
   function pickGames(size) {
     const pool = ALL_GAMES.slice();
     const picked = [];
@@ -357,14 +391,10 @@
       pool.splice(idx, 1);
     }
     return picked.map((g, i) => ({
-      name: g.name,
-      baseWeight: g.weight || 0,
-      weight: 0,
-      colorIdx: i
+      name: g.name, baseWeight: g.weight || 0, weight: 0, colorIdx: i
     }));
   }
 
-  // ===== ЭКРАН НАСТРОЙКИ =====
   function initSetup() {
     games = pickGames(currentSize);
     rollWeights();
@@ -380,13 +410,11 @@
     `).join('');
   }
 
-  // ===== ПЕРЕХОД В ИГРУ =====
   function startGame() {
     setupScreen.classList.remove('active');
     gameScreen.classList.add('active');
     hideFinaleOverlay();
     hideWinnerOverlay();
-    
     history = [];
     rotation = 0;
     spinning = false;
@@ -394,7 +422,6 @@
     resultEl.textContent = '';
     resultEl.className = 'result';
     historyListEl.innerHTML = '';
-    
     renderVotes();
     renderStaticWheel();
     drawWheel();
@@ -411,7 +438,6 @@
     initSetup();
   }
 
-  // ===== ОТРИСОВКА КОЛЕСА =====
   function renderStaticWheel() {
     offCtx.clearRect(0, 0, SIZE, SIZE);
     const segs = computeSegments();
@@ -514,26 +540,20 @@
     return items[items.length - 1];
   }
 
-  // ===== ЭПИЧНЫЙ ФИНАЛ (20 секунд) =====
   function finaleRotation(t, totalAngle) {
-    // t в [0, 1]
     if (t < FINALE_TREMBLE_END) {
-      // Дрожь: колебания с затуханием
       const p = t / FINALE_TREMBLE_END;
       const amp = totalAngle * 0.0010 * (1 - p);
       return Math.sin(t * 400) * amp;
     }
     if (t < FINALE_ACCEL_END) {
-      // Разгон: от 0 до 0.08 от totalAngle
       const p = (t - FINALE_TREMBLE_END) / (FINALE_ACCEL_END - FINALE_TREMBLE_END);
       return totalAngle * 0.08 * p * p;
     }
     if (t < FINALE_MAX_END) {
-      // Максимальная скорость: линейно от 0.08 до 0.65
       const p = (t - FINALE_ACCEL_END) / (FINALE_MAX_END - FINALE_ACCEL_END);
       return totalAngle * (0.08 + 0.57 * p);
     }
-    // Замедление: от 0.65 до 1.0 с easeOutQuart
     const p = (t - FINALE_MAX_END) / (1 - FINALE_MAX_END);
     const ease = 1 - Math.pow(1 - p, 4);
     return totalAngle * (0.65 + 0.35 * ease);
@@ -545,36 +565,29 @@
     resultEl.textContent = '🔥 ФИНАЛ! 🔥';
     resultEl.className = 'result winner';
 
-    // Заглушаем фоновую музыку
     bgMusic.pause();
     bgMusic.currentTime = 0;
 
-    // Затемнение + свечение указателя
     showFinaleOverlay();
     wheelWrap.classList.add('finale-active');
 
-    // Гимн запускается через 0.8с (когда экран уже потемнел)
     setTimeout(() => {
       anthem.volume = 0.6;
       anthem.currentTime = 0;
       anthem.play().catch(() => {});
     }, 800);
 
-    // Расчёт целевого угла
     const segs = computeSegments();
     const idx = games.indexOf(winner);
     const wSeg = segs[idx];
     const wCenter = wSeg.start + wSeg.sweep / 2;
-
     const targetNorm = norm(POINTER_ANGLE - wCenter);
     const currentNorm = norm(rotation);
     let delta = targetNorm - currentNorm;
     if (delta < 0) delta += TAU;
-
     const jitter = (Math.random() * 2 - 1) * (wSeg.sweep * 0.3);
     const totalAngle = TAU * FINALE_TURNS + delta + jitter;
     const startRot = rotation;
-
     const startTime = performance.now();
     let lastFrame = 0;
     const frameInterval = 1000 / 60;
@@ -582,20 +595,11 @@
     function animateFinale(now) {
       const t = Math.min((now - startTime) / FINALE_DURATION, 1);
       rotation = startRot + finaleRotation(t, totalAngle);
-
       if (now - lastFrame >= frameInterval || t >= 1) {
-        drawWheel();
-        lastFrame = now;
+        drawWheel(); lastFrame = now;
       }
-
-      if (t < 1) {
-        requestAnimationFrame(animateFinale);
-        return;
-      }
-
-      // Финализируем позицию
+      if (t < 1) { requestAnimationFrame(animateFinale); return; }
       rotation = startRot + totalAngle;
-
       if (gameUnderPointer(rotation) !== winner) {
         const curSeg = computeSegments()[idx];
         const curCenterAbs = curSeg.start + curSeg.sweep / 2 + rotation;
@@ -604,23 +608,14 @@
         rotation += adjust;
       }
       drawWheel();
-
-      // Снимаем свечение указателя
-      wheelWrap.classList.remove('finale-active');
-
       finishSpin(winner);
     }
-
     requestAnimationFrame(animateFinale);
   }
 
-  // ===== ИГРОВОЙ ПРОЦЕСС =====
   function spin() {
     if (spinning || !games.length) return;
-
     if (games.length === 1) { finishGame(games[0]); return; }
-
-    // Обычная крутка (когда игр больше 2)
     if (games.length === 2) {
       const winner = weightedPick(games);
       spinFinale(winner);
@@ -638,12 +633,10 @@
     const idx = games.indexOf(winner);
     const wSeg = segs[idx];
     const wCenter = wSeg.start + wSeg.sweep / 2;
-
     const targetNorm = norm(POINTER_ANGLE - wCenter);
     const currentNorm = norm(rotation);
     let delta = targetNorm - currentNorm;
     if (delta < 0) delta += TAU;
-
     const jitter = (Math.random() * 2 - 1) * (wSeg.sweep * 0.3);
     const totalRotation = TAU * SPIN_TURNS + delta + jitter;
     const startRot = rotation;
@@ -687,8 +680,6 @@
       games = []; invalidate();
       spinBtn.disabled = true;
       renderVotes(); renderStaticWheel(); drawWheel();
-      
-      // Убираем затемнение, потом показываем окно победителя
       hideFinaleOverlay();
       setTimeout(() => showWinner(champ.name), 600);
       return;
@@ -742,18 +733,13 @@
     winnerName.textContent = name;
     winnerOverlay.classList.add('show');
   }
-  function hideWinnerOverlay() {
-    winnerOverlay.classList.remove('show');
-  }
-  function showFinaleOverlay() {
-    finaleOverlay.classList.add('show');
-  }
+  function hideWinnerOverlay() { winnerOverlay.classList.remove('show'); }
+  function showFinaleOverlay() { finaleOverlay.classList.add('show'); }
   function hideFinaleOverlay() {
     finaleOverlay.classList.remove('show');
     wheelWrap.classList.remove('finale-active');
   }
 
-  // ===== ЗАГРУЗКА =====
   async function loadGames() {
     try {
       const resp = await fetch('games.json', { cache: 'no-store' });
@@ -772,7 +758,6 @@
     }
   }
 
-  // ===== ОБРАБОТЧИКИ =====
   sizeBtns.forEach(btn => {
     btn.addEventListener('click', () => {
       sizeBtns.forEach(b => b.classList.remove('active'));
@@ -798,10 +783,11 @@
   resetBtn.addEventListener('click', backToSetup);
   spinBtn.addEventListener('click', spin);
 
+  // Гимн продолжает играть после закрытия окна победителя (по просьбе)
   closeWinnerBtn.addEventListener('click', () => {
     hideWinnerOverlay();
     hideFinaleOverlay();
-    stopAllAudio();
+    // НЕ вызываем stopAllAudio — песня играет дальше
   });
 
   window.addEventListener('resize', () => {
@@ -810,7 +796,6 @@
     }
   });
 
-  // ===== СТАРТ =====
   setupCanvas();
   loadGames();
 })();
