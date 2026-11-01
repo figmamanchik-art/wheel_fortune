@@ -331,7 +331,7 @@
   .auction-grid.n3 { grid-template-columns: 1fr 1fr 1fr; }
   .auction-grid.n4 { grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; }
 
-  /* ===== КАРТОЧКА С ОБЛОЖКОЙ ===== */
+  /* ===== КАРТОЧКА ===== */
   .auction-card {
     background: linear-gradient(135deg, #2a1a4a, #0d0d1a 70%);
     border: 2px solid rgba(255,255,255,.15);
@@ -352,21 +352,6 @@
     border-color: #ffd700;
     box-shadow: 0 0 25px rgba(255,215,0,.3);
   }
-  .auction-card .card-cover {
-    position: absolute; inset: 0;
-    width: 100%; height: 100%;
-    object-fit: cover;
-    opacity: 0;
-    transition: opacity 0.5s ease;
-    pointer-events: none;
-    z-index: 0;
-  }
-  .auction-card .card-cover.loaded {
-    opacity: 0.55;
-  }
-  .auction-card .card-cover.instant {
-    transition: none;
-  }
   .auction-card .card-name {
     position: relative;
     z-index: 1;
@@ -386,6 +371,28 @@
     font-size: .95rem; font-weight: bold;
     z-index: 2;
     box-shadow: 0 2px 10px rgba(0,0,0,.5);
+  }
+
+  /* Стиль для кнопки "ссылка" */
+  .auction-card .card-link {
+    position: absolute;
+    top: 10px;
+    left: 15px;
+    background: rgba(0, 0, 0, 0.6);
+    color: #fff;
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    text-decoration: none;
+    z-index: 3;
+    transition: all 0.15s;
+    font-weight: normal;
+    border: 1px solid rgba(255,255,255,0.2);
+  }
+  .auction-card .card-link:hover {
+    background: #ffd700;
+    color: #1a1a2e;
+    border-color: #ffd700;
   }
 
   .auction-bottom {
@@ -697,142 +704,6 @@
     } catch (e) {
       return null;
     }
-  }
-
-  // ===== ОБЛОЖКИ: STEAM + БЕЗОПАСНАЯ ОЧЕРЕДЬ =====
-  const seenCovers = new Set();
-  const steamCache = new Map();
-  const steamQueue = [];
-  let isProcessingQueue = false;
-  let steamFailures = 0;
-
-  // Загружаем кэш из localStorage
-  (function loadSteamCache() {
-    try {
-      const raw = localStorage.getItem('papaWheelSteamCache_v2');
-      if (raw) {
-        const obj = JSON.parse(raw);
-        Object.entries(obj).forEach(([k, v]) => steamCache.set(k, v));
-      }
-    } catch (e) {}
-  })();
-
-  function saveSteamCache() {
-    try {
-      const obj = {};
-      steamCache.forEach((v, k) => { obj[k] = v; });
-      localStorage.setItem('papaWheelSteamCache_v2', JSON.stringify(obj));
-    } catch (e) {}
-  }
-
-  // Умная очередь запросов
-  async function getSteamCover(gameName) {
-    if (steamCache.has(gameName)) return steamCache.get(gameName);
-
-    return new Promise((resolve) => {
-      steamQueue.push({ gameName, resolve });
-      processSteamQueue();
-    });
-  }
-
-  async function processSteamQueue() {
-    if (isProcessingQueue || steamQueue.length === 0) return;
-    isProcessingQueue = true;
-
-    while (steamQueue.length > 0) {
-      // Предохранитель: если было 3 ошибки подряд — стопорим очередь на минуту
-      if (steamFailures >= 3) {
-        console.warn('Steam API: предохранитель активирован. Ждём 60 секунд.');
-        setTimeout(() => {
-          steamFailures = 0;
-          isProcessingQueue = false;
-          processSteamQueue();
-        }, 60000);
-        break;
-      }
-
-      const task = steamQueue.shift();
-      
-      try {
-        // Используем CORS-прокси corsproxy.io, так как сайт хостится на GitHub Pages
-        const targetUrl = `https://store.steampowered.com/api/storesearch/?term=${encodeURIComponent(task.gameName)}&cc=us&l=en`;
-        const proxyUrl = `https://corsproxy.io/?${encodeURIComponent(targetUrl)}`;
-        
-        const res = await fetch(proxyUrl);
-        
-        if (res.status === 429) {
-          steamFailures += 5; // Жёстко триггерим предохранитель
-          steamQueue.unshift(task); // Возвращаем задачу обратно
-          throw new Error('429 Too Many Requests');
-        }
-        
-        if (!res.ok) throw new Error('HTTP ' + res.status);
-        
-        const data = await res.json();
-        const item = (data.items && data.items[0]) || null;
-        
-        if (item && item.id) {
-          // CDN Steam отдаёт картинки без CORS-проблем
-          const coverUrl = `https://cdn.cloudflare.steamstatic.com/steam/apps/${item.id}/header.jpg`;
-          steamCache.set(task.gameName, coverUrl);
-          task.resolve(coverUrl);
-        } else {
-          steamCache.set(task.gameName, null); // Игра не найдена
-          task.resolve(null);
-        }
-        
-        steamFailures = 0; // Сбрасываем счетчик при успехе
-        saveSteamCache(); // Сохраняем результат
-        
-      } catch (e) {
-        console.warn('Ошибка поиска Steam для:', task.gameName, e);
-        steamFailures++; 
-        task.resolve(null); // Возвращаем null, чтобы сработал фолбэк
-      }
-
-      // Строгая пауза 2 секунды между запросами
-      await new Promise(r => setTimeout(r, 2000));
-    }
-
-    isProcessingQueue = false;
-  }
-
-  async function applyCoverToCard(card, gameName) {
-    const wasSeen = seenCovers.has(gameName);
-    let img = card.querySelector('.card-cover');
-    if (!img) {
-      img = document.createElement('img');
-      img.className = 'card-cover' + (wasSeen ? ' instant' : '');
-      img.alt = '';
-      img.referrerPolicy = 'no-referrer';
-      card.insertBefore(img, card.firstChild);
-    }
-    
-    const markLoaded = () => {
-      img.classList.add('loaded');
-      seenCovers.add(gameName);
-    };
-    
-    img.onload = markLoaded;
-    img.onerror = () => {
-      // Если обложка не загрузилась, просто удаляем её. Останется градиент.
-      img.remove();
-    };
-
-    // Ждём ответа от безопасной очереди Steam
-    const steamUrl = await getSteamCover(gameName);
-
-    // Если карточку уже убрали с экрана — прерываемся
-    if (!document.body.contains(card)) return;
-
-    if (steamUrl) {
-      img.src = steamUrl;
-    } else {
-      // Если Steam не нашёл игру, удаляем img. Останется градиент и текст.
-      img.remove();
-    }
-    
-    if (img.complete && img.naturalWidth > 0) markLoaded();
   }
 
   let ALL_GAMES = [];
@@ -1638,14 +1509,26 @@
         const card = document.createElement('div');
         card.className = 'auction-card';
         card.dataset.gameName = g.name;
-        card.innerHTML = `<span class="card-name">${esc(g.name)}</span>`;
+        
+        // Формируем ссылку на Google Картинки
+        const searchUrl = `https://www.google.com/search?q=${encodeURIComponent(g.name + ' игра')}&tbm=isch`;
+        
+        // Добавляем кнопку-ссылку и название игры
+        card.innerHTML = `
+          <a href="${searchUrl}" target="_blank" class="card-link">ссылка</a>
+          <span class="card-name">${esc(g.name)}</span>
+        `;
+        
+        // Важно: не даём клику по ссылке засчитывать голос за игру
+        const link = card.querySelector('.card-link');
+        link.addEventListener('click', (e) => e.stopPropagation());
+
         card.addEventListener('click', () => clickAuctionGame(g));
         auctionGridEl.appendChild(card);
-        applyCoverToCard(card, g.name);
       });
     }
 
-    // Обновляем только бейджи и класс voted
+    // Обновляем только бейджи голосов
     auctionState.currentGames.forEach((g, i) => {
       const card = auctionGridEl.children[i];
       const rv = auctionState.roundVotes[g.name] || 0;
